@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Battleships</string>
+<!--    Main Activity-->
+    <string name="exit_button">exit</string>
+    <string name="settings_button">settings</string>
+    <string name="pvp_button">Player VS Player</string>
+    <string name="pve_button">Player VS AI</string>
+
+<!--    Settings Activity-->
+    <string name="sound_setting">Sound</string>
+</resources>
