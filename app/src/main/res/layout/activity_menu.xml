@@ -53,7 +53,7 @@
                 app:layout_constraintGuide_percent=".9" />
 
             <ImageButton
-                android:id="@+id/settingsButton"
+                android:id="@+id/back"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:backgroundTint="#0000"
