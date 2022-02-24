@@ -1,11 +1,11 @@
-package com.example.battleships
+package ru.etu.battleships
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 
-class ScoreBoard : AppCompatActivity() {
+class Menu : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_score_board)
+        setContentView(R.layout.activity_menu)
     }
 }

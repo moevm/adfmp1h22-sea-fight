@@ -79,15 +79,48 @@
                 app:srcCompat="@drawable/ic_exit" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <TableLayout
-            android:id="@+id/table"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="500dp"
             android:layout_height="0dp"
-            android:layout_weight="4" >
+            android:layout_gravity="center"
+            android:layout_weight="4">
+
+            <TableLayout
+                android:id="@+id/table"
+                android:layout_width="400dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <TableRow>
+                    <TextView
+                        style="@style/TableHeaderCell"
+                        android:text="Username" />
+                    <TextView
+                        style="@style/TableHeaderCell"
+                        android:text="Victories" />
+                </TableRow>
+
+                <TableRow>
+
+                    <TextView
+
+                        android:text="Username" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Victories" />
+                </TableRow>
 
 
+            </TableLayout>
 
-        </TableLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <Space
             android:layout_width="match_parent"

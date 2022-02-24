@@ -31,4 +31,14 @@
         <item name="android:background">@drawable/text_button</item>
         <item name="android:clickable">true</item>
     </style>
+
+    <style name="TableHeaderCell">
+        <item name="android:textSize">24sp</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">3</item>
+        <item name="android:fontFamily">@font/akaya_kanadaka__regular</item>
+        <item name="android:textColor">?colorOnPrimary</item>
+    </style>
 </resources>

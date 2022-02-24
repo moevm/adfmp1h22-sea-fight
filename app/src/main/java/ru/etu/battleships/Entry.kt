@@ -1,4 +1,4 @@
-package com.example.battleships
+package ru.etu.battleships
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
