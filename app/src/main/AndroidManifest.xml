@@ -10,11 +10,20 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Battleships">
         <activity
+            android:name=".ScoreBoard"
+            android:exported="false"
+            android:screenOrientation="sensorLandscape" />
+        <activity
+            android:name=".Menu"
+            android:exported="false"
+            android:screenOrientation="sensorLandscape" />
+        <activity
             android:name=".Entry"
-            android:screenOrientation="sensorLandscape"
-            android:exported="true">
+            android:exported="true"
+            android:screenOrientation="sensorLandscape">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
