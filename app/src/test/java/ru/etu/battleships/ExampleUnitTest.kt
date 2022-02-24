@@ -1,4 +1,4 @@
-package com.example.battleships
+package ru.etu.battleships
 
 import org.junit.Test
 
