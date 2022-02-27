@@ -7,8 +7,8 @@
         <item name="colorOnPrimary">@color/black</item>
 
         <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/teal_200</item>
-        <item name="colorSecondaryVariant">@color/teal_700</item>
+        <item name="colorSecondary">@color/teal_700</item>
+        <item name="colorSecondaryVariant">@color/teal_200</item>
         <item name="colorOnSecondary">@color/black</item>
 
         <!-- Status bar color. -->
@@ -16,6 +16,17 @@
 
         <!-- Customize your theme here. -->
         <item name="android:windowFullscreen">true</item>
+    </style>
+
+    <style name="TextInput">
+        <item name="android:fontFamily">@font/akaya_kanadaka__regular</item>
+        <item name="android:background">?colorPrimary</item>
+        <item name="android:textColorHint">?colorOnPrimary</item>
+        <item name="android:textColor">?colorOnPrimary</item>
+        <item name="android:textSize">26sp</item>
+        <item name="android:paddingTop">9dp</item>
+        <item name="android:paddingHorizontal">9dp</item>
+<!--        <item name="android:height">32sp</item>-->
     </style>
     
     <style name="TextButton">
@@ -34,22 +45,25 @@
 
     <style name="TableHeaderCell">
         <item name="android:textSize">26sp</item>
+        <item name="android:height">32sp</item>
         <item name="android:textAlignment">center</item>
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_weight">3</item>
         <item name="android:fontFamily">@font/akaya_kanadaka__regular</item>
         <item name="android:textColor">?colorOnPrimary</item>
+        <item name="android:background">@drawable/cell</item>
     </style>
 
     <style name="TableCell">
         <item name="android:textSize">22sp</item>
+        <item name="android:height">30sp</item>
         <item name="android:textAlignment">center</item>
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_weight">3</item>
         <item name="android:fontFamily">@font/akaya_kanadaka__regular</item>
         <item name="android:textColor">?colorPrimaryDark</item>
-        <item name="strokeColor">?colorPrimaryDark</item>
+        <item name="android:background">@drawable/cell</item>
     </style>
 </resources>

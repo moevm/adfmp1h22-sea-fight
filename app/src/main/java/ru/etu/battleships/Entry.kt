@@ -15,7 +15,6 @@ class Entry : AppCompatActivity() {
         binding = ActivityEntryBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        println(binding.exitButton.width)
         val settings: ImageButton = findViewById(R.id.settingsButton)
         settings.setOnClickListener {
             val intent = Intent(this, Menu::class.java)

@@ -1,12 +1,29 @@
 <resources>
     <string name="app_name">Battleships</string>
-    <!--    Main Activity-->
+
+    <!--    Top Buttons-->
     <string name="exit_button">Exit</string>
     <string name="settings_button">Settings</string>
+    <string name="back_button">Back</string>
+    <string name="next_button">Next</string>
+
+    <!--    Main Activity-->
     <string name="pvp_button">Player VS Player</string>
     <string name="pve_button">Player VS AI</string>
 
-    <!--    Settings Activity-->
+    <!--    Menu Activity-->
     <string name="sound_setting">Sound</string>
     <string name="vibration_setting">Vibration</string>
+
+    <!--    Score board activity-->
+    <string name="username">Username</string>
+    <string name="victories">Victories</string>
+
+    <!--    Preparation state-->
+    <string name="nickname_hint">Player</string>
+    <string name="shuffle_button">Shuffle</string>
+
+    <!--    Game state-->
+    <string name="victories_delimiter">:</string>
+    <string name="turn_indicator">Turn</string>
 </resources>
