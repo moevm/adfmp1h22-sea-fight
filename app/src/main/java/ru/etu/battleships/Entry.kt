@@ -18,9 +18,6 @@ class Entry : AppCompatActivity() {
 
 
         binding.apply {
-            exitButton.setOnClickListener {
-                finish()
-            }
             pvpButton.setOnClickListener {
                 val intent = Intent(entry, SetupLeft::class.java)
                 startActivity(intent)
