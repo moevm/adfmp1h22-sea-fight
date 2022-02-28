@@ -15,7 +15,9 @@ class SetupRight : AppCompatActivity() {
 
         binding.apply {
             btBack.setOnClickListener {
-                finish()
+                val intent = Intent(this@SetupRight, Entry::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP;
+                startActivity(intent)
             }
 
             btNext.setOnClickListener {

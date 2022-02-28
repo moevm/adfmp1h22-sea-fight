@@ -1,5 +1,6 @@
 package ru.etu.battleships
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import ru.etu.battleships.databinding.ActivityGameBinding
@@ -15,7 +16,9 @@ class Game : AppCompatActivity() {
 
         binding.apply {
             btBack.setOnClickListener {
-                finish()
+                val intent = Intent(this@Game, Entry::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP;
+                startActivity(intent)
             }
             btExit.setOnClickListener {
                 finishAffinity()
