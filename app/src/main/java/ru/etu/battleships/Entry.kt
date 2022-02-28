@@ -1,30 +1,42 @@
 package ru.etu.battleships
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.ImageButton
+import androidx.appcompat.app.AppCompatActivity
 import ru.etu.battleships.databinding.ActivityEntryBinding
 import kotlin.system.exitProcess
 
 class Entry : AppCompatActivity() {
     private lateinit var binding: ActivityEntryBinding
+    private lateinit var entry: Entry
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityEntryBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        entry = this
 
-        val settings: ImageButton = findViewById(R.id.settingsButton)
-        settings.setOnClickListener {
-            val intent = Intent(this, Menu::class.java)
-            startActivity(intent)
-        }
 
-        val exit: ImageButton = findViewById(R.id.exitButton)
-        exit.setOnClickListener {
-            finishAffinity()
-            exitProcess(0)
+        binding.apply {
+            exitButton.setOnClickListener {
+                finish()
+            }
+            pvpButton.setOnClickListener {
+                val intent = Intent(entry, SetupLeft::class.java)
+                startActivity(intent)
+            }
+            pveButton.setOnClickListener {
+                val intent = Intent(entry, SetupLeft::class.java)
+                startActivity(intent)
+            }
+            settingsButton.setOnClickListener {
+                val intent = Intent(entry, Menu::class.java)
+                startActivity(intent)
+            }
+            exitButton.setOnClickListener {
+                finishAffinity()
+                exitProcess(0)
+            }
         }
     }
 }

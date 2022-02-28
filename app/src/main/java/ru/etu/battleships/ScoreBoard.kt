@@ -1,10 +1,10 @@
 package ru.etu.battleships
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import kotlin.system.exitProcess
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import ru.etu.battleships.databinding.ActivityScoreBoardBinding
+import kotlin.system.exitProcess
 
 
 class ScoreBoard : AppCompatActivity() {

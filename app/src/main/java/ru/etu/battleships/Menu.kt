@@ -1,27 +1,29 @@
 package ru.etu.battleships
 
-import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.ImageButton
+import androidx.appcompat.app.AppCompatActivity
+import ru.etu.battleships.databinding.ActivityMenuBinding
 import kotlin.system.exitProcess
 
 
 class Menu : AppCompatActivity() {
+    private lateinit var binding: ActivityMenuBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_menu)
+        binding = ActivityMenuBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        val back: ImageButton = findViewById(R.id.back)
-        back.setOnClickListener {
-            finish()
-        }
 
-        val exit: ImageButton = findViewById(R.id.exitButton)
-        exit.setOnClickListener {
-            finishAffinity()
-            exitProcess(0)
+        binding.apply {
+            back.setOnClickListener {
+                finish()
+            }
+
+            exitButton.setOnClickListener {
+                finishAffinity()
+                exitProcess(0)
+            }
         }
     }
-
 }
