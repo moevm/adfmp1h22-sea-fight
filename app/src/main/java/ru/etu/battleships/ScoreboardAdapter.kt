@@ -6,11 +6,10 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import ru.etu.battleships.databinding.ScoreBoardItemBinding
 
-
-class ScoreboardAdapter : RecyclerView.Adapter<ScoreboardAdapter.ScoreboardHolder> () {
+class ScoreboardAdapter : RecyclerView.Adapter<ScoreboardAdapter.ScoreboardHolder>() {
     private var userScoreList: List<UserScore> = ArrayList()
 
-    class ScoreboardHolder(item: View): RecyclerView.ViewHolder(item) {
+    class ScoreboardHolder(item: View) : RecyclerView.ViewHolder(item) {
         private var binding = ScoreBoardItemBinding.bind(item)
         fun bind(userScore: UserScore) = with(binding) {
             username.text = userScore.username
@@ -19,7 +18,8 @@ class ScoreboardAdapter : RecyclerView.Adapter<ScoreboardAdapter.ScoreboardHolde
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ScoreboardHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.score_board_item, parent, false)
+        val view =
+            LayoutInflater.from(parent.context).inflate(R.layout.score_board_item, parent, false)
         return ScoreboardHolder(view)
     }
 

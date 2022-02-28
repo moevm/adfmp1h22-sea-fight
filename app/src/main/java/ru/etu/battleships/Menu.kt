@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatActivity
 import ru.etu.battleships.databinding.ActivityMenuBinding
 import kotlin.system.exitProcess
 
-
 class Menu : AppCompatActivity() {
     private lateinit var binding: ActivityMenuBinding
 
