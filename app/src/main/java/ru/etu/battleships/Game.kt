@@ -17,7 +17,7 @@ class Game : AppCompatActivity() {
         binding.apply {
             btBack.setOnClickListener {
                 val intent = Intent(this@Game, Entry::class.java)
-                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP;
+                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
                 startActivity(intent)
             }
             btExit.setOnClickListener {
