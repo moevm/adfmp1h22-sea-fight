@@ -27,4 +27,10 @@
     <!--    Game state-->
     <string name="victories_delimiter">:</string>
     <string name="turn_indicator">Turn</string>
+
+    <!--    Dialogs-->
+    <string name="exit_dialog_message">Are you sure want to exit game?</string>
+    <string name="back_dialog_message">Are you sure want to return to main menu?</string>
+    <string name="accept_button">Yes</string>
+    <string name="decline_button">No</string>
 </resources>

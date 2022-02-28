@@ -3,11 +3,11 @@
     <style name="Theme.Battleships" parent="Theme.AppCompat.NoActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/blue_a50</item>
-        <item name="colorPrimaryDark">@color/blue_a100</item>
+        <item name="colorPrimaryDark">@color/blue_dark</item>
         <item name="colorOnPrimary">@color/black</item>
 
         <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/teal_700</item>
+        <item name="colorSecondary">@color/blue_a100</item>
         <item name="colorSecondaryVariant">@color/teal_200</item>
         <item name="colorOnSecondary">@color/black</item>
 
@@ -16,6 +16,7 @@
 
         <!-- Customize your theme here. -->
         <item name="android:windowFullscreen">true</item>
+        <item name="android:windowAnimationStyle">@null</item>
     </style>
 
     <style name="TextInput">
