@@ -1,8 +1,10 @@
 package ru.etu.battleships
 
 import android.os.Bundle
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import ru.etu.battleships.databinding.ActivityMenuBinding
+import ru.etu.battleships.databinding.DialogQuestionBinding
 import kotlin.system.exitProcess
 
 class Menu : AppCompatActivity() {
@@ -19,9 +21,28 @@ class Menu : AppCompatActivity() {
             }
 
             exitButton.setOnClickListener {
-                finishAffinity()
-                exitProcess(0)
+                openDialog(resources.getString(R.string.exit_dialog_message))
             }
         }
+    }
+
+    private fun openDialog(message: String) {
+        val viewBinding = DialogQuestionBinding.inflate(layoutInflater)
+
+        val alertDialog = AlertDialog.Builder(this)
+            .setCancelable(true)
+            .setView(viewBinding.root)
+            .create()
+
+        viewBinding.message.text = message
+        viewBinding.accept.setOnClickListener {
+            finishAffinity()
+            exitProcess(0)
+        }
+        viewBinding.decline.setOnClickListener {
+            alertDialog.dismiss()
+        }
+
+        alertDialog.show()
     }
 }
