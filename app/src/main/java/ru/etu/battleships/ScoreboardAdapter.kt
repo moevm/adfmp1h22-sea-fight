@@ -35,5 +35,4 @@ class ScoreboardAdapter : RecyclerView.Adapter<ScoreboardAdapter.ScoreboardHolde
         this.userScoreList = userScoreList
         this.notifyDataSetChanged()
     }
-
 }

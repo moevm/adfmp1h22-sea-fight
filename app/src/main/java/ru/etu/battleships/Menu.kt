@@ -14,7 +14,6 @@ class Menu : AppCompatActivity() {
         binding = ActivityMenuBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-
         binding.apply {
             back.setOnClickListener {
                 finish()
