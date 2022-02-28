@@ -27,6 +27,10 @@ class SetupRight : AppCompatActivity() {
         }
     }
 
+    override fun onBackPressed() {
+        this.openDialog(resources.getString(R.string.back_dialog_message))
+    }
+
     private fun openDialog(message: String) {
         val viewBinding = DialogQuestionBinding.inflate(layoutInflater)
 

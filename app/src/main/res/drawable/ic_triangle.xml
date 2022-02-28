@@ -6,13 +6,13 @@
     android:viewportWidth="100">
 
     <path
-        android:fillColor="?colorPrimaryDark"
-        android:strokeColor="?colorSecondaryVariant"
+        android:fillColor="?colorSecondary"
+        android:strokeColor="?colorPrimaryDark"
         android:strokeWidth="5"
         android:pathData="M 10,10 L 90,50, L 10,90 Z"/>
 
     <path
-        android:strokeColor="?colorSecondaryVariant"
+        android:strokeColor="?colorPrimaryDark"
         android:strokeWidth="6"
         android:pathData="M 11,11 L 11,89"/>
 </vector>

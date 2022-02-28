@@ -35,6 +35,14 @@ class Game : AppCompatActivity() {
         }
     }
 
+    override fun onBackPressed() {
+        this.openDialog(resources.getString(R.string.back_dialog_message)) {
+            val intent = Intent(this@Game, Entry::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+            startActivity(intent)
+        }
+    }
+
     private fun openDialog(message: String, acceptListener: View.OnClickListener) {
         val viewBinding = DialogQuestionBinding.inflate(layoutInflater)
 
