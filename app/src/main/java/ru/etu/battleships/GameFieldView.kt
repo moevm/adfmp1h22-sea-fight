@@ -57,9 +57,8 @@ class GameFieldView(context: Context, attributeSet: AttributeSet?) : View(contex
         drawField(canvas)
         for (i in 1..10) {
             drawText(canvas, i.toString(), i, 0)
-            drawText(canvas, "ABCDEFGHIK"[i-1].toString(), 0, i)
+            drawText(canvas, "ABCDEFGHIK"[i - 1].toString(), 0, i)
         }
-
     }
 
     private fun drawField(canvas: Canvas?) {

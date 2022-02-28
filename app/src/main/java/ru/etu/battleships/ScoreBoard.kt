@@ -6,7 +6,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import ru.etu.battleships.databinding.ActivityScoreBoardBinding
 import kotlin.system.exitProcess
 
-
 class ScoreBoard : AppCompatActivity() {
     private lateinit var binding: ActivityScoreBoardBinding
     private val adapter = ScoreboardAdapter()

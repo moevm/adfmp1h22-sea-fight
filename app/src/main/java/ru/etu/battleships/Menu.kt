@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatActivity
 import ru.etu.battleships.databinding.ActivityMenuBinding
 import kotlin.system.exitProcess
 
-
 class Menu : AppCompatActivity() {
     private lateinit var binding: ActivityMenuBinding
 
@@ -13,7 +12,6 @@ class Menu : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMenuBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
 
         binding.apply {
             back.setOnClickListener {
