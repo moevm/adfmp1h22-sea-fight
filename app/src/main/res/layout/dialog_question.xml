@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:padding="10dp"
+    android:background="@drawable/dialog_shape">
+
+    <TextView
+        android:id="@+id/message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/akaya_kanadaka__regular"
+        android:textSize="30sp"
+        android:textColor="?colorPrimaryDark"
+        android:gravity="center"
+        android:paddingTop="15dp"
+
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <Button
+        android:id="@+id/accept"
+        style="@style/TextButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/accept_button"
+        android:textSize="30sp"
+        android:paddingTop="15dp"
+        app:layout_constraintStart_toEndOf="@id/decline"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/message"
+        app:layout_constraintBottom_toBottomOf="parent"
+
+        android:layout_marginStart="5dp"
+        />
+
+    <Button
+        android:id="@+id/decline"
+        style="@style/TextButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/decline_button"
+        android:textSize="30sp"
+        android:paddingTop="15dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/accept"
+        app:layout_constraintTop_toBottomOf="@id/message"
+        app:layout_constraintBottom_toBottomOf="parent"
+
+        android:layout_marginEnd="5dp"
+        />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
