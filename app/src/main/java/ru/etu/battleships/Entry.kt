@@ -31,6 +31,10 @@ class Entry : AppCompatActivity() {
                 finishAffinity()
                 exitProcess(0)
             }
+            btScoreboard.setOnClickListener {
+                val intent = Intent(this@Entry, ScoreBoard::class.java)
+                startActivity(intent)
+            }
         }
     }
 }

@@ -39,44 +39,43 @@
             android:layout_weight="1"
             android:gravity="center_vertical">
 
-            <androidx.constraintlayout.widget.Guideline
-                android:id="@+id/left_guideline"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                app:layout_constraintGuide_percent=".1" />
-
-            <androidx.constraintlayout.widget.Guideline
-                android:id="@+id/right_guideline"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                app:layout_constraintGuide_percent=".9" />
-
             <ImageButton
                 android:id="@+id/settingsButton"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
                 android:backgroundTint="#0000"
                 android:contentDescription="@string/settings_button"
                 android:scaleType="centerInside"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/left_guideline"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintDimensionRatio="W, 1:1"
                 app:srcCompat="@drawable/ic_settings" />
+
+            <ImageButton
+                android:id="@+id/btScoreboard"
+                android:contentDescription="@string/scoreboard_button"
+                app:srcCompat="@drawable/ic_stats"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:backgroundTint="#0000"
+                android:scaleType="centerInside"
+                app:layout_constraintStart_toEndOf="@id/settingsButton"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintDimensionRatio="W, 1:1" />
 
             <ImageButton
                 android:id="@+id/exitButton"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
                 android:backgroundTint="#0000"
                 android:contentDescription="@string/exit_button"
                 android:scaleType="centerInside"
-                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="@+id/right_guideline"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintDimensionRatio="H, 1:1"
                 app:srcCompat="@drawable/ic_exit" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 

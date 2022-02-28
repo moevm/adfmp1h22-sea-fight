@@ -6,6 +6,7 @@
     <string name="settings_button">Settings</string>
     <string name="back_button">Back</string>
     <string name="next_button">Next</string>
+    <string name="scoreboard_button">Scoreboard</string>
 
     <!--    Main Activity-->
     <string name="pvp_button">Player VS Player</string>
