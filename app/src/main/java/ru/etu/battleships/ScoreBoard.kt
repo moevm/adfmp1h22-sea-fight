@@ -12,7 +12,7 @@ class ScoreBoard : AppCompatActivity() {
     private val adapter = ScoreboardAdapter()
 
     /* TODO: hardcoded user score */
-    private var users = mutableListOf(
+    private val users = listOf(
         UserScore("player1", 7),
         UserScore("player2", 2),
         UserScore("Anya", 8),

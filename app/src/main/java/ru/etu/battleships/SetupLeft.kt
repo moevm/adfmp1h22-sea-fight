@@ -7,13 +7,11 @@ import ru.etu.battleships.databinding.ActivitySetupLeftBinding
 
 class SetupLeft : AppCompatActivity() {
     private lateinit var binding: ActivitySetupLeftBinding
-    private lateinit var setupLeft: SetupLeft
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySetupLeftBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        setupLeft = this
 
         binding.apply {
             btBack.setOnClickListener {
@@ -21,7 +19,7 @@ class SetupLeft : AppCompatActivity() {
             }
 
             btNext.setOnClickListener {
-                val intent = Intent(setupLeft, SetupRight::class.java)
+                val intent = Intent(this@SetupLeft, SetupRight::class.java)
                 startActivity(intent)
             }
         }
