@@ -1,7 +1,13 @@
 package ru.etu.battleships
 
+import android.content.ClipData
+import android.content.ClipDescription
 import android.content.Intent
 import android.os.Bundle
+import android.view.DragEvent
+import android.view.View
+import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import ru.etu.battleships.databinding.ActivitySetupLeftBinding
@@ -9,6 +15,8 @@ import ru.etu.battleships.databinding.DialogQuestionBinding
 
 class SetupLeft : AppCompatActivity() {
     private lateinit var binding: ActivitySetupLeftBinding
+
+    private val TAG = "DEBUG_TAG"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,6 +31,20 @@ class SetupLeft : AppCompatActivity() {
             btNext.setOnClickListener {
                 val intent = Intent(this@SetupLeft, SetupRight::class.java)
                 startActivity(intent)
+            }
+
+            mockView.setOnDragListener(dragListener)
+
+            // TODO: fix linter
+            ship41.setOnTouchListener { view, _ ->
+                val data = ClipData.newPlainText("Ship", "4_1")
+                val shadowBuilder = View.DragShadowBuilder(view)
+                view.startDragAndDrop(data, shadowBuilder, view, 0)
+            }
+            ship31.setOnTouchListener { view, _ ->
+                val data = ClipData.newPlainText("Ship", "3_1")
+                val shadowBuilder = View.DragShadowBuilder(view)
+                view.startDragAndDrop(data, shadowBuilder, view, 0)
             }
         }
     }
@@ -50,5 +72,42 @@ class SetupLeft : AppCompatActivity() {
         }
 
         alertDialog.show()
+    }
+
+    private val dragListener = View.OnDragListener { view, event ->
+        when (event.action) {
+            DragEvent.ACTION_DRAG_STARTED -> {
+                event.clipDescription.hasMimeType(ClipDescription.MIMETYPE_TEXT_PLAIN)
+            }
+            DragEvent.ACTION_DRAG_ENTERED -> {
+                view.invalidate()
+                true
+            }
+            DragEvent.ACTION_DRAG_LOCATION -> true
+            DragEvent.ACTION_DRAG_EXITED -> {
+                view.invalidate()
+                true
+            }
+            DragEvent.ACTION_DROP -> {
+                val item = event.clipData.getItemAt(0)
+                val dragData = item.text
+                Toast.makeText(this, dragData, Toast.LENGTH_SHORT).show()
+
+                view.invalidate()
+
+                val v = event.localState as View
+                val owner = v.parent as ViewGroup
+//                owner.removeView(v)
+                val destination = view as GameFieldView
+//                destination.addShip(v)
+                v.visibility = View.VISIBLE
+                true
+            }
+            DragEvent.ACTION_DRAG_ENDED -> {
+                view.invalidate()
+                true
+            }
+            else -> false
+        }
     }
 }

@@ -160,6 +160,7 @@
                         app:layout_constraintTop_toTopOf="parent">
 
                         <ImageView
+                            android:id="@+id/ship_4_1"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
@@ -178,12 +179,14 @@
                         app:layout_constraintTop_toBottomOf="@id/ll_ships_4">
 
                         <ImageView
+                            android:id="@+id/ship_3_1"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             app:srcCompat="@drawable/ic_ship_3" />
 
                         <ImageView
+                            android:id="@+id/ship_3_2"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
@@ -202,18 +205,21 @@
                         app:layout_constraintTop_toBottomOf="@id/ll_ships_3">
 
                         <ImageView
+                            android:id="@+id/ship_2_1"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             app:srcCompat="@drawable/ic_ship_2" />
 
                         <ImageView
+                            android:id="@+id/ship_2_2"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             app:srcCompat="@drawable/ic_ship_2" />
 
                         <ImageView
+                            android:id="@+id/ship_2_3"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
@@ -232,24 +238,28 @@
                         app:layout_constraintTop_toBottomOf="@id/ll_ships_2">
 
                         <ImageView
+                            android:id="@+id/ship_1_1"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             app:srcCompat="@drawable/ic_ship_1" />
 
                         <ImageView
+                            android:id="@+id/ship_1_2"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             app:srcCompat="@drawable/ic_ship_1" />
 
                         <ImageView
+                            android:id="@+id/ship_1_3"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             app:srcCompat="@drawable/ic_ship_1" />
 
                         <ImageView
+                            android:id="@+id/ship_1_4"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
