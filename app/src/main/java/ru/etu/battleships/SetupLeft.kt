@@ -35,16 +35,29 @@ class SetupLeft : AppCompatActivity() {
 
             mockView.setOnDragListener(dragListener)
 
+            val ships = mapOf(
+                ship41 to "4_1",
+
+                ship31 to "3_1",
+                ship32 to "3_2",
+
+                ship21 to "2_1",
+                ship22 to "2_2",
+                ship23 to "2_3",
+
+                ship11 to "1_1",
+                ship12 to "1_2",
+                ship13 to "1_3",
+                ship14 to "1_4",
+            )
+
             // TODO: fix linter
-            ship41.setOnTouchListener { view, _ ->
-                val data = ClipData.newPlainText("Ship", "4_1")
-                val shadowBuilder = View.DragShadowBuilder(view)
-                view.startDragAndDrop(data, shadowBuilder, view, 0)
-            }
-            ship31.setOnTouchListener { view, _ ->
-                val data = ClipData.newPlainText("Ship", "3_1")
-                val shadowBuilder = View.DragShadowBuilder(view)
-                view.startDragAndDrop(data, shadowBuilder, view, 0)
+            ships.forEach { (ship, mineType) ->
+                ship.setOnTouchListener { view, _ ->
+                    val data = ClipData.newPlainText("Ship", mineType)
+                    val shadowBuilder = View.DragShadowBuilder(view)
+                    view.startDragAndDrop(data, shadowBuilder, view, 0)
+                }
             }
         }
     }
@@ -97,9 +110,9 @@ class SetupLeft : AppCompatActivity() {
 
                 val v = event.localState as View
                 val owner = v.parent as ViewGroup
-//                owner.removeView(v)
+                owner.removeView(v)
                 val destination = view as GameFieldView
-//                destination.addShip(v)
+                destination.addShip(dragData, event.x, event.y)
                 v.visibility = View.VISIBLE
                 true
             }

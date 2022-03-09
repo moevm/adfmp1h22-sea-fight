@@ -20,6 +20,9 @@ class GameFieldView(context: Context, attributeSet: AttributeSet?) : View(contex
     private var offsetY = 0f
     private var cellSize = 0f
 
+    // TODO: think about ships structure
+    private val ships: MutableList<Pair<Int, Int>> = mutableListOf()
+
     init {
         fillPaint.style = Paint.Style.FILL
         fillPaint.color = Color.WHITE
@@ -58,6 +61,10 @@ class GameFieldView(context: Context, attributeSet: AttributeSet?) : View(contex
         for (i in 1..10) {
             drawText(canvas, i.toString(), i, 0)
             drawText(canvas, "ABCDEFGHIK"[i - 1].toString(), 0, i)
+        }
+
+        ships.forEach { (x, y) ->
+            drawText(canvas, "S", x, y)
         }
     }
 
@@ -102,5 +109,20 @@ class GameFieldView(context: Context, attributeSet: AttributeSet?) : View(contex
         println(textPaint.typeface)
 
         canvas?.drawText(text, bounds.left, bounds.top - textPaint.ascent(), textPaint)
+    }
+
+    fun addShip(dragData: CharSequence, x: Float, y: Float) {
+        val i = (x - offsetX) / cellSize
+        val j = (y - offsetY) / cellSize
+
+        // TODO: shipId is never used. Do we really need ship id? Don't know
+        val (length, shipId) = dragData.split("_")
+        repeat(length.toInt()) {
+            // TODO: support vertical ships
+            // FIXME:
+            // current: ship starts from drop touch
+            // expected: ship center too close from drop touch
+            ships.add(Pair(i.toInt() + it, j.toInt()))
+        }
     }
 }
