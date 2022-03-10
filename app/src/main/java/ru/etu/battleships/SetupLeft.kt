@@ -25,14 +25,14 @@ class SetupLeft : AppCompatActivity() {
 
         binding.apply {
             clTools.forEach { linearLayout ->
-                if (linearLayout !is LinearLayout){
+                if (linearLayout !is LinearLayout) {
                     return@forEach
                 }
                 linearLayout.forEach { ship ->
                     ship.setOnTouchListener { view, _ ->
                         val (_, length, id) = view.resources.getResourceName(view.id)
                             .split("/")[1].split("_")
-                        val data = ClipData.newPlainText("Ship", "${length}_${id}")
+                        val data = ClipData.newPlainText("Ship", "${length}_$id")
                         val shadowBuilder = View.DragShadowBuilder(view)
                         view.startDragAndDrop(data, shadowBuilder, view, 0)
                     }
@@ -65,7 +65,7 @@ class SetupLeft : AppCompatActivity() {
                 Log.d("setOnShipDrag lambda", "qweqwe")
                 val (_, length, id) = view.resources.getResourceName(view.id)
                     .split("/")[1].split("_")
-                val data = ClipData.newPlainText("Ship", "${length}_${id}")
+                val data = ClipData.newPlainText("Ship", "${length}_$id")
                 val shadowBuilder = View.DragShadowBuilder(view)
                 view.startDragAndDrop(data, shadowBuilder, view, 0)
             }
@@ -96,5 +96,4 @@ class SetupLeft : AppCompatActivity() {
 
         alertDialog.show()
     }
-
 }
