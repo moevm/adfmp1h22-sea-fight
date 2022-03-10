@@ -1,15 +1,18 @@
 package ru.etu.battleships
 
+import android.content.ClipDescription
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.RectF
 import android.util.AttributeSet
+import android.view.DragEvent
+import android.view.MotionEvent
 import android.view.View
+import android.view.View.OnDragListener
 import android.view.ViewGroup
 import androidx.core.content.res.ResourcesCompat
-
 
 class GameFieldView(context: Context, attributeSet: AttributeSet?) : View(context, attributeSet) {
     private val fillPaint = Paint()
@@ -24,7 +27,43 @@ class GameFieldView(context: Context, attributeSet: AttributeSet?) : View(contex
 
     private val ships: MutableSet<Ship> = mutableSetOf()
 
-    private lateinit var lastShip: Ship
+    private val callbacks: MutableList<(View) -> Unit> = mutableListOf()
+
+    private val map: MutableMap<Ship, View> = mutableMapOf()
+
+    private val dragListener = OnDragListener { view, event ->
+        when (event.action) {
+            DragEvent.ACTION_DRAG_STARTED -> {
+                event.clipDescription.hasMimeType(ClipDescription.MIMETYPE_TEXT_PLAIN)
+            }
+            DragEvent.ACTION_DRAG_ENTERED -> {
+                view.invalidate()
+                true
+            }
+            DragEvent.ACTION_DRAG_LOCATION -> true
+            DragEvent.ACTION_DRAG_EXITED -> {
+                view.invalidate()
+                true
+            }
+            DragEvent.ACTION_DROP -> {
+                val item = event.clipData.getItemAt(0)
+                val dragData = item.text
+
+                view.invalidate()
+
+                val v = event.localState as View
+                val owner = v.parent as ViewGroup
+                val destination = view as GameFieldView
+                val hasPlaced = destination.addShip(dragData, event.x, event.y, owner, v)
+                hasPlaced
+            }
+            DragEvent.ACTION_DRAG_ENDED -> {
+                view.invalidate()
+                true
+            }
+            else -> false
+        }
+    }
 
     init {
         fillPaint.style = Paint.Style.FILL
@@ -40,6 +79,8 @@ class GameFieldView(context: Context, attributeSet: AttributeSet?) : View(contex
         if (!this.isInEditMode) {
             textPaint.typeface = ResourcesCompat.getFont(context, R.font.aladin__regular)
         }
+
+        setOnDragListener(dragListener)
     }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
@@ -178,23 +219,61 @@ class GameFieldView(context: Context, attributeSet: AttributeSet?) : View(contex
         // FIXME:
         // current: ship starts from drop touch
         // expected: ship center too close from drop touch
-        val tempShip = Ship(length, Point(i, j), Orientation.HORIZONTAL)
+        val tempShip = Ship(length, Point(i - length / 2, j), Orientation.HORIZONTAL)
 
         if (validateShipPosition(tempShip)) {
             ships.add(tempShip)
-            lastShip = tempShip
-            owner.removeView(v)
+            map[tempShip] = v
+
+            v.visibility = GONE
             return true
         }
         return false
     }
 
-    fun allShipsArePlaced() = ships.size == (4 * 1 + 3 * 2 + 2 * 3 + 1 * 4)
+    fun allShipsArePlaced() = ships.sumOf { it.length } == (4 * 1 + 3 * 2 + 2 * 3 + 1 * 4)
 
-    fun rotateLastShip() {
-        lastShip.rotate()
-        if (!validateShipPosition(lastShip)) {
-            lastShip.rotate()
+    fun rotateLastShip(ship: Ship) {
+        ship.rotate()
+        if (!validateShipPosition(ship)) {
+            ship.rotate()
         }
+    }
+
+    override fun onTouchEvent(event: MotionEvent?): Boolean {
+        if (event == null) {
+            return super.onTouchEvent(event)
+        }
+
+        val x = event.x
+        val y = event.y
+        val i = ((x - offsetX) / cellSize).toInt()
+        val j = ((y - offsetY) / cellSize).toInt()
+
+        ships.forEach { ship ->
+            val hasFound = when (ship.orientation) {
+                Orientation.VERTICAL -> {
+                    i == ship.position.x && j in ship.position.y until ship.position.y + ship.length
+                }
+                Orientation.HORIZONTAL -> {
+                    j == ship.position.y && i in ship.position.x until ship.position.x + ship.length
+                }
+            }
+            if (hasFound) {
+                when (event.action) {
+                    MotionEvent.ACTION_MOVE -> {
+                        callbacks.forEach { callback ->
+                            callback(map[ship]!!)
+                        }
+                    }
+                }
+                return true
+            }
+        }
+        return false
+    }
+
+    fun setOnShipDrag(function: (View) -> Unit) {
+        callbacks.add(function)
     }
 }
