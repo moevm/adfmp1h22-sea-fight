@@ -29,23 +29,49 @@ class SetupLeft : AppCompatActivity() {
                 this@SetupLeft.openDialog(resources.getString(R.string.back_dialog_message))
             }
 
+            rotateButton.setOnClickListener {
+                mockView.rotateLastShip()
+                mockView.invalidate()
+            }
+
             btNext.setOnClickListener {
-                val intent = Intent(this@SetupLeft, SetupRight::class.java)
-                startActivity(intent)
+                if (mockView.allShipsArePlaced()) {
+                    val intent = Intent(this@SetupLeft, SetupRight::class.java)
+                    startActivity(intent)
+                } else {
+                    Toast.makeText(
+                        this@SetupLeft,
+                        resources.getString(R.string.not_all_ships_are_placed),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
             }
 
             gameFieldView.setOnDragListener(dragListener)
 
+            val ships = mapOf(
+                ship41 to "4_1",
+
+                ship31 to "3_1",
+                ship32 to "3_2",
+
+                ship21 to "2_1",
+                ship22 to "2_2",
+                ship23 to "2_3",
+
+                ship11 to "1_1",
+                ship12 to "1_2",
+                ship13 to "1_3",
+                ship14 to "1_4",
+            )
+
             // TODO: fix linter
-            ship41.setOnTouchListener { view, _ ->
-                val data = ClipData.newPlainText("Ship", "4_1")
-                val shadowBuilder = View.DragShadowBuilder(view)
-                view.startDragAndDrop(data, shadowBuilder, view, 0)
-            }
-            ship31.setOnTouchListener { view, _ ->
-                val data = ClipData.newPlainText("Ship", "3_1")
-                val shadowBuilder = View.DragShadowBuilder(view)
-                view.startDragAndDrop(data, shadowBuilder, view, 0)
+            ships.forEach { (ship, mineType) ->
+                ship.setOnTouchListener { view, _ ->
+                    val data = ClipData.newPlainText("Ship", mineType)
+                    val shadowBuilder = View.DragShadowBuilder(view)
+                    view.startDragAndDrop(data, shadowBuilder, view, 0)
+                }
             }
         }
     }
@@ -92,17 +118,15 @@ class SetupLeft : AppCompatActivity() {
             DragEvent.ACTION_DROP -> {
                 val item = event.clipData.getItemAt(0)
                 val dragData = item.text
-                Toast.makeText(this, dragData, Toast.LENGTH_SHORT).show()
 
                 view.invalidate()
 
                 val v = event.localState as View
                 val owner = v.parent as ViewGroup
-//                owner.removeView(v)
                 val destination = view as GameFieldView
-//                destination.addShip(v)
+                val hasPlaced = destination.addShip(dragData, event.x, event.y, owner, v)
                 v.visibility = View.VISIBLE
-                true
+                hasPlaced
             }
             DragEvent.ACTION_DRAG_ENDED -> {
                 view.invalidate()
