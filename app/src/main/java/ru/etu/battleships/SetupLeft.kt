@@ -30,12 +30,12 @@ class SetupLeft : AppCompatActivity() {
             }
 
             rotateButton.setOnClickListener {
-                mockView.rotateLastShip()
-                mockView.invalidate()
+                gameFieldView.rotateLastShip()
+                gameFieldView.invalidate()
             }
 
             btNext.setOnClickListener {
-                if (mockView.allShipsArePlaced()) {
+                if (gameFieldView.allShipsArePlaced()) {
                     val intent = Intent(this@SetupLeft, SetupRight::class.java)
                     startActivity(intent)
                 } else {
