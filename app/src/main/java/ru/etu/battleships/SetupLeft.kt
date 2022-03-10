@@ -28,9 +28,22 @@ class SetupLeft : AppCompatActivity() {
                 this@SetupLeft.openDialog(resources.getString(R.string.back_dialog_message))
             }
 
+            rotateButton.setOnClickListener {
+                mockView.rotateLastShip()
+                mockView.invalidate()
+            }
+
             btNext.setOnClickListener {
-                val intent = Intent(this@SetupLeft, SetupRight::class.java)
-                startActivity(intent)
+                if (mockView.allShipsArePlaced()) {
+                    val intent = Intent(this@SetupLeft, SetupRight::class.java)
+                    startActivity(intent)
+                } else {
+                    Toast.makeText(
+                        this@SetupLeft,
+                        resources.getString(R.string.not_all_ships_are_placed),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
             }
 
             mockView.setOnDragListener(dragListener)
@@ -104,17 +117,15 @@ class SetupLeft : AppCompatActivity() {
             DragEvent.ACTION_DROP -> {
                 val item = event.clipData.getItemAt(0)
                 val dragData = item.text
-                Toast.makeText(this, dragData, Toast.LENGTH_SHORT).show()
 
                 view.invalidate()
 
                 val v = event.localState as View
                 val owner = v.parent as ViewGroup
-                owner.removeView(v)
                 val destination = view as GameFieldView
-                destination.addShip(dragData, event.x, event.y)
+                val hasPlaced = destination.addShip(dragData, event.x, event.y, owner, v)
                 v.visibility = View.VISIBLE
-                true
+                hasPlaced
             }
             DragEvent.ACTION_DRAG_ENDED -> {
                 view.invalidate()
