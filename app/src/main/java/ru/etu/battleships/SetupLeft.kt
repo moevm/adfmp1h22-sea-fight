@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+
 import ru.etu.battleships.databinding.ActivitySetupLeftBinding
 import ru.etu.battleships.databinding.DialogQuestionBinding
 
@@ -33,7 +34,7 @@ class SetupLeft : AppCompatActivity() {
                 startActivity(intent)
             }
 
-            mockView.setOnDragListener(dragListener)
+            gameFieldView.setOnDragListener(dragListener)
 
             // TODO: fix linter
             ship41.setOnTouchListener { view, _ ->
