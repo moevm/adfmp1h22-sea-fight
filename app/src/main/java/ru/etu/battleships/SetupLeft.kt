@@ -1,9 +1,11 @@
 package ru.etu.battleships
 
 import android.content.ClipData
+import android.content.ClipDescription
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.DragEvent
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.Toast
@@ -18,18 +20,25 @@ class SetupLeft : AppCompatActivity() {
 
     private val TAG = "DEBUG_TAG"
 
+    private lateinit var _gameFieldView: GameFieldView
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySetupLeftBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         binding.apply {
+            clTools.setOnDragListener(dragListener)
+
+            _gameFieldView = gameFieldView
+
             clTools.forEach { linearLayout ->
                 if (linearLayout !is LinearLayout) {
                     return@forEach
                 }
                 linearLayout.forEach { ship ->
                     ship.setOnTouchListener { view, _ ->
+                        gameFieldView.setSelectedShipToNull()
                         val (_, length, id) = view.resources.getResourceName(view.id)
                             .split("/")[1].split("_")
                         val data = ClipData.newPlainText("Ship", "${length}_$id")
@@ -95,5 +104,34 @@ class SetupLeft : AppCompatActivity() {
         }
 
         alertDialog.show()
+    }
+
+    private val dragListener = View.OnDragListener { view, event ->
+        when (event.action) {
+            DragEvent.ACTION_DRAG_STARTED -> {
+                event.clipDescription.hasMimeType(ClipDescription.MIMETYPE_TEXT_PLAIN)
+            }
+            DragEvent.ACTION_DRAG_ENTERED -> {
+                view.invalidate()
+                true
+            }
+            DragEvent.ACTION_DRAG_LOCATION -> true
+            DragEvent.ACTION_DRAG_EXITED -> {
+                view.invalidate()
+                true
+            }
+            DragEvent.ACTION_DROP -> {
+                val v = event.localState as View
+                v.visibility = View.VISIBLE
+                view.invalidate()
+                _gameFieldView.selectedShipOut()
+                true
+            }
+            DragEvent.ACTION_DRAG_ENDED -> {
+                view.invalidate()
+                true
+            }
+            else -> false
+        }
     }
 }

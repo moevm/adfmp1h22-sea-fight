@@ -12,6 +12,7 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.View.OnDragListener
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import androidx.core.content.res.ResourcesCompat
 
 class GameFieldView(context: Context, attributeSet: AttributeSet?) : View(context, attributeSet) {
@@ -30,6 +31,8 @@ class GameFieldView(context: Context, attributeSet: AttributeSet?) : View(contex
     private val callbacks: MutableList<(View) -> Unit> = mutableListOf()
 
     private val map: MutableMap<Ship, View> = mutableMapOf()
+
+    private var selectedShip: Ship? = null
 
     private val dragListener = OnDragListener { view, event ->
         when (event.action) {
@@ -52,9 +55,8 @@ class GameFieldView(context: Context, attributeSet: AttributeSet?) : View(contex
                 view.invalidate()
 
                 val v = event.localState as View
-                val owner = v.parent as ViewGroup
                 val destination = view as GameFieldView
-                val hasPlaced = destination.addShip(dragData, event.x, event.y, owner, v)
+                val hasPlaced = destination.addShip(dragData, event.x, event.y, v)
                 hasPlaced
             }
             DragEvent.ACTION_DRAG_ENDED -> {
@@ -191,7 +193,8 @@ class GameFieldView(context: Context, attributeSet: AttributeSet?) : View(contex
         )
 
         ships.filter { ship ->
-            ship != currentShip
+            // TO THINK: maybe we need use different ids for all ships
+            ship.length != currentShip.length || ship.id != currentShip.id
         }.forEach { ship ->
             val startPoint = ship.position
             val endPoint = getEndPoint(ship)
@@ -209,23 +212,23 @@ class GameFieldView(context: Context, attributeSet: AttributeSet?) : View(contex
         return true
     }
 
-    fun addShip(dragData: CharSequence, x: Float, y: Float, owner: ViewGroup, v: View): Boolean {
+    private fun addShip(dragData: CharSequence, x: Float, y: Float, v: View): Boolean {
         val i = ((x - offsetX) / cellSize).toInt()
         val j = ((y - offsetY) / cellSize).toInt()
 
-        // TODO: shipId is never used. Do we really need ship id? Don't know
         val (length, shipId) = dragData.split("_").map { it.toInt() }
 
-        // FIXME:
-        // current: ship starts from drop touch
-        // expected: ship center too close from drop touch
-        val tempShip = Ship(length, Point(i - length / 2, j), Orientation.HORIZONTAL)
+        // TODO: add ghost ship
+        val tempShip = Ship(length, Point(i - length / 2, j), Orientation.HORIZONTAL, shipId)
 
         if (validateShipPosition(tempShip)) {
+            if (tempShip == selectedShip) {
+                return true
+            }
             ships.add(tempShip)
             map[tempShip] = v
-
             v.visibility = GONE
+            ships.remove(selectedShip)
             return true
         }
         return false
@@ -260,6 +263,7 @@ class GameFieldView(context: Context, attributeSet: AttributeSet?) : View(contex
                 }
             }
             if (hasFound) {
+                selectedShip = ship
                 when (event.action) {
                     MotionEvent.ACTION_MOVE -> {
                         callbacks.forEach { callback ->
@@ -271,6 +275,15 @@ class GameFieldView(context: Context, attributeSet: AttributeSet?) : View(contex
             }
         }
         return false
+    }
+
+    fun selectedShipOut() {
+        ships.remove(selectedShip)
+        setSelectedShipToNull()
+    }
+
+    fun setSelectedShipToNull() {
+        selectedShip = null
     }
 
     fun setOnShipDrag(function: (View) -> Unit) {
