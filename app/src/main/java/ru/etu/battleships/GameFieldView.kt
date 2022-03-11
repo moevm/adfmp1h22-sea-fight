@@ -11,8 +11,6 @@ import android.view.DragEvent
 import android.view.MotionEvent
 import android.view.View
 import android.view.View.OnDragListener
-import android.view.ViewGroup
-import android.widget.LinearLayout
 import androidx.core.content.res.ResourcesCompat
 
 class GameFieldView(context: Context, attributeSet: AttributeSet?) : View(context, attributeSet) {
