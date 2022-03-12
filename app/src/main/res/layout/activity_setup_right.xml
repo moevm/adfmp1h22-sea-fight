@@ -90,7 +90,7 @@
                 app:layout_constraintEnd_toStartOf="@id/right_guideline"
                 android:inputType="textPersonName"
                 android:autofillHints="username"
-                android:imeOptions="actionDone"
+                android:imeOptions="actionDone|flagNoExtractUi|flagNoFullscreen"
                 android:hint="@string/nickname_hint"
                 />
 
