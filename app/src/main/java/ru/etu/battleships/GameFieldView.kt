@@ -7,6 +7,7 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.RectF
 import android.util.AttributeSet
+import android.util.Log
 import android.view.DragEvent
 import android.view.MotionEvent
 import android.view.View
@@ -25,12 +26,12 @@ class GameFieldView(context: Context, attributeSet: AttributeSet?) : View(contex
     private var cellSize = 0f
 
     private val ships: MutableSet<Ship> = mutableSetOf()
+    private val shipToViewMap: MutableMap<Ship, View> = mutableMapOf()
 
-    private val callbacks: MutableList<(View) -> Unit> = mutableListOf()
+    private val onShipDragCallbacks: MutableList<(Ship, View) -> Unit> = mutableListOf()
+    private var previousTouchAction = MotionEvent.ACTION_UP
 
-    private val map: MutableMap<Ship, View> = mutableMapOf()
-
-    private var selectedShip: Ship? = null
+    private var lastDraggedShip: Ship? = null
 
     private val dragListener = OnDragListener { view, event ->
         when (event.action) {
@@ -54,11 +55,28 @@ class GameFieldView(context: Context, attributeSet: AttributeSet?) : View(contex
 
                 val v = event.localState as View
                 val destination = view as GameFieldView
-                val hasPlaced = destination.addShip(dragData, event.x, event.y, v)
-                hasPlaced
+                val (length, shipId) = dragData.split("_").map { it.toInt() }
+                val x = ((event.x - offsetX) / cellSize).toInt() - length / 2
+                val y = ((event.y - offsetY) / cellSize).toInt()
+
+                destination.addShip(length, shipId, x, y, v)
             }
             DragEvent.ACTION_DRAG_ENDED -> {
                 view.invalidate()
+                val v = event.localState as View
+                if (!event.result && view is GameFieldView) {
+                    if (lastDraggedShip == null) {
+                        v.visibility = View.VISIBLE
+                    } else {
+                        this.addShip(
+                            lastDraggedShip!!.length,
+                            lastDraggedShip!!.id,
+                            lastDraggedShip!!.position.x,
+                            lastDraggedShip!!.position.y,
+                            v
+                        )
+                    }
+                }
                 true
             }
             else -> false
@@ -210,26 +228,22 @@ class GameFieldView(context: Context, attributeSet: AttributeSet?) : View(contex
         return true
     }
 
-    private fun addShip(dragData: CharSequence, x: Float, y: Float, v: View): Boolean {
-        val i = ((x - offsetX) / cellSize).toInt()
-        val j = ((y - offsetY) / cellSize).toInt()
-
-        val (length, shipId) = dragData.split("_").map { it.toInt() }
-
+    private fun addShip(length: Int, shipId: Int, x: Int, y: Int, v: View): Boolean {
         // TODO: add ghost ship
-        val tempShip = Ship(length, Point(i - length / 2, j), Orientation.HORIZONTAL, shipId)
+        val tempShip = Ship(length, Point(x, y), Orientation.HORIZONTAL, shipId)
 
         if (validateShipPosition(tempShip)) {
-            if (tempShip == selectedShip) {
-                return true
-            }
             ships.add(tempShip)
-            map[tempShip] = v
+            shipToViewMap[tempShip] = v
             v.visibility = GONE
-            ships.remove(selectedShip)
             return true
         }
         return false
+    }
+
+    fun removeShip(ship: Ship): Boolean {
+        shipToViewMap.remove(ship)
+        return ships.remove(ship)
     }
 
     fun allShipsArePlaced() = ships.sumOf { it.length } == (4 * 1 + 3 * 2 + 2 * 3 + 1 * 4)
@@ -241,18 +255,14 @@ class GameFieldView(context: Context, attributeSet: AttributeSet?) : View(contex
         }
     }
 
-    override fun onTouchEvent(event: MotionEvent?): Boolean {
-        if (event == null) {
-            return super.onTouchEvent(event)
-        }
-
+    override fun onTouchEvent(event: MotionEvent): Boolean {
         val x = event.x
         val y = event.y
         val i = ((x - offsetX) / cellSize).toInt()
         val j = ((y - offsetY) / cellSize).toInt()
 
-        ships.forEach { ship ->
-            val hasFound = when (ship.orientation) {
+        val ship = ships.find { ship ->
+            when (ship.orientation) {
                 Orientation.VERTICAL -> {
                     i == ship.position.x && j in ship.position.y until ship.position.y + ship.length
                 }
@@ -260,31 +270,35 @@ class GameFieldView(context: Context, attributeSet: AttributeSet?) : View(contex
                     j == ship.position.y && i in ship.position.x until ship.position.x + ship.length
                 }
             }
-            if (hasFound) {
-                selectedShip = ship
-                when (event.action) {
-                    MotionEvent.ACTION_MOVE -> {
-                        callbacks.forEach { callback ->
-                            callback(map[ship]!!)
-                        }
+        }
+
+
+        when (event.action) {
+            MotionEvent.ACTION_MOVE -> {
+                if (ship != null && previousTouchAction == MotionEvent.ACTION_DOWN) {
+                    lastDraggedShip = ship
+                    onShipDragCallbacks.forEach { callback ->
+                        callback(ship, shipToViewMap[ship]!!)
                     }
                 }
-                return true
+            }
+
+            MotionEvent.ACTION_UP -> {
+                this.performClick()
+                Log.d("TAP", "($i;$j)")
+
+                if (ship != null) {
+                    // TODO: perform rotation
+                    Log.d("TAP", "${ship.length}_${ship.id} - (${ship.position.x}; ${ship.position.y})")
+                }
             }
         }
-        return false
+        previousTouchAction = event.action
+
+        return true
     }
 
-    fun selectedShipOut() {
-        ships.remove(selectedShip)
-        setSelectedShipToNull()
-    }
-
-    fun setSelectedShipToNull() {
-        selectedShip = null
-    }
-
-    fun setOnShipDrag(function: (View) -> Unit) {
-        callbacks.add(function)
+    fun setOnShipDrag(function: (Ship, View) -> Unit) {
+        onShipDragCallbacks.add(function)
     }
 }

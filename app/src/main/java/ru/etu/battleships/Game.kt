@@ -52,7 +52,10 @@ class Game : AppCompatActivity() {
             .create()
 
         viewBinding.message.text = message
-        viewBinding.accept.setOnClickListener(acceptListener)
+        viewBinding.accept.setOnClickListener {
+            alertDialog.dismiss()
+            acceptListener.onClick(it)
+        }
         viewBinding.decline.setOnClickListener {
             alertDialog.dismiss()
         }

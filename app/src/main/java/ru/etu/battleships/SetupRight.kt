@@ -9,6 +9,7 @@ import ru.etu.battleships.databinding.DialogQuestionBinding
 
 class SetupRight : AppCompatActivity() {
     private lateinit var binding: ActivitySetupRightBinding
+    private val modals = mutableSetOf<AlertDialog>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,6 +42,7 @@ class SetupRight : AppCompatActivity() {
 
         viewBinding.message.text = message
         viewBinding.accept.setOnClickListener {
+            alertDialog.dismiss()
             val intent = Intent(this, Entry::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
             startActivity(intent)
@@ -49,6 +51,7 @@ class SetupRight : AppCompatActivity() {
             alertDialog.dismiss()
         }
 
+        modals.add(alertDialog)
         alertDialog.show()
     }
 }

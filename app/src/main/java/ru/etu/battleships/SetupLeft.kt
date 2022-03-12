@@ -18,8 +18,6 @@ import ru.etu.battleships.databinding.DialogQuestionBinding
 class SetupLeft : AppCompatActivity() {
     private lateinit var binding: ActivitySetupLeftBinding
 
-    private val TAG = "DEBUG_TAG"
-
     private lateinit var _gameFieldView: GameFieldView
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,12 +36,13 @@ class SetupLeft : AppCompatActivity() {
                 }
                 linearLayout.forEach { ship ->
                     ship.setOnTouchListener { view, _ ->
-                        gameFieldView.setSelectedShipToNull()
+//                        gameFieldView.setSelectedShipToNull()
                         val (_, length, id) = view.resources.getResourceName(view.id)
                             .split("/")[1].split("_")
                         val data = ClipData.newPlainText("Ship", "${length}_$id")
                         val shadowBuilder = View.DragShadowBuilder(view)
                         view.startDragAndDrop(data, shadowBuilder, view, 0)
+                        view.performClick()
                     }
                 }
             }
@@ -70,8 +69,8 @@ class SetupLeft : AppCompatActivity() {
                 }
             }
 
-            gameFieldView.setOnShipDrag { view: View ->
-                Log.d("setOnShipDrag lambda", "qweqwe")
+            gameFieldView.setOnShipDrag { ship, view ->
+                gameFieldView.removeShip(ship)
                 val (_, length, id) = view.resources.getResourceName(view.id)
                     .split("/")[1].split("_")
                 val data = ClipData.newPlainText("Ship", "${length}_$id")
@@ -95,6 +94,7 @@ class SetupLeft : AppCompatActivity() {
 
         viewBinding.message.text = message
         viewBinding.accept.setOnClickListener {
+            alertDialog.dismiss()
             val intent = Intent(this, Entry::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
             startActivity(intent)
@@ -124,7 +124,7 @@ class SetupLeft : AppCompatActivity() {
                 val v = event.localState as View
                 v.visibility = View.VISIBLE
                 view.invalidate()
-                _gameFieldView.selectedShipOut()
+//                _gameFieldView.selectedShipOut()
                 true
             }
             DragEvent.ACTION_DRAG_ENDED -> {
