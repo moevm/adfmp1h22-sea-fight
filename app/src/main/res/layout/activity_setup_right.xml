@@ -113,11 +113,11 @@
                 android:layout_marginBottom="10dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/cl_tools"
+                app:layout_constraintStart_toEndOf="@+id/ll_tools"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <LinearLayout
-                android:id="@+id/cl_tools"
+                android:id="@+id/ll_tools"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
 

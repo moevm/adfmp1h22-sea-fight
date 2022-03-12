@@ -1,24 +1,17 @@
 package ru.etu.battleships
 
 import android.content.ClipData
-import android.content.ClipDescription
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
-import android.view.DragEvent
 import android.view.View
-import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.forEach
 import ru.etu.battleships.databinding.ActivitySetupLeftBinding
 import ru.etu.battleships.databinding.DialogQuestionBinding
 
 class SetupLeft : AppCompatActivity() {
     private lateinit var binding: ActivitySetupLeftBinding
-
-    private lateinit var _gameFieldView: GameFieldView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,34 +19,8 @@ class SetupLeft : AppCompatActivity() {
         setContentView(binding.root)
 
         binding.apply {
-            clTools.setOnDragListener(dragListener)
-
-            _gameFieldView = gameFieldView
-
-            clTools.forEach { linearLayout ->
-                if (linearLayout !is LinearLayout) {
-                    return@forEach
-                }
-                linearLayout.forEach { ship ->
-                    ship.setOnTouchListener { view, _ ->
-//                        gameFieldView.setSelectedShipToNull()
-                        val (_, length, id) = view.resources.getResourceName(view.id)
-                            .split("/")[1].split("_")
-                        val data = ClipData.newPlainText("Ship", "${length}_$id")
-                        val shadowBuilder = View.DragShadowBuilder(view)
-                        view.startDragAndDrop(data, shadowBuilder, view, 0)
-                        view.performClick()
-                    }
-                }
-            }
-
             btBack.setOnClickListener {
                 this@SetupLeft.openDialog(resources.getString(R.string.back_dialog_message))
-            }
-
-            rotateButton.setOnClickListener {
-//                gameFieldView.rotateLastShip()
-                gameFieldView.invalidate()
             }
 
             btNext.setOnClickListener {
@@ -69,11 +36,13 @@ class SetupLeft : AppCompatActivity() {
                 }
             }
 
-            gameFieldView.setOnShipDrag { ship, view ->
+            gameFieldView.setupPullView(llTools)
+
+            gameFieldView.addOnShipDragListener { ship, view ->
                 gameFieldView.removeShip(ship)
                 val (_, length, id) = view.resources.getResourceName(view.id)
                     .split("/")[1].split("_")
-                val data = ClipData.newPlainText("Ship", "${length}_$id")
+                val data = ClipData("Ship", arrayOf(GameFieldView.MIME_TYPE), ClipData.Item("${length}_$id"))
                 val shadowBuilder = View.DragShadowBuilder(view)
                 view.startDragAndDrop(data, shadowBuilder, view, 0)
             }
@@ -104,34 +73,5 @@ class SetupLeft : AppCompatActivity() {
         }
 
         alertDialog.show()
-    }
-
-    private val dragListener = View.OnDragListener { view, event ->
-        when (event.action) {
-            DragEvent.ACTION_DRAG_STARTED -> {
-                event.clipDescription.hasMimeType(ClipDescription.MIMETYPE_TEXT_PLAIN)
-            }
-            DragEvent.ACTION_DRAG_ENTERED -> {
-                view.invalidate()
-                true
-            }
-            DragEvent.ACTION_DRAG_LOCATION -> true
-            DragEvent.ACTION_DRAG_EXITED -> {
-                view.invalidate()
-                true
-            }
-            DragEvent.ACTION_DROP -> {
-                val v = event.localState as View
-                v.visibility = View.VISIBLE
-                view.invalidate()
-//                _gameFieldView.selectedShipOut()
-                true
-            }
-            DragEvent.ACTION_DRAG_ENDED -> {
-                view.invalidate()
-                true
-            }
-            else -> false
-        }
     }
 }

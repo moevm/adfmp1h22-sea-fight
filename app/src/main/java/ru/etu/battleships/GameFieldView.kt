@@ -1,6 +1,6 @@
 package ru.etu.battleships
 
-import android.content.ClipDescription
+import android.content.ClipData
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
@@ -11,10 +11,15 @@ import android.util.Log
 import android.view.DragEvent
 import android.view.MotionEvent
 import android.view.View
-import android.view.View.OnDragListener
+import android.widget.LinearLayout
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.view.forEach
 
 class GameFieldView(context: Context, attributeSet: AttributeSet?) : View(context, attributeSet) {
+    companion object {
+        const val MIME_TYPE = "battleship/ship"
+    }
+
     private val fillPaint = Paint()
     private val strokePaint = Paint()
     private val textPaint = Paint()
@@ -33,56 +38,6 @@ class GameFieldView(context: Context, attributeSet: AttributeSet?) : View(contex
 
     private var lastDraggedShip: Ship? = null
 
-    private val dragListener = OnDragListener { view, event ->
-        when (event.action) {
-            DragEvent.ACTION_DRAG_STARTED -> {
-                event.clipDescription.hasMimeType(ClipDescription.MIMETYPE_TEXT_PLAIN)
-            }
-            DragEvent.ACTION_DRAG_ENTERED -> {
-                view.invalidate()
-                true
-            }
-            DragEvent.ACTION_DRAG_LOCATION -> true
-            DragEvent.ACTION_DRAG_EXITED -> {
-                view.invalidate()
-                true
-            }
-            DragEvent.ACTION_DROP -> {
-                val item = event.clipData.getItemAt(0)
-                val dragData = item.text
-
-                view.invalidate()
-
-                val v = event.localState as View
-                val destination = view as GameFieldView
-                val (length, shipId) = dragData.split("_").map { it.toInt() }
-                val x = ((event.x - offsetX) / cellSize).toInt() - length / 2
-                val y = ((event.y - offsetY) / cellSize).toInt()
-
-                destination.addShip(length, shipId, x, y, v)
-            }
-            DragEvent.ACTION_DRAG_ENDED -> {
-                view.invalidate()
-                val v = event.localState as View
-                if (!event.result && view is GameFieldView) {
-                    if (lastDraggedShip == null) {
-                        v.visibility = View.VISIBLE
-                    } else {
-                        this.addShip(
-                            lastDraggedShip!!.length,
-                            lastDraggedShip!!.id,
-                            lastDraggedShip!!.position.x,
-                            lastDraggedShip!!.position.y,
-                            v
-                        )
-                    }
-                }
-                true
-            }
-            else -> false
-        }
-    }
-
     init {
         fillPaint.style = Paint.Style.FILL
         fillPaint.color = Color.WHITE
@@ -97,8 +52,52 @@ class GameFieldView(context: Context, attributeSet: AttributeSet?) : View(contex
         if (!this.isInEditMode) {
             textPaint.typeface = ResourcesCompat.getFont(context, R.font.aladin__regular)
         }
+    }
 
-        setOnDragListener(dragListener)
+    fun setupPullView(pullLayout: LinearLayout) {
+        pullLayout.setOnDragListener { view, event ->
+            when (event.action) {
+                DragEvent.ACTION_DRAG_STARTED -> {
+                    event.clipDescription.hasMimeType(MIME_TYPE)
+                }
+                DragEvent.ACTION_DRAG_ENTERED -> {
+                    view.invalidate()
+                    true
+                }
+                DragEvent.ACTION_DRAG_LOCATION -> true
+                DragEvent.ACTION_DRAG_EXITED -> {
+                    view.invalidate()
+                    true
+                }
+                DragEvent.ACTION_DROP -> {
+                    val v = event.localState as View
+                    v.visibility = VISIBLE
+                    view.invalidate()
+                    true
+                }
+                DragEvent.ACTION_DRAG_ENDED -> {
+                    view.invalidate()
+                    true
+                }
+                else -> false
+            }
+        }
+
+        pullLayout.forEach { linearLayout ->
+            if (linearLayout !is LinearLayout) {
+                return@forEach
+            }
+            linearLayout.forEach { ship ->
+                ship.setOnTouchListener { view, _ ->
+                    val (_, length, id) = view.resources.getResourceName(view.id)
+                        .split("/")[1].split("_")
+                    val data = ClipData("Ship", arrayOf(MIME_TYPE), ClipData.Item("${length}_$id"))
+                    val shadowBuilder = DragShadowBuilder(view)
+                    view.startDragAndDrop(data, shadowBuilder, view, 0)
+                    view.performClick()
+                }
+            }
+        }
     }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
@@ -114,6 +113,54 @@ class GameFieldView(context: Context, attributeSet: AttributeSet?) : View(contex
         this.cellSize = strokePaint.strokeWidth / this.strokeRatio
 
         this.textPaint.textSize = this.cellSize * 0.7f
+    }
+
+    override fun onDragEvent(event: DragEvent): Boolean {
+        return when (event.action) {
+            DragEvent.ACTION_DRAG_STARTED -> {
+                event.clipDescription.hasMimeType(MIME_TYPE)
+            }
+            DragEvent.ACTION_DRAG_ENTERED -> {
+                invalidate()
+                true
+            }
+            DragEvent.ACTION_DRAG_LOCATION -> true
+            DragEvent.ACTION_DRAG_EXITED -> {
+                invalidate()
+                true
+            }
+            DragEvent.ACTION_DROP -> {
+                val dragData = event.clipData.getItemAt(0).text
+
+                invalidate()
+
+                val v = event.localState as View
+                val (length, shipId) = dragData.split("_").map { it.toInt() }
+                val x = ((event.x - offsetX) / cellSize).toInt() - length / 2
+                val y = ((event.y - offsetY) / cellSize).toInt()
+
+                this.addShip(length, shipId, x, y, v)
+            }
+            DragEvent.ACTION_DRAG_ENDED -> {
+                invalidate()
+                val v = event.localState as View
+                if (!event.result) {
+                    if (lastDraggedShip == null) {
+                        v.visibility = VISIBLE
+                    } else {
+                        this.addShip(
+                            lastDraggedShip!!.length,
+                            lastDraggedShip!!.id,
+                            lastDraggedShip!!.position.x,
+                            lastDraggedShip!!.position.y,
+                            v
+                        )
+                    }
+                }
+                true
+            }
+            else -> false
+        }
     }
 
     override fun onDraw(canvas: Canvas?) {
@@ -229,12 +276,11 @@ class GameFieldView(context: Context, attributeSet: AttributeSet?) : View(contex
     }
 
     private fun addShip(length: Int, shipId: Int, x: Int, y: Int, v: View): Boolean {
-        // TODO: add ghost ship
-        val tempShip = Ship(length, Point(x, y), Orientation.HORIZONTAL, shipId)
+        val ship = Ship(length, Point(x, y), Orientation.HORIZONTAL, shipId)
 
-        if (validateShipPosition(tempShip)) {
-            ships.add(tempShip)
-            shipToViewMap[tempShip] = v
+        if (validateShipPosition(ship)) {
+            ships.add(ship)
+            shipToViewMap[ship] = v
             v.visibility = GONE
             return true
         }
@@ -256,22 +302,19 @@ class GameFieldView(context: Context, attributeSet: AttributeSet?) : View(contex
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
-        val x = event.x
-        val y = event.y
-        val i = ((x - offsetX) / cellSize).toInt()
-        val j = ((y - offsetY) / cellSize).toInt()
+        val x = ((event.x - offsetX) / cellSize).toInt()
+        val y = ((event.y - offsetY) / cellSize).toInt()
 
         val ship = ships.find { ship ->
             when (ship.orientation) {
                 Orientation.VERTICAL -> {
-                    i == ship.position.x && j in ship.position.y until ship.position.y + ship.length
+                    x == ship.position.x && y in ship.position.y until ship.position.y + ship.length
                 }
                 Orientation.HORIZONTAL -> {
-                    j == ship.position.y && i in ship.position.x until ship.position.x + ship.length
+                    y == ship.position.y && x in ship.position.x until ship.position.x + ship.length
                 }
             }
         }
-
 
         when (event.action) {
             MotionEvent.ACTION_MOVE -> {
@@ -285,7 +328,7 @@ class GameFieldView(context: Context, attributeSet: AttributeSet?) : View(contex
 
             MotionEvent.ACTION_UP -> {
                 this.performClick()
-                Log.d("TAP", "($i;$j)")
+                Log.d("TAP", "($x;$y)")
 
                 if (ship != null) {
                     // TODO: perform rotation
@@ -294,11 +337,10 @@ class GameFieldView(context: Context, attributeSet: AttributeSet?) : View(contex
             }
         }
         previousTouchAction = event.action
-
         return true
     }
 
-    fun setOnShipDrag(function: (Ship, View) -> Unit) {
+    fun addOnShipDragListener(function: (Ship, View) -> Unit) {
         onShipDragCallbacks.add(function)
     }
 }
