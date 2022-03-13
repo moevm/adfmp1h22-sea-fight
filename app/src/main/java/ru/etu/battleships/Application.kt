@@ -1,6 +1,5 @@
 package ru.etu.battleships
 
-import android.util.Log
 import android.app.Application as BaseApplication
 
 class Application: BaseApplication() {

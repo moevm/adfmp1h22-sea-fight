@@ -2,10 +2,7 @@ package ru.etu.battleships
 
 import android.content.ClipData
 import android.content.Context
-import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.Paint
-import android.graphics.RectF
+import android.graphics.*
 import android.util.AttributeSet
 import android.util.Log
 import android.view.DragEvent
@@ -22,6 +19,7 @@ class GameFieldView(context: Context, attributeSet: AttributeSet?) : View(contex
 
     private val fillPaint = Paint()
     private val strokePaint = Paint()
+    private val highlighterPaint = Paint()
     private val textPaint = Paint()
 
     private val strokeRatio = 1f / 10f
@@ -36,6 +34,8 @@ class GameFieldView(context: Context, attributeSet: AttributeSet?) : View(contex
     private val onShipDragCallbacks: MutableList<(Ship, View) -> Unit> = mutableListOf()
     private var previousTouchAction = MotionEvent.ACTION_UP
 
+    private val highlighter = RectF(0f, 0f, 0f, 0f)
+
     private var lastDraggedShip: Ship? = null
 
     init {
@@ -45,6 +45,10 @@ class GameFieldView(context: Context, attributeSet: AttributeSet?) : View(contex
         strokePaint.style = Paint.Style.STROKE
         strokePaint.color = Color.BLACK
         strokePaint.strokeCap = Paint.Cap.SQUARE
+
+        highlighterPaint.style = Paint.Style.STROKE
+        highlighterPaint.color = Color.RED
+        highlighterPaint.strokeJoin = Paint.Join.ROUND
 
         textPaint.style = Paint.Style.FILL
         textPaint.color = Color.BLACK
@@ -113,6 +117,7 @@ class GameFieldView(context: Context, attributeSet: AttributeSet?) : View(contex
         this.offsetX = (w - lowestSide).toFloat() / 2f + drawStep
         this.offsetY = (h - lowestSide).toFloat() / 2f + drawStep
         strokePaint.strokeWidth = drawStep * 2
+        highlighterPaint.strokeWidth = drawStep * 2
 
         this.cellSize = strokePaint.strokeWidth / this.strokeRatio
 
@@ -126,27 +131,59 @@ class GameFieldView(context: Context, attributeSet: AttributeSet?) : View(contex
             }
             DragEvent.ACTION_DRAG_ENTERED -> {
                 invalidate()
+
+                // TODO: create child of ImageView and add ship properties to it
+                val v = event.localState as View
+                val length = v.resources.getResourceName(v.id).split("/")[1].split("_")[1].toInt()
+
+                val p = length*cellSize*cellSize
+                val dashGapSize = p / kotlin.math.ceil(p / cellSize * 2)
+                highlighterPaint.pathEffect = DashPathEffect(
+                    floatArrayOf(dashGapSize*0.5f, dashGapSize*0.5f), 0f
+                )
+
                 true
             }
-            DragEvent.ACTION_DRAG_LOCATION -> true
+            DragEvent.ACTION_DRAG_LOCATION -> {
+                // TODO: create child of ImageView and add ship properties to it
+                val v = event.localState as View
+                val (length, shipId) = v.resources.getResourceName(v.id).split("/")[1].split("_").slice(1..2).map { it.toInt() }
+                val x = ((event.x - offsetX) / cellSize).toInt() - length / 2
+                val y = ((event.y - offsetY) / cellSize).toInt()
+
+                val ship = Ship(length, Point(x, y), Orientation.HORIZONTAL, shipId)
+                highlighterPaint.color = if (validateShipPosition(ship)) {
+                    Color.GREEN
+                } else {
+                    Color.RED
+                }
+                highlighter.set(
+                    x * cellSize,
+                    y * cellSize,
+                    (x + length) * cellSize,
+                    (y + 1) * cellSize
+                )
+                highlighter.offset(offsetX, offsetY)
+                invalidate()
+                true
+            }
             DragEvent.ACTION_DRAG_EXITED -> {
+                highlighter.set(0f, 0f, 0f, 0f)
                 invalidate()
                 true
             }
             DragEvent.ACTION_DROP -> {
                 val dragData = event.clipData.getItemAt(0).text
 
-                invalidate()
-
                 val v = event.localState as View
                 val (length, shipId) = dragData.split("_").map { it.toInt() }
                 val x = ((event.x - offsetX) / cellSize).toInt() - length / 2
                 val y = ((event.y - offsetY) / cellSize).toInt()
 
+                invalidate()
                 this.addShip(length, shipId, x, y, v)
             }
             DragEvent.ACTION_DRAG_ENDED -> {
-                invalidate()
                 val v = event.localState as View
                 if (!event.result) {
                     if (lastDraggedShip == null) {
@@ -161,6 +198,8 @@ class GameFieldView(context: Context, attributeSet: AttributeSet?) : View(contex
                         )
                     }
                 }
+                highlighter.set(0f, 0f, 0f, 0f)
+                invalidate()
                 true
             }
             else -> false
@@ -175,6 +214,8 @@ class GameFieldView(context: Context, attributeSet: AttributeSet?) : View(contex
             drawText(canvas, i.toString(), i, 0)
             drawText(canvas, "ABCDEFGHIK"[i - 1].toString(), 0, i)
         }
+
+        canvas?.drawRect(highlighter, highlighterPaint)
 
         ships.forEach { ship ->
             val x = ship.position.x
