@@ -54,6 +54,10 @@ class GameFieldView(context: Context, attributeSet: AttributeSet?) : View(contex
         }
     }
 
+    fun getShips(): Set<Ship> {
+        return ships.toSet()
+    }
+
     fun setupPullView(pullLayout: LinearLayout) {
         pullLayout.setOnDragListener { view, event ->
             when (event.action) {

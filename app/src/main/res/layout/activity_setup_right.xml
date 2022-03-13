@@ -82,6 +82,7 @@
 
             <EditText
                 style="@style/TextInput"
+                android:id="@+id/et_player_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -91,7 +92,7 @@
                 android:inputType="textPersonName"
                 android:autofillHints="username"
                 android:imeOptions="actionDone|flagNoExtractUi|flagNoFullscreen"
-                android:hint="@string/nickname_hint"
+                android:hint="@string/nickname_hint_2"
                 />
 
         </androidx.constraintlayout.widget.ConstraintLayout>

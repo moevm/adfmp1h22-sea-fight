@@ -91,7 +91,7 @@
                 android:inputType="textPersonName"
                 android:autofillHints="username"
                 android:imeOptions="actionDone|flagNoExtractUi|flagNoFullscreen"
-                android:hint="@string/nickname_hint"
+                android:hint="@string/nickname_hint_1"
                 />
 
         </androidx.constraintlayout.widget.ConstraintLayout>

@@ -2,6 +2,7 @@ package ru.etu.battleships
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -33,6 +34,10 @@ class Game : AppCompatActivity() {
                 }
             }
         }
+
+        val app = application as Application
+        Log.d("PLAYER", "player 1 name: ${app.player1.name}")
+        Log.d("PLAYER", "player 2 name: ${app.player2.name}")
     }
 
     override fun onBackPressed() {
