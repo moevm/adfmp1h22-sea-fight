@@ -2,7 +2,11 @@ package ru.etu.battleships
 
 import android.content.ClipData
 import android.content.Context
-import android.graphics.*
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.Paint
+import android.graphics.RectF
+import android.graphics.DashPathEffect
 import android.util.AttributeSet
 import android.util.Log
 import android.view.DragEvent
@@ -38,6 +42,13 @@ class GameFieldView(context: Context, attributeSet: AttributeSet?) : View(contex
 
     private var lastDraggedShip: Ship? = null
 
+    private var pressedX = 0f
+    private var pressedY = 0f
+
+    private val onTapListenerCallbacks: MutableList<(Point) -> Unit> = mutableListOf()
+
+    private val hitCells: MutableList<Point> = mutableListOf()
+
     init {
         fillPaint.style = Paint.Style.FILL
         fillPaint.color = Color.WHITE
@@ -61,6 +72,8 @@ class GameFieldView(context: Context, attributeSet: AttributeSet?) : View(contex
     fun getShips(): Set<Ship> {
         return ships.toSet()
     }
+
+    fun addShips(newShips: Set<Ship>) = ships.addAll(newShips)
 
     fun setupPullView(pullLayout: LinearLayout) {
         pullLayout.setOnDragListener { view, event ->
@@ -136,10 +149,10 @@ class GameFieldView(context: Context, attributeSet: AttributeSet?) : View(contex
                 val v = event.localState as View
                 val length = v.resources.getResourceName(v.id).split("/")[1].split("_")[1].toInt()
 
-                val p = length*cellSize*cellSize
+                val p = length * cellSize * cellSize
                 val dashGapSize = p / kotlin.math.ceil(p / cellSize * 2)
                 highlighterPaint.pathEffect = DashPathEffect(
-                    floatArrayOf(dashGapSize*0.5f, dashGapSize*0.5f), 0f
+                    floatArrayOf(dashGapSize * 0.5f, dashGapSize * 0.5f), 0f
                 )
 
                 true
@@ -147,7 +160,9 @@ class GameFieldView(context: Context, attributeSet: AttributeSet?) : View(contex
             DragEvent.ACTION_DRAG_LOCATION -> {
                 // TODO: create child of ImageView and add ship properties to it
                 val v = event.localState as View
-                val (length, shipId) = v.resources.getResourceName(v.id).split("/")[1].split("_").slice(1..2).map { it.toInt() }
+                val (length, shipId) = v.resources.getResourceName(v.id)
+                    .split("/")[1].split("_")
+                    .slice(1..2).map { it.toInt() }
                 val x = ((event.x - offsetX) / cellSize).toInt() - length / 2
                 val y = ((event.y - offsetY) / cellSize).toInt()
 
@@ -231,6 +246,10 @@ class GameFieldView(context: Context, attributeSet: AttributeSet?) : View(contex
                 }
             }
         }
+
+        hitCells.forEach {
+            drawText(canvas, "X", it.x, it.y)
+        }
     }
 
     private fun drawField(canvas: Canvas?) {
@@ -287,8 +306,8 @@ class GameFieldView(context: Context, attributeSet: AttributeSet?) : View(contex
         if (
             startCurrentPoint.x < 1 ||
             startCurrentPoint.y < 1 ||
-            endCurrentPoint.x > 11 ||
-            endCurrentPoint.y > 11
+            endCurrentPoint.x > 10 ||
+            endCurrentPoint.y > 10
         ) {
             return false
         }
@@ -337,13 +356,23 @@ class GameFieldView(context: Context, attributeSet: AttributeSet?) : View(contex
         return ships.remove(ship)
     }
 
-    fun allShipsArePlaced() = ships.sumOf { it.length } == (4 * 1 + 3 * 2 + 2 * 3 + 1 * 4)
+    // TODO: remove true, need for quick testing
+    fun allShipsArePlaced() = true
+//        ships.sumOf { it.length } == (4 * 1 + 3 * 2 + 2 * 3 + 1 * 4)
 
     fun rotateLastShip(ship: Ship) {
         ship.rotate()
         if (!validateShipPosition(ship)) {
             ship.rotate()
         }
+    }
+
+    fun hitCell(cell: Point): Boolean {
+        if (cell.x < 1 || cell.y < 1 || cell.x > 10 || cell.y > 10) {
+            return false
+        }
+        hitCells.add(cell)
+        return true
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
@@ -362,22 +391,35 @@ class GameFieldView(context: Context, attributeSet: AttributeSet?) : View(contex
         }
 
         when (event.action) {
-            MotionEvent.ACTION_MOVE -> {
-                if (ship != null && previousTouchAction == MotionEvent.ACTION_DOWN) {
-                    lastDraggedShip = ship
-                    onShipDragCallbacks.forEach { callback ->
-                        callback(ship, shipToViewMap[ship]!!)
-                    }
-                }
+            MotionEvent.ACTION_DOWN -> {
+                pressedX = event.x
+                pressedY = event.y
             }
 
             MotionEvent.ACTION_UP -> {
                 this.performClick()
                 Log.d("TAP", "($x;$y)")
-
+                onTapListenerCallbacks.forEach { callback ->
+                    callback(Point(x, y))
+                }
                 if (ship != null) {
                     // TODO: perform rotation
-                    Log.d("TAP", "${ship.length}_${ship.id} - (${ship.position.x}; ${ship.position.y})")
+                    Log.d(
+                        "TAP",
+                        "${ship.length}_${ship.id} - (${ship.position.x}; ${ship.position.y})"
+                    )
+                }
+            }
+
+            MotionEvent.ACTION_MOVE -> {
+                if (ship != null &&
+                    (event.x - pressedX) !in -5f..5f &&
+                    (event.y - pressedY) !in -5f..5f
+                ) {
+                    lastDraggedShip = ship
+                    onShipDragCallbacks.forEach { callback ->
+                        callback(ship, shipToViewMap[ship]!!)
+                    }
                 }
             }
         }
@@ -387,5 +429,9 @@ class GameFieldView(context: Context, attributeSet: AttributeSet?) : View(contex
 
     fun addOnShipDragListener(function: (Ship, View) -> Unit) {
         onShipDragCallbacks.add(function)
+    }
+
+    fun setOnTapListener(function: (Point) -> Unit) {
+        onTapListenerCallbacks.add(function)
     }
 }

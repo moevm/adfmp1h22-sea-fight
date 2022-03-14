@@ -2,9 +2,9 @@ package ru.etu.battleships
 
 import android.app.Application as BaseApplication
 
-class Application: BaseApplication() {
+class Application : BaseApplication() {
     class Player(val name: String = "", val ships: Set<Ship> = emptySet()) {
-        constructor(player: Player): this(player.name, player.ships)
+        constructor(player: Player) : this(player.name, player.ships)
     }
 
     var player1 = Player()
@@ -20,5 +20,4 @@ class Application: BaseApplication() {
     fun setPlayer2State(username: String, ships: Set<Ship>) {
         player2 = Player(username, ships)
     }
-
 }

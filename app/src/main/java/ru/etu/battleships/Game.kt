@@ -18,6 +18,8 @@ class Game : AppCompatActivity() {
         binding = ActivityGameBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        val app = application as Application
+
         binding.apply {
             btBack.setOnClickListener {
                 this@Game.openDialog(resources.getString(R.string.back_dialog_message)) {
@@ -33,9 +35,26 @@ class Game : AppCompatActivity() {
                     exitProcess(0)
                 }
             }
+
+            leftPlayer.addShips(app.player1.ships)
+            rightPlayer.addShips(app.player2.ships)
+
+            leftPlayer.invalidate()
+            rightPlayer.invalidate()
+
+            leftPlayer.setOnTapListener { point: Point ->
+                Log.d("TAP", "left player | (${point.x};${point.y})")
+                leftPlayer.hitCell(point)
+                leftPlayer.invalidate()
+            }
+
+            rightPlayer.setOnTapListener { point: Point ->
+                Log.d("TAP", "right player | (${point.x};${point.y})")
+                rightPlayer.hitCell(point)
+                rightPlayer.invalidate()
+            }
         }
 
-        val app = application as Application
         Log.d("PLAYER", "player 1 name: ${app.player1.name}")
         Log.d("PLAYER", "player 2 name: ${app.player2.name}")
     }
