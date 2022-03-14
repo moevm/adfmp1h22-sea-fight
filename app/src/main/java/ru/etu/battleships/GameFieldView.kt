@@ -69,9 +69,7 @@ class GameFieldView(context: Context, attributeSet: AttributeSet?) : View(contex
         }
     }
 
-    fun getShips(): Set<Ship> {
-        return ships.toSet()
-    }
+    fun getShips() = ships.toSet()
 
     fun addShips(newShips: Set<Ship>) = ships.addAll(newShips)
 
