@@ -12,7 +12,6 @@ class Application : BaseApplication() {
     var player2 = Player()
         get() = Player(field)
 
-
     fun setPlayer1State(username: String, ships: Set<Ship>) {
         player1 = Player(username, ships)
     }
