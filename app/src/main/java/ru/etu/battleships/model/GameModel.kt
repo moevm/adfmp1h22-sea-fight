@@ -82,7 +82,7 @@ class GameModel(listOfShips: List<Any>) {
             setCell(x, y, CellState.HIT)
             var killed = false
             var vertical = false
-            var length = 1
+            var length: Int
             if (
                 getCell(x, y + 1).isEndCell() &&
                 getCell(x, y - 1).isEndCell() &&
