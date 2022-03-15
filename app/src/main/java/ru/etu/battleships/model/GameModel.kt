@@ -1,4 +1,4 @@
-package ru.etu.battleships
+package ru.etu.battleships.model
 
 import java.lang.IllegalStateException
 

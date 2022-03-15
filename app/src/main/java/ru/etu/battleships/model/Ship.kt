@@ -1,9 +1,4 @@
-package ru.etu.battleships
-
-data class Point(
-    val x: Int,
-    val y: Int,
-)
+package ru.etu.battleships.model
 
 data class Ship(
     val length: Int,

@@ -1,4 +1,4 @@
-package ru.etu.battleships
+package ru.etu.battleships.model
 
 enum class CellState(val value: Int) {
     FREE(0),

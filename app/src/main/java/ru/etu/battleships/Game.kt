@@ -8,6 +8,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import ru.etu.battleships.databinding.ActivityGameBinding
 import ru.etu.battleships.databinding.DialogQuestionBinding
+import ru.etu.battleships.model.Point
 import kotlin.system.exitProcess
 
 class Game : AppCompatActivity() {

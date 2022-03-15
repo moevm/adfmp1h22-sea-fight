@@ -15,6 +15,7 @@ import android.view.View
 import android.widget.LinearLayout
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.forEach
+import ru.etu.battleships.model.Orientation
 
 class GameFieldView(context: Context, attributeSet: AttributeSet?) : View(context, attributeSet) {
     companion object {

@@ -2,6 +2,8 @@ package ru.etu.battleships
 
 import junit.framework.TestCase
 import org.junit.Assert
+import ru.etu.battleships.model.CellState
+import ru.etu.battleships.model.GameModel
 
 class GameModelTest : TestCase() {
     private val initField: List<List<Int>> = listOf(
