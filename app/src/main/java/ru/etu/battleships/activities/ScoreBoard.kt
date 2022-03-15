@@ -16,7 +16,6 @@ import ru.etu.battleships.databinding.ScoreBoardItemBinding
 import ru.etu.battleships.model.UserScore
 import kotlin.system.exitProcess
 
-
 class ScoreBoard : AppCompatActivity() {
     class ScoreboardAdapter : RecyclerView.Adapter<ScoreboardAdapter.ScoreboardHolder>() {
         private var userScoreList: List<UserScore> = ArrayList()

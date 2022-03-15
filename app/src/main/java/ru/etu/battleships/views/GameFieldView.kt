@@ -10,7 +10,6 @@ import android.view.View
 import androidx.core.content.res.ResourcesCompat
 import ru.etu.battleships.R
 
-
 open class GameFieldView(context: Context, attributeSet: AttributeSet?) :
     View(context, attributeSet) {
     companion object {

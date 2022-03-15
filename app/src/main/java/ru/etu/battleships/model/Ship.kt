@@ -1,6 +1,5 @@
 package ru.etu.battleships.model
 
-
 data class Ship(
     val length: Int,
     val position: Point,
