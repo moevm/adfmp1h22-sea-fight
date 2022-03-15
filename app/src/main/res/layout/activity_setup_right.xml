@@ -103,7 +103,7 @@
             android:layout_weight="5"
             android:gravity="center">
 
-            <ru.etu.battleships.views.GameFieldView
+            <ru.etu.battleships.views.SetupGameFieldView
                 android:id="@+id/gameFieldView"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
