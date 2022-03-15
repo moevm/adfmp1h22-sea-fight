@@ -2,7 +2,6 @@ package ru.etu.battleships.model
 
 import java.lang.IllegalStateException
 
-
 class GameModel(listOfShips: List<Any>) {
     private val matrix: MutableList<MutableList<CellState>> =
         MutableList(10) { MutableList(10) { CellState.FREE } }

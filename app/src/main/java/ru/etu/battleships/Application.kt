@@ -1,8 +1,8 @@
 package ru.etu.battleships
 
-import android.app.Application as BaseApplication
 import ru.etu.battleships.model.Player
 import ru.etu.battleships.model.Ship
+import android.app.Application as BaseApplication
 
 class Application : BaseApplication() {
     var player1 = Player()

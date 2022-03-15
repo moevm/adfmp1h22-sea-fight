@@ -67,8 +67,8 @@ class SetupGameFieldView(context: Context, attributeSet: AttributeSet?) :
                     true
                 }
                 DragEvent.ACTION_DROP -> {
-                    val v = event.localState as View
-                    v.visibility = VISIBLE
+                    val view = event.localState as View
+                    view.visibility = VISIBLE
                     view.invalidate()
                     true
                 }
@@ -106,8 +106,8 @@ class SetupGameFieldView(context: Context, attributeSet: AttributeSet?) :
                 invalidate()
 
                 // TODO: create child of ImageView and add ship properties to it
-                val v = event.localState as View
-                val length = v.resources.getResourceName(v.id).split("/")[1].split("_")[1].toInt()
+                val view = event.localState as View
+                val length = view.resources.getResourceName(view.id).split("/")[1].split("_")[1].toInt()
 
                 val p = length * cellSize * cellSize
                 val dashGapSize = p / kotlin.math.ceil(p / cellSize * 2)
@@ -119,12 +119,12 @@ class SetupGameFieldView(context: Context, attributeSet: AttributeSet?) :
             }
             DragEvent.ACTION_DRAG_LOCATION -> {
                 // TODO: create child of ImageView and add ship properties to it
-                val v = event.localState as View
-                val (length, shipId) = v.resources.getResourceName(v.id)
+                val view = event.localState as View
+                val (length, shipId) = view.resources.getResourceName(view.id)
                     .split("/")[1].split("_")
                     .slice(1..2).map { it.toInt() }
                 var (x, y) = coordsViewToGame(event.x, event.y)
-                x -= length/2
+                x -= length / 2
 
                 val ship = Ship(length, Point(x, y), Orientation.HORIZONTAL, shipId)
                 highlighterPaint.color = if (validateShipPosition(ship)) {
@@ -145,27 +145,27 @@ class SetupGameFieldView(context: Context, attributeSet: AttributeSet?) :
             DragEvent.ACTION_DROP -> {
                 val dragData = event.clipData.getItemAt(0).text
 
-                val v = event.localState as View
+                val view = event.localState as View
                 val (length, shipId) = dragData.split("_").map { it.toInt() }
 
                 var (x, y) = coordsViewToGame(event.x, event.y)
                 x -= length / 2
 
                 invalidate()
-                this.addShip(length, shipId, x, y, v)
+                this.addShip(length, shipId, x, y, view)
             }
             DragEvent.ACTION_DRAG_ENDED -> {
-                val v = event.localState as View
+                val view = event.localState as View
                 if (!event.result) {
                     if (lastDraggedShip == null) {
-                        v.visibility = VISIBLE
+                        view.visibility = VISIBLE
                     } else {
                         this.addShip(
                             lastDraggedShip!!.length,
                             lastDraggedShip!!.id,
                             lastDraggedShip!!.position.x,
                             lastDraggedShip!!.position.y,
-                            v
+                            view
                         )
                     }
                 }
@@ -221,13 +221,13 @@ class SetupGameFieldView(context: Context, attributeSet: AttributeSet?) :
         return true
     }
 
-    private fun addShip(length: Int, shipId: Int, x: Int, y: Int, v: View): Boolean {
+    private fun addShip(length: Int, shipId: Int, x: Int, y: Int, view: View): Boolean {
         val ship = Ship(length, Point(x, y), Orientation.HORIZONTAL, shipId)
 
         if (validateShipPosition(ship)) {
             ships.add(ship)
-            shipToViewMap[ship] = v
-            v.visibility = GONE
+            shipToViewMap[ship] = view
+            view.visibility = GONE
             return true
         }
         return false

@@ -11,7 +11,8 @@ import androidx.core.content.res.ResourcesCompat
 import ru.etu.battleships.R
 
 
-open class GameFieldView(context: Context, attributeSet: AttributeSet?) : View(context, attributeSet) {
+open class GameFieldView(context: Context, attributeSet: AttributeSet?) :
+    View(context, attributeSet) {
     companion object {
         const val MIME_TYPE = "battleship/ship"
     }
@@ -80,7 +81,7 @@ open class GameFieldView(context: Context, attributeSet: AttributeSet?) : View(c
             drawText(canvas, "ABCDEFGHIK"[i - 1].toString(), 0, i)
         }
 
-        if (canvas != null){
+        if (canvas != null) {
             drawState(canvas)
         }
     }
@@ -129,5 +130,6 @@ open class GameFieldView(context: Context, attributeSet: AttributeSet?) : View(c
     }
 
     @Suppress("MemberVisibilityCanBePrivate")
-    protected open fun drawState(canvas: Canvas) {}
+    protected open fun drawState(canvas: Canvas) {
+    }
 }

@@ -32,7 +32,6 @@ class PlayingGameFieldView(context: Context, attributeSet: AttributeSet?) :
         val x = ((event.x - offsetX) / cellSize).toInt()
         val y = ((event.y - offsetY) / cellSize).toInt()
 
-
         when (event.action) {
             MotionEvent.ACTION_DOWN -> {
                 // TODO: draw lines crossed at the cell
