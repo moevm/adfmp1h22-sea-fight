@@ -1,4 +1,4 @@
-package ru.etu.battleships
+package ru.etu.battleships.views
 
 import android.content.Context
 import android.graphics.Canvas
@@ -8,17 +8,27 @@ import android.graphics.RectF
 import android.util.AttributeSet
 import android.view.View
 import androidx.core.content.res.ResourcesCompat
+import ru.etu.battleships.R
 
-class GameFieldView(context: Context, attributeSet: AttributeSet?) : View(context, attributeSet) {
+open class GameFieldView(context: Context, attributeSet: AttributeSet?) :
+    View(context, attributeSet) {
+    companion object {
+        const val MIME_TYPE = "battleship/ship"
+    }
+
     private val fillPaint = Paint()
     private val strokePaint = Paint()
     private val textPaint = Paint()
 
     private val strokeRatio = 1f / 10f
 
-    private var offsetX = 0f
-    private var offsetY = 0f
-    private var cellSize = 0f
+    // TODO: only cellSize guy should be visible, play around with coords converter to rid off offsets in subclasses
+    protected var offsetX = 0f
+        private set
+    protected var offsetY = 0f
+        private set
+    protected var cellSize = 0.0f
+        private set
 
     init {
         fillPaint.style = Paint.Style.FILL
@@ -36,6 +46,16 @@ class GameFieldView(context: Context, attributeSet: AttributeSet?) : View(contex
         }
     }
 
+    protected fun coordsGameToView(x: Int, y: Int) = floatArrayOf(
+        x * cellSize + offsetX,
+        y * cellSize + offsetY
+    )
+
+    protected fun coordsViewToGame(x: Float, y: Float) = intArrayOf(
+        ((x - offsetX) / cellSize).toInt(),
+        ((y - offsetY) / cellSize).toInt()
+    )
+
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
 
@@ -51,13 +71,17 @@ class GameFieldView(context: Context, attributeSet: AttributeSet?) : View(contex
         this.textPaint.textSize = this.cellSize * 0.7f
     }
 
-    override fun onDraw(canvas: Canvas?) {
+    final override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
 
         drawField(canvas)
         for (i in 1..10) {
             drawText(canvas, i.toString(), i, 0)
             drawText(canvas, "ABCDEFGHIK"[i - 1].toString(), 0, i)
+        }
+
+        if (canvas != null) {
+            drawState(canvas)
         }
     }
 
@@ -83,7 +107,7 @@ class GameFieldView(context: Context, attributeSet: AttributeSet?) : View(contex
         }
     }
 
-    private fun drawText(canvas: Canvas?, text: String, x: Int, y: Int) {
+    protected fun drawText(canvas: Canvas?, text: String, x: Int, y: Int) {
         val cellRect = RectF(
             offsetX + x * cellSize,
             offsetY + y * cellSize,
@@ -102,5 +126,9 @@ class GameFieldView(context: Context, attributeSet: AttributeSet?) : View(contex
         println(textPaint.typeface)
 
         canvas?.drawText(text, bounds.left, bounds.top - textPaint.ascent(), textPaint)
+    }
+
+    @Suppress("MemberVisibilityCanBePrivate")
+    protected open fun drawState(canvas: Canvas) {
     }
 }

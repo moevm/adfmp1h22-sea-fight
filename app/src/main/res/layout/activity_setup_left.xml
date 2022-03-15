@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SetupLeft">
+    tools:context=".activities.SetupLeft">
 
     <ImageView
         android:id="@+id/backgroundImageView"
@@ -65,7 +65,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-
             <ImageButton
                 android:id="@+id/bt_next"
                 android:contentDescription="@string/next_button"
@@ -81,6 +80,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <EditText
+                android:id="@+id/et_player_name"
                 style="@style/TextInput"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -90,8 +90,8 @@
                 app:layout_constraintEnd_toStartOf="@id/right_guideline"
                 android:inputType="textPersonName"
                 android:autofillHints="username"
-                android:imeOptions="actionDone"
-                android:hint="@string/nickname_hint"
+                android:imeOptions="actionDone|flagNoExtractUi|flagNoFullscreen"
+                android:hint="@string/nickname_hint_1"
                 />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -102,8 +102,8 @@
             android:layout_weight="5"
             android:gravity="center">
 
-            <ru.etu.battleships.GameFieldView
-                android:id="@+id/mockView"
+            <ru.etu.battleships.views.SetupGameFieldView
+                android:id="@+id/gameFieldView"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:layout_marginStart="10dp"
@@ -111,167 +111,179 @@
                 android:layout_marginEnd="5dp"
                 android:layout_marginBottom="10dp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/linearLayout"
+                app:layout_constraintEnd_toStartOf="@+id/ll_tools"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/linearLayout"
+            <LinearLayout
+                android:id="@+id/ll_tools"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:layout_marginStart="5dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginEnd="10dp"
                 android:layout_marginBottom="10dp"
+                android:orientation="vertical"
                 app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintDimensionRatio="1:1"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/mockView"
-                app:layout_constraintTop_toTopOf="parent">
+                app:layout_constraintStart_toEndOf="@+id/gameFieldView"
+                app:layout_constraintTop_toTopOf="parent"
+                android:weightSum="11">
 
-                <androidx.constraintlayout.widget.Guideline
-                    android:id="@+id/ratio_guideline"
-                    android:layout_width="wrap_content"
+                <Space
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_weight="2"/>
+
+                <LinearLayout
+                    android:id="@+id/ll_ships_4"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:gravity="center"
                     android:orientation="horizontal"
-                    app:layout_constraintGuide_percent=".8" />
+                    android:layout_weight="1"
+                    android:background="@color/blue_a50">
+
+                    <ImageView
+                        android:id="@+id/ship_4_1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:srcCompat="@drawable/ic_ship_4" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/ll_ships_3"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:layout_weight="1"
+                    android:background="@color/blue_a50"
+                    android:divider="@drawable/horizontal_divider"
+                    android:showDividers="middle">
+
+                    <ImageView
+                        android:id="@+id/ship_3_1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:srcCompat="@drawable/ic_ship_3" />
+
+                    <ImageView
+                        android:id="@+id/ship_3_2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:srcCompat="@drawable/ic_ship_3" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/ll_ships_2"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:layout_weight="1"
+                    android:divider="@drawable/horizontal_divider"
+                    android:background="@color/blue_a50"
+                    android:showDividers="middle">
+
+                    <ImageView
+                        android:id="@+id/ship_2_1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:srcCompat="@drawable/ic_ship_2" />
+
+                    <ImageView
+                        android:id="@+id/ship_2_2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:srcCompat="@drawable/ic_ship_2" />
+
+                    <ImageView
+                        android:id="@+id/ship_2_3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:srcCompat="@drawable/ic_ship_2" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/ll_ships_1"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:layout_weight="1"
+                    android:background="@color/blue_a50"
+                    android:divider="@drawable/horizontal_divider"
+                    android:showDividers="middle">
+
+                    <ImageView
+                        android:id="@+id/ship_1_1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        app:srcCompat="@drawable/ic_ship_1" />
+
+                    <ImageView
+                        android:id="@+id/ship_1_2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:srcCompat="@drawable/ic_ship_1" />
+
+                    <ImageView
+                        android:id="@+id/ship_1_3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:srcCompat="@drawable/ic_ship_1" />
+
+                    <ImageView
+                        android:id="@+id/ship_1_4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:srcCompat="@drawable/ic_ship_1" />
+                </LinearLayout>
+
+                <Space
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"/>
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:layout_marginBottom="10dp"
-                    android:background="?colorPrimary"
-                    android:orientation="vertical"
-                    app:layout_constraintBottom_toTopOf="@id/ratio_guideline"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="1"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
+                    android:layout_weight="3"
+                    android:orientation="horizontal">
 
+                    <ImageButton
+                        android:id="@+id/shuffleButton"
+                        android:contentDescription="@string/shuffle_button"
+                        app:srcCompat="@drawable/ic_shuffle"
 
-                    <LinearLayout
-                        android:id="@+id/ll_ships_4"
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="0dp"
-                        android:gravity="center"
-                        android:orientation="horizontal"
-                        app:layout_constraintBottom_toTopOf="@id/ll_ships_3"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent">
-
-                        <ImageView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            app:srcCompat="@drawable/ic_ship_4" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/ll_ships_3"
-                        android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:gravity="center"
-                        android:orientation="horizontal"
-                        app:layout_constraintBottom_toTopOf="@id/ll_ships_2"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/ll_ships_4">
-
-                        <ImageView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            app:srcCompat="@drawable/ic_ship_3" />
-
-                        <ImageView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            app:srcCompat="@drawable/ic_ship_3" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/ll_ships_2"
-                        android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:gravity="center"
-                        android:orientation="horizontal"
-                        app:layout_constraintBottom_toTopOf="@id/ll_ships_1"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/ll_ships_3">
-
-                        <ImageView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            app:srcCompat="@drawable/ic_ship_2" />
-
-                        <ImageView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            app:srcCompat="@drawable/ic_ship_2" />
-
-                        <ImageView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            app:srcCompat="@drawable/ic_ship_2" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/ll_ships_1"
-                        android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:gravity="center"
-                        android:orientation="horizontal"
+                        android:backgroundTint="#0000"
+                        android:scaleType="centerInside"
+                        app:layout_constraintTop_toTopOf="parent"
                         app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/ll_ships_2">
+                        app:layout_constraintDimensionRatio="h, 1:1"
+                        app:layout_constraintLeft_toLeftOf="parent"/>
 
-                        <ImageView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            app:srcCompat="@drawable/ic_ship_1" />
+                    <ImageButton
+                        android:id="@+id/rotateButton"
+                        android:contentDescription="@string/shuffle_button"
+                        app:srcCompat="@drawable/ic_shuffle"
 
-                        <ImageView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            app:srcCompat="@drawable/ic_ship_1" />
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:backgroundTint="#0000"
+                        android:scaleType="centerInside"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintDimensionRatio="h, 1:1"
+                        app:layout_constraintRight_toRightOf="parent"/>
 
-                        <ImageView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            app:srcCompat="@drawable/ic_ship_1" />
-
-                        <ImageView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            app:srcCompat="@drawable/ic_ship_1" />
-                    </LinearLayout>
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
-                <ImageButton
-                    android:id="@+id/shuffleButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="0dp"
-                    android:backgroundTint="#0000"
-                    android:contentDescription="@string/exit_button"
-                    android:scaleType="centerInside"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/ratio_guideline"
-                    app:srcCompat="@drawable/ic_shuffle" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
+            </LinearLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Game">
+    tools:context=".activities.Game">
 
     <ImageView
         android:id="@+id/backgroundImageView"
@@ -176,7 +176,7 @@
         android:orientation="vertical"
         app:layout_constraintGuide_percent=".53"/>
 
-    <ru.etu.battleships.GameFieldView
+    <ru.etu.battleships.views.PlayingGameFieldView
         android:id="@+id/left_player"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -203,7 +203,7 @@
         app:layout_constraintLeft_toRightOf="@id/pointer_left_guideline"
         app:layout_constraintRight_toLeftOf="@id/pointer_right_guideline"/>
 
-    <ru.etu.battleships.GameFieldView
+    <ru.etu.battleships.views.PlayingGameFieldView
         android:id="@+id/right_player"
 
         android:layout_width="0dp"

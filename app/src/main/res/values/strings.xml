@@ -22,6 +22,8 @@
 
     <!--    Preparation state-->
     <string name="nickname_hint">Player</string>
+    <string name="nickname_hint_1">Player 1</string>
+    <string name="nickname_hint_2">Player 2</string>
     <string name="shuffle_button">Shuffle</string>
 
     <!--    Game state-->
@@ -33,4 +35,5 @@
     <string name="back_dialog_message">Are you sure want to return to main menu?</string>
     <string name="accept_button">Yes</string>
     <string name="decline_button">No</string>
+    <string name="not_all_ships_are_placed">Not all ships are placed</string>
 </resources>

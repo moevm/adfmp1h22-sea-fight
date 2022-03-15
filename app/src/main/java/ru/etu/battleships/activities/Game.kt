@@ -1,13 +1,18 @@
-package ru.etu.battleships
+package ru.etu.battleships.activities
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import kotlin.system.exitProcess
+import ru.etu.battleships.Application
+import ru.etu.battleships.R
 import ru.etu.battleships.databinding.ActivityGameBinding
 import ru.etu.battleships.databinding.DialogQuestionBinding
-import kotlin.system.exitProcess
+import ru.etu.battleships.model.Point
+
 
 class Game : AppCompatActivity() {
     private lateinit var binding: ActivityGameBinding
@@ -16,6 +21,8 @@ class Game : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityGameBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        val app = application as Application
 
         binding.apply {
             btBack.setOnClickListener {
@@ -32,7 +39,28 @@ class Game : AppCompatActivity() {
                     exitProcess(0)
                 }
             }
+
+            leftPlayer.addShips(app.player1.ships)
+            rightPlayer.addShips(app.player2.ships)
+
+            leftPlayer.invalidate()
+            rightPlayer.invalidate()
+
+            leftPlayer.setOnTapListener { point: Point ->
+                Log.d("TAP", "left player | (${point.x};${point.y})")
+                leftPlayer.hitCell(point)
+                leftPlayer.invalidate()
+            }
+
+            rightPlayer.setOnTapListener { point: Point ->
+                Log.d("TAP", "right player | (${point.x};${point.y})")
+                rightPlayer.hitCell(point)
+                rightPlayer.invalidate()
+            }
         }
+
+        Log.d("PLAYER", "player 1 name: ${app.player1.name}")
+        Log.d("PLAYER", "player 2 name: ${app.player2.name}")
     }
 
     override fun onBackPressed() {
@@ -52,7 +80,10 @@ class Game : AppCompatActivity() {
             .create()
 
         viewBinding.message.text = message
-        viewBinding.accept.setOnClickListener(acceptListener)
+        viewBinding.accept.setOnClickListener {
+            alertDialog.dismiss()
+            acceptListener.onClick(it)
+        }
         viewBinding.decline.setOnClickListener {
             alertDialog.dismiss()
         }
