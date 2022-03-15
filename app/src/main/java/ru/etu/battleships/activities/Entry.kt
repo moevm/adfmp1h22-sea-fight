@@ -4,12 +4,11 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-
+import kotlin.system.exitProcess
 import ru.etu.battleships.R
 import ru.etu.battleships.databinding.ActivityEntryBinding
 import ru.etu.battleships.databinding.DialogQuestionBinding
 
-import kotlin.system.exitProcess
 
 class Entry : AppCompatActivity() {
     private lateinit var binding: ActivityEntryBinding

@@ -7,12 +7,12 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-
 import ru.etu.battleships.Application
 import ru.etu.battleships.views.GameFieldView
 import ru.etu.battleships.R
 import ru.etu.battleships.databinding.ActivitySetupLeftBinding
 import ru.etu.battleships.databinding.DialogQuestionBinding
+
 
 class SetupLeft : AppCompatActivity() {
     private lateinit var binding: ActivitySetupLeftBinding

@@ -1,14 +1,10 @@
 package ru.etu.battleships
 
 import android.app.Application as BaseApplication
-
+import ru.etu.battleships.model.Player
 import ru.etu.battleships.model.Ship
 
 class Application : BaseApplication() {
-    class Player(val name: String = "", val ships: Set<Ship> = emptySet()) {
-        constructor(player: Player) : this(player.name, player.ships)
-    }
-
     var player1 = Player()
         get() = Player(field)
     var player2 = Player()

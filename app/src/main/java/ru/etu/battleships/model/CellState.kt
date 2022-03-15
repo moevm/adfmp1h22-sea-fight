@@ -1,5 +1,6 @@
 package ru.etu.battleships.model
 
+
 enum class CellState(val value: Int) {
     FREE(0),
     OCCUPIED(1),

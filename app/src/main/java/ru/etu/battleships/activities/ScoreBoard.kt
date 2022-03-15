@@ -9,14 +9,13 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-
+import kotlin.system.exitProcess
 import ru.etu.battleships.R
 import ru.etu.battleships.databinding.ActivityScoreBoardBinding
 import ru.etu.battleships.databinding.DialogQuestionBinding
 import ru.etu.battleships.databinding.ScoreBoardItemBinding
 import ru.etu.battleships.model.UserScore
 
-import kotlin.system.exitProcess
 
 class ScoreBoard : AppCompatActivity() {
     class ScoreboardAdapter : RecyclerView.Adapter<ScoreboardAdapter.ScoreboardHolder>() {

@@ -3,12 +3,11 @@ package ru.etu.battleships.activities
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-
+import kotlin.system.exitProcess
 import ru.etu.battleships.R
 import ru.etu.battleships.databinding.ActivityMenuBinding
 import ru.etu.battleships.databinding.DialogQuestionBinding
 
-import kotlin.system.exitProcess
 
 class Menu : AppCompatActivity() {
     private lateinit var binding: ActivityMenuBinding
