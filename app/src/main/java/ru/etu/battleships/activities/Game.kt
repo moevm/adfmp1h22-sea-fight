@@ -40,8 +40,8 @@ class Game : AppCompatActivity() {
                 }
             }
 
-            leftPlayer.addShips(app.player1.ships)
-            rightPlayer.addShips(app.player2.ships)
+            leftPlayer.initGameField(app.player1.ships)
+            rightPlayer.initGameField(app.player2.ships)
 
             leftPlayer.invalidate()
             rightPlayer.invalidate()

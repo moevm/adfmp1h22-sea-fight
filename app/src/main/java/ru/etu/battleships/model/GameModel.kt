@@ -2,9 +2,23 @@ package ru.etu.battleships.model
 
 import java.lang.IllegalStateException
 
-class GameModel(listOfShips: List<Any>) {
+class GameModel(listOfShips: Set<Ship>) {
     private val matrix: MutableList<MutableList<CellState>> =
         MutableList(10) { MutableList(10) { CellState.FREE } }
+
+    private val onShipKillCallbacks: MutableList<(Ship) -> Unit> = mutableListOf()
+
+    init {
+        listOfShips.forEach { ship ->
+            val pos = ship.position
+            repeat(ship.length) {
+                when (ship.orientation) {
+                    Orientation.HORIZONTAL -> setCell(pos.x + it - 1, pos.y - 1, CellState.OCCUPIED)
+                    Orientation.VERTICAL -> setCell(pos.x - 1, pos.y + it - 1, CellState.OCCUPIED)
+                }
+            }
+        }
+    }
 
     fun setMatrix(matrix: List<List<Int>>) {
         repeat(10) { i ->
@@ -137,6 +151,15 @@ class GameModel(listOfShips: List<Any>) {
             if (killed) {
                 val point = findLeftShipCorner(x, y, vertical)
                 hitAroundCells(point, length, vertical)
+                val orientation = if (vertical) {
+                    Orientation.VERTICAL
+                } else {
+                    Orientation.HORIZONTAL
+                }
+                onShipKillCallbacks.forEach { callback ->
+                    callback(Ship(length, Point(point.x + 1, point.y + 1), orientation, -1))
+                }
+                println(matrix)
             }
             return Pair(true, getCell(x, y))
         }
@@ -180,5 +203,9 @@ class GameModel(listOfShips: List<Any>) {
             }
         }
         throw IllegalStateException()
+    }
+
+    fun setOnShipKilled(function: (Ship) -> Unit) {
+        onShipKillCallbacks.add((function))
     }
 }
