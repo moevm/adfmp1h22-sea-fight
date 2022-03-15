@@ -16,6 +16,10 @@ import android.widget.LinearLayout
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.forEach
 
+import ru.etu.battleships.model.Orientation
+import ru.etu.battleships.model.Point
+import ru.etu.battleships.model.Ship
+
 class GameFieldView(context: Context, attributeSet: AttributeSet?) : View(context, attributeSet) {
     companion object {
         const val MIME_TYPE = "battleship/ship"
@@ -69,9 +73,7 @@ class GameFieldView(context: Context, attributeSet: AttributeSet?) : View(contex
         }
     }
 
-    fun getShips(): Set<Ship> {
-        return ships.toSet()
-    }
+    fun getShips() = ships.toSet()
 
     fun addShips(newShips: Set<Ship>) = ships.addAll(newShips)
 

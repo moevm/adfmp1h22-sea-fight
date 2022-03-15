@@ -1,5 +1,6 @@
 package ru.etu.battleships
 
+import ru.etu.battleships.model.Ship
 import android.app.Application as BaseApplication
 
 class Application : BaseApplication() {

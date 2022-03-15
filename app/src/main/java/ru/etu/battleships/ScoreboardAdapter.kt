@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import ru.etu.battleships.databinding.ScoreBoardItemBinding
+import ru.etu.battleships.model.UserScore
 
 class ScoreboardAdapter : RecyclerView.Adapter<ScoreboardAdapter.ScoreboardHolder>() {
     private var userScoreList: List<UserScore> = ArrayList()

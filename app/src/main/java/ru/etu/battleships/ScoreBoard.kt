@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import ru.etu.battleships.databinding.ActivityScoreBoardBinding
 import ru.etu.battleships.databinding.DialogQuestionBinding
+import ru.etu.battleships.model.UserScore
 import kotlin.system.exitProcess
 
 class ScoreBoard : AppCompatActivity() {
