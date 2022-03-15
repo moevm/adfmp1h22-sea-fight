@@ -1,4 +1,4 @@
-package ru.etu.battleships
+package ru.etu.battleships.activities
 
 import android.content.ClipData
 import android.content.Intent
@@ -6,6 +6,10 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+
+import ru.etu.battleships.Application
+import ru.etu.battleships.views.GameFieldView
+import ru.etu.battleships.R
 import ru.etu.battleships.databinding.ActivitySetupRightBinding
 import ru.etu.battleships.databinding.DialogQuestionBinding
 

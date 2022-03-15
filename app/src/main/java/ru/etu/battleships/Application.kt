@@ -1,7 +1,8 @@
 package ru.etu.battleships
 
-import ru.etu.battleships.model.Ship
 import android.app.Application as BaseApplication
+
+import ru.etu.battleships.model.Ship
 
 class Application : BaseApplication() {
     class Player(val name: String = "", val ships: Set<Ship> = emptySet()) {

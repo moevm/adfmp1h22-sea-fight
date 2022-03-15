@@ -1,4 +1,4 @@
-package ru.etu.battleships
+package ru.etu.battleships.views
 
 import android.content.ClipData
 import android.content.Context
@@ -16,6 +16,7 @@ import android.widget.LinearLayout
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.forEach
 
+import ru.etu.battleships.R
 import ru.etu.battleships.model.Orientation
 import ru.etu.battleships.model.Point
 import ru.etu.battleships.model.Ship

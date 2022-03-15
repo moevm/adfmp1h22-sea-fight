@@ -5,7 +5,7 @@
     android:id="@+id/rootLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Entry">
+    tools:context=".activities.Entry">
 
     <ImageView
         android:id="@+id/backgroundImageView"

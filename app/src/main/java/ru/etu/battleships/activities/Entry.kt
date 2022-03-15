@@ -1,11 +1,14 @@
-package ru.etu.battleships
+package ru.etu.battleships.activities
 
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+
+import ru.etu.battleships.R
 import ru.etu.battleships.databinding.ActivityEntryBinding
 import ru.etu.battleships.databinding.DialogQuestionBinding
+
 import kotlin.system.exitProcess
 
 class Entry : AppCompatActivity() {
