@@ -238,9 +238,7 @@ class SetupGameFieldView(context: Context, attributeSet: AttributeSet?) :
         return ships.remove(ship)
     }
 
-    // TODO: remove true, need for quick testing
-    fun allShipsArePlaced() = true
-//        ships.sumOf { it.length } == (4 * 1 + 3 * 2 + 2 * 3 + 1 * 4)
+    fun allShipsArePlaced() = ships.sumOf { it.length } == (4 * 1 + 3 * 2 + 2 * 3 + 1 * 4)
 
     fun rotateLastShip(ship: Ship) {
         ship.rotate()

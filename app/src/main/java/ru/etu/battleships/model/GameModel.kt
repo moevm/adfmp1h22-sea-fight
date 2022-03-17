@@ -78,7 +78,7 @@ class GameModel(listOfShips: Set<Ship>) {
     }
 
     fun isOver(): Boolean = matrix.flatMap { squashedMatrix ->
-        squashedMatrix.filter { it == CellState.HIT }
+        squashedMatrix.filter { it == CellState.KILLED }
     }.size == (4 * 1 + 3 * 2 + 2 * 3 + 1 * 4)
 
     fun hit(x: Int, y: Int): Pair<Boolean, CellState> {

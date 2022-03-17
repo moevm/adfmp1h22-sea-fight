@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import kotlin.system.exitProcess
@@ -52,6 +53,13 @@ class Game : AppCompatActivity() {
                 if (currentPlayer == 1) {
                     leftPlayer.hitCell(point)
                     val (isKeep, _) = leftPlayer.gameModel!!.hit(point.x - 1, point.y - 1)
+                    if (leftPlayer.gameModel!!.isOver()) {
+                        Toast.makeText(
+                            this@Game,
+                            "Player 1 lost!",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
                     currentPlayer = if (isKeep) {
                         1
                     } else {
@@ -67,6 +75,13 @@ class Game : AppCompatActivity() {
                 if (currentPlayer == 2) {
                     rightPlayer.hitCell(point)
                     val (isKeep, _) = rightPlayer.gameModel!!.hit(point.x - 1, point.y - 1)
+                    if (rightPlayer.gameModel!!.isOver()) {
+                        Toast.makeText(
+                            this@Game,
+                            "Player 2 lost!",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
                     currentPlayer = if (isKeep) {
                         2
                     } else {
