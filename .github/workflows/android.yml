@@ -4,7 +4,7 @@ on: [pull_request, push]
 
 jobs:
   build:
-    name: Build
+    name: Build & Unit Test
     runs-on: ubuntu-latest
 
     steps:
