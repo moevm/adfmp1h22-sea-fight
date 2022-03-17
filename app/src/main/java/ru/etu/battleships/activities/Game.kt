@@ -16,7 +16,7 @@ import ru.etu.battleships.model.Point
 
 class Game : AppCompatActivity() {
     private lateinit var binding: ActivityGameBinding
-    private var currentPlayer = 1
+    private var currentPlayer = 2
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,7 +52,12 @@ class Game : AppCompatActivity() {
                 if (currentPlayer == 1) {
                     leftPlayer.hitCell(point)
                     val (isKeep, _) = leftPlayer.gameModel!!.hit(point.x - 1, point.y - 1)
-                    currentPlayer = if (isKeep) 1 else 2
+                    currentPlayer = if (isKeep) {
+                        1
+                    } else {
+                        playerTurnArrow.animate().rotation(0f).start()
+                        2
+                    }
                 }
                 leftPlayer.invalidate()
             }
@@ -62,7 +67,12 @@ class Game : AppCompatActivity() {
                 if (currentPlayer == 2) {
                     rightPlayer.hitCell(point)
                     val (isKeep, _) = rightPlayer.gameModel!!.hit(point.x - 1, point.y - 1)
-                    currentPlayer = if (isKeep) 2 else 1
+                    currentPlayer = if (isKeep) {
+                        2
+                    } else {
+                        playerTurnArrow.animate().rotation(180f).start()
+                        1
+                    }
                 }
                 rightPlayer.invalidate()
             }
