@@ -20,7 +20,7 @@ class GameModelTest : TestCase() {
     )
 
     fun testKillLongShip() {
-        val model = GameModel(emptyList())
+        val model = GameModel(emptySet())
         model.setMatrix(initField)
         model.hit(3, 2)
         model.hit(1, 2)
@@ -44,7 +44,7 @@ class GameModelTest : TestCase() {
     }
 
     fun testKeepPlayerAndReturnState() {
-        val model = GameModel(emptyList())
+        val model = GameModel(emptySet())
         model.setMatrix(initField)
         Assert.assertEquals(Pair(true, CellState.HIT), model.hit(0, 0))
         Assert.assertEquals(Pair(true, CellState.HIT), model.hit(0, 0))
@@ -58,7 +58,7 @@ class GameModelTest : TestCase() {
     }
 
     fun testLongShip() {
-        val model = GameModel(emptyList())
+        val model = GameModel(emptySet())
         model.setMatrix(initField)
         model.hit(0, 0)
         model.hit(2, 0)
@@ -82,7 +82,7 @@ class GameModelTest : TestCase() {
     }
 
     fun testLongShip2() {
-        val model = GameModel(emptyList())
+        val model = GameModel(emptySet())
         model.setMatrix(initField)
         model.hit(0, 0)
         model.hit(2, 0)
@@ -107,7 +107,7 @@ class GameModelTest : TestCase() {
     }
 
     fun testMissShot() {
-        val model = GameModel(emptyList())
+        val model = GameModel(emptySet())
         model.setMatrix(initField)
         model.hit(1, 1)
         model.hit(9, 9)
@@ -130,7 +130,7 @@ class GameModelTest : TestCase() {
     }
 
     fun testHitInside() {
-        val model = GameModel(emptyList())
+        val model = GameModel(emptySet())
         model.setMatrix(initField)
         model.hit(0, 7)
         model.hit(1, 7)
@@ -152,7 +152,7 @@ class GameModelTest : TestCase() {
     }
 
     fun testHitOnBorders() {
-        val model = GameModel(emptyList())
+        val model = GameModel(emptySet())
         model.setMatrix(initField)
         model.hit(0, 9)
         Assert.assertEquals(
@@ -173,7 +173,7 @@ class GameModelTest : TestCase() {
     }
 
     fun testHitOnBorders2() {
-        val model = GameModel(emptyList())
+        val model = GameModel(emptySet())
         model.setMatrix(initField)
         model.hit(0, 5)
         Assert.assertEquals(
