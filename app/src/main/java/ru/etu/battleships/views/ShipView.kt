@@ -4,7 +4,6 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Point
 import android.util.AttributeSet
-import android.util.Log
 import android.view.View
 import ru.etu.battleships.R
 import ru.etu.battleships.model.Orientation

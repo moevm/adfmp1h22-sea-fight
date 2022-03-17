@@ -64,7 +64,10 @@ class SetupGameFieldView(context: Context, attributeSet: AttributeSet?) :
         val height = if (ship.orientation == Orientation.VERTICAL) ship.length else 1
 
         val (leftView, topView) = coordsGameToView(ship.position.x, ship.position.y)
-        val (rightView, bottomView) = coordsGameToView(ship.position.x + width, ship.position.y + height)
+        val (rightView, bottomView) = coordsGameToView(
+            ship.position.x + width,
+            ship.position.y + height
+        )
 
         highlighter.set(leftView, topView, rightView, bottomView)
     }
@@ -129,9 +132,13 @@ class SetupGameFieldView(context: Context, attributeSet: AttributeSet?) :
                 val shipView = event.localState as ShipView
                 var (x, y) = coordsViewToGame(event.x, event.y)
 
-                when(shipView.orientation) {
-                    Orientation.HORIZONTAL -> {x -= shipView.length/2}
-                    Orientation.VERTICAL -> {y -= shipView.length/2}
+                when (shipView.orientation) {
+                    Orientation.HORIZONTAL -> {
+                        x -= shipView.length / 2
+                    }
+                    Orientation.VERTICAL -> {
+                        y -= shipView.length / 2
+                    }
                 }
 
                 val ship = Ship(shipView.length, Point(x, y), shipView.orientation, shipView.index)
@@ -150,9 +157,13 @@ class SetupGameFieldView(context: Context, attributeSet: AttributeSet?) :
                 val shipView = event.localState as ShipView
 
                 var (x, y) = coordsViewToGame(event.x, event.y)
-                when(shipView.orientation) {
-                    Orientation.HORIZONTAL -> {x -= shipView.length/2}
-                    Orientation.VERTICAL -> {y -= shipView.length/2}
+                when (shipView.orientation) {
+                    Orientation.HORIZONTAL -> {
+                        x -= shipView.length / 2
+                    }
+                    Orientation.VERTICAL -> {
+                        y -= shipView.length / 2
+                    }
                 }
 
                 invalidate()
@@ -226,7 +237,14 @@ class SetupGameFieldView(context: Context, attributeSet: AttributeSet?) :
         return true
     }
 
-    private fun addShip(length: Int, index: Int, rot: Orientation, x: Int, y: Int, view: ShipView): Boolean {
+    private fun addShip(
+        length: Int,
+        index: Int,
+        rot: Orientation,
+        x: Int,
+        y: Int,
+        view: ShipView
+    ): Boolean {
         val ship = Ship(length, Point(x, y), rot, index)
 
         if (validateShipPosition(ship)) {
@@ -314,14 +332,14 @@ class SetupGameFieldView(context: Context, attributeSet: AttributeSet?) :
             val y = ship.position.y
 
             val (left, top) = coordsGameToView(x, y)
-            val (right, bottom) = coordsGameToView(x+ship.length, y+1)
+            val (right, bottom) = coordsGameToView(x + ship.length, y + 1)
             val bounds = Rect()
             RectF(left, top, right, bottom).round(bounds)
 
 
             canvas.save()
             if (ship.orientation == Orientation.VERTICAL) {
-                canvas.rotate(90f, left+cellSize/2, top+cellSize/2)
+                canvas.rotate(90f, left + cellSize / 2, top + cellSize / 2)
             }
 
             val drawable = shipResources[ship.length]!!

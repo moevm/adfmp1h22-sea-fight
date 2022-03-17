@@ -2,7 +2,6 @@ package ru.etu.battleships.activities
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import ru.etu.battleships.Application
