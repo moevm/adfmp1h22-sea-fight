@@ -13,6 +13,7 @@ import ru.etu.battleships.R
 import ru.etu.battleships.databinding.ActivityScoreBoardBinding
 import ru.etu.battleships.databinding.DialogQuestionBinding
 import ru.etu.battleships.databinding.ScoreBoardItemBinding
+import ru.etu.battleships.db.UsersDBHelper
 import ru.etu.battleships.model.UserScore
 import kotlin.system.exitProcess
 
@@ -30,7 +31,8 @@ class ScoreBoard : AppCompatActivity() {
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ScoreboardHolder {
             val view =
-                LayoutInflater.from(parent.context).inflate(R.layout.score_board_item, parent, false)
+                LayoutInflater.from(parent.context)
+                    .inflate(R.layout.score_board_item, parent, false)
             return ScoreboardHolder(view)
         }
 
@@ -51,20 +53,16 @@ class ScoreBoard : AppCompatActivity() {
 
     private lateinit var binding: ActivityScoreBoardBinding
     private val adapter = ScoreboardAdapter()
+    lateinit var usersDBHelper: UsersDBHelper
 
-    /* TODO: hardcoded user score */
-    private val users = listOf(
-        UserScore("player1", 7),
-        UserScore("player2", 2),
-        UserScore("Anya", 8),
-        UserScore("Constantine", 6),
-        UserScore("Kirill", 9),
-    )
+    private var users = mutableListOf<UserScore>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityScoreBoardBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        usersDBHelper = UsersDBHelper(this)
+        users = usersDBHelper.readAllUsers()
         init()
     }
 
