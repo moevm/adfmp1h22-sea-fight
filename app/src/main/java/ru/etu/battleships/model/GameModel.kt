@@ -30,12 +30,16 @@ class GameModel(listOfShips: Set<Ship>) {
 
     fun getMatrix() = matrix.map { it.map { el -> el.value } }
 
+    fun getCell(point: Point) = getCell(point.x, point.y)
+
     fun getCell(x: Int, y: Int): CellState {
         if (!(x in 0 until 10 && y in 0 until 10)) {
             return CellState.FREE
         }
         return matrix[y][x]
     }
+
+    fun setCell(point: Point, state: CellState) = setCell(point.x, point.y, state)
 
     fun setCell(x: Int, y: Int, state: CellState) {
         if (!(x in 0 until 10 && y in 0 until 10)) {
@@ -74,7 +78,7 @@ class GameModel(listOfShips: Set<Ship>) {
     }
 
     fun isOver(): Boolean = matrix.flatMap { squashedMatrix ->
-        squashedMatrix.filter { it == CellState.HIT }
+        squashedMatrix.filter { it == CellState.KILLED }
     }.size == (4 * 1 + 3 * 2 + 2 * 3 + 1 * 4)
 
     fun hit(x: Int, y: Int): Pair<Boolean, CellState> {

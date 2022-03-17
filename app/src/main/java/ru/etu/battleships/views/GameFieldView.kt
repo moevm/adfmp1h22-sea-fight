@@ -9,6 +9,7 @@ import android.util.AttributeSet
 import android.view.View
 import androidx.core.content.res.ResourcesCompat
 import ru.etu.battleships.R
+import ru.etu.battleships.model.Point
 
 open class GameFieldView(context: Context, attributeSet: AttributeSet?) :
     View(context, attributeSet) {
@@ -103,6 +104,9 @@ open class GameFieldView(context: Context, attributeSet: AttributeSet?) :
             }
         }
     }
+
+    protected fun drawText(canvas: Canvas?, text: String, point: Point) =
+        drawText(canvas, text, point.x, point.y)
 
     protected fun drawText(canvas: Canvas?, text: String, x: Int, y: Int) {
         val cellRect = RectF(

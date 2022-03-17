@@ -5,6 +5,7 @@ import android.graphics.Canvas
 import android.util.AttributeSet
 import android.util.Log
 import android.view.MotionEvent
+import ru.etu.battleships.model.CellState
 import ru.etu.battleships.model.GameModel
 import ru.etu.battleships.model.Orientation
 import ru.etu.battleships.model.Point
@@ -17,15 +18,17 @@ class PlayingGameFieldView(context: Context, attributeSet: AttributeSet?) :
 
     private val onTapListenerCallbacks: MutableList<(Point) -> Unit> = mutableListOf()
 
-    private val hitCells: MutableList<Point> = mutableListOf()
+    private val hitCells: MutableList<Pair<Point, CellState>> = mutableListOf()
 
-    private var gameModel: GameModel? = null
+    var gameModel: GameModel? = null
 
-    fun hitCell(cell: Point): Boolean {
-        if (cell.x < 1 || cell.y < 1 || cell.x > 10 || cell.y > 10) {
+    fun hitCell(point: Point) = hitCell(point.x, point.y)
+
+    fun hitCell(x: Int, y: Int): Boolean {
+        if (x < 1 || y < 1 || x > 10 || y > 10) {
             return false
         }
-        hitCells.add(cell)
+        hitCells.add(Pair(Point(x, y), gameModel!!.getCell(x, y)))
         return true
     }
 
@@ -45,8 +48,6 @@ class PlayingGameFieldView(context: Context, attributeSet: AttributeSet?) :
             MotionEvent.ACTION_UP -> {
                 this.performClick()
                 Log.d("TAP", "($x;$y)")
-                hitCell(Point(x, y))
-                gameModel!!.hit(x - 1, y - 1)
                 onTapListenerCallbacks.forEach { callback ->
                     callback(Point(x, y))
                 }
@@ -77,8 +78,8 @@ class PlayingGameFieldView(context: Context, attributeSet: AttributeSet?) :
             }
         }
 
-        hitCells.forEach {
-            drawText(canvas, "X", it.x, it.y)
+        hitCells.forEach { (point, cellState) ->
+            drawText(canvas, "X", point)
         }
     }
 
@@ -87,7 +88,7 @@ class PlayingGameFieldView(context: Context, attributeSet: AttributeSet?) :
     }
 
     fun initGameField(ships: Set<Ship>) {
-        this.ships.addAll(ships)
+//        this.ships.addAll(ships)
         gameModel = GameModel(ships)
         gameModel!!.setOnShipKilled { ship: Ship ->
             val point = ship.position
@@ -96,13 +97,13 @@ class PlayingGameFieldView(context: Context, attributeSet: AttributeSet?) :
             if (vertical) {
                 ((point.x - 1)..(point.x + 1)).forEach { x ->
                     ((point.y - 1)..(point.y + length)).forEach { y ->
-                        hitCell(Point(x, y))
+                        hitCell(x, y)
                     }
                 }
             } else {
                 ((point.x - 1)..(point.x + length)).forEach { x ->
                     ((point.y - 1)..(point.y + 1)).forEach { y ->
-                        hitCell(Point(x, y))
+                        hitCell(x, y)
                     }
                 }
             }
