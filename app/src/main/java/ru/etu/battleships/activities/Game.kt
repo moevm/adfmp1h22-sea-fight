@@ -91,9 +91,6 @@ class Game : AppCompatActivity() {
                 rightPlayer.invalidate()
             }
         }
-
-        Log.d("PLAYER", "player 1 name: ${app.player1.name}")
-        Log.d("PLAYER", "player 2 name: ${app.player2.name}")
     }
 
     override fun onBackPressed() {

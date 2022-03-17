@@ -13,9 +13,6 @@ import ru.etu.battleships.model.Point
 
 open class GameFieldView(context: Context, attributeSet: AttributeSet?) :
     View(context, attributeSet) {
-    companion object {
-        const val MIME_TYPE = "battleship/ship"
-    }
 
     private val fillPaint = Paint()
     private val strokePaint = Paint()

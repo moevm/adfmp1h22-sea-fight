@@ -57,6 +57,11 @@ class PlayingGameFieldView(context: Context, attributeSet: AttributeSet?) :
         return true
     }
 
+    override fun performClick(): Boolean {
+        super.performClick()
+        return true
+    }
+
     override fun drawState(canvas: Canvas) {
         ships.forEach { ship ->
             val x = ship.position.x

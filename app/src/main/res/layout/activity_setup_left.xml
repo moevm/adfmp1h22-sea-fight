@@ -79,7 +79,7 @@
                 app:layout_constraintStart_toStartOf="@+id/right_guideline"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <EditText
+            <ru.etu.battleships.views.DragIgnoreEditText
                 android:id="@+id/et_player_name"
                 style="@style/TextInput"
                 android:layout_width="wrap_content"
@@ -145,11 +145,14 @@
                     android:layout_weight="1"
                     android:background="@color/blue_a50">
 
-                    <ImageView
+                    <ru.etu.battleships.views.ShipView
                         android:id="@+id/ship_4_1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        app:srcCompat="@drawable/ic_ship_4" />
+                        android:src="@drawable/ic_ship_4"
+                        app:length="4"
+                        app:index="1"
+                        app:orientation="horizontal" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -163,17 +166,23 @@
                     android:divider="@drawable/horizontal_divider"
                     android:showDividers="middle">
 
-                    <ImageView
+                    <ru.etu.battleships.views.ShipView
                         android:id="@+id/ship_3_1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        app:srcCompat="@drawable/ic_ship_3" />
+                        android:src="@drawable/ic_ship_3"
+                        app:length="3"
+                        app:index="1"
+                        app:orientation="horizontal" />
 
-                    <ImageView
+                    <ru.etu.battleships.views.ShipView
                         android:id="@+id/ship_3_2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        app:srcCompat="@drawable/ic_ship_3" />
+                        android:src="@drawable/ic_ship_3"
+                        app:length="3"
+                        app:index="2"
+                        app:orientation="horizontal"/>
                 </LinearLayout>
 
                 <LinearLayout
@@ -183,27 +192,36 @@
                     android:gravity="center"
                     android:orientation="horizontal"
                     android:layout_weight="1"
-                    android:divider="@drawable/horizontal_divider"
                     android:background="@color/blue_a50"
+                    android:divider="@drawable/horizontal_divider"
                     android:showDividers="middle">
 
-                    <ImageView
+                    <ru.etu.battleships.views.ShipView
                         android:id="@+id/ship_2_1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        app:srcCompat="@drawable/ic_ship_2" />
+                        android:src="@drawable/ic_ship_2"
+                        app:length="2"
+                        app:index="1"
+                        app:orientation="horizontal" />
 
-                    <ImageView
+                    <ru.etu.battleships.views.ShipView
                         android:id="@+id/ship_2_2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        app:srcCompat="@drawable/ic_ship_2" />
+                        android:src="@drawable/ic_ship_2"
+                        app:length="2"
+                        app:index="2"
+                        app:orientation="horizontal" />
 
-                    <ImageView
+                    <ru.etu.battleships.views.ShipView
                         android:id="@+id/ship_2_3"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        app:srcCompat="@drawable/ic_ship_2" />
+                        android:src="@drawable/ic_ship_2"
+                        app:length="2"
+                        app:index="3"
+                        app:orientation="horizontal" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -217,29 +235,41 @@
                     android:divider="@drawable/horizontal_divider"
                     android:showDividers="middle">
 
-                    <ImageView
+                    <ru.etu.battleships.views.ShipView
                         android:id="@+id/ship_1_1"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        app:srcCompat="@drawable/ic_ship_1" />
+                        android:src="@drawable/ic_ship_1"
+                        app:length="1"
+                        app:index="1"
+                        app:orientation="horizontal" />
 
-                    <ImageView
+                    <ru.etu.battleships.views.ShipView
                         android:id="@+id/ship_1_2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        app:srcCompat="@drawable/ic_ship_1" />
+                        android:src="@drawable/ic_ship_1"
+                        app:length="1"
+                        app:index="2"
+                        app:orientation="horizontal" />
 
-                    <ImageView
+                    <ru.etu.battleships.views.ShipView
                         android:id="@+id/ship_1_3"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        app:srcCompat="@drawable/ic_ship_1" />
+                        android:src="@drawable/ic_ship_1"
+                        app:length="1"
+                        app:index="3"
+                        app:orientation="horizontal" />
 
-                    <ImageView
+                    <ru.etu.battleships.views.ShipView
                         android:id="@+id/ship_1_4"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        app:srcCompat="@drawable/ic_ship_1" />
+                        android:src="@drawable/ic_ship_1"
+                        app:length="1"
+                        app:index="4"
+                        app:orientation="horizontal" />
                 </LinearLayout>
 
                 <Space
