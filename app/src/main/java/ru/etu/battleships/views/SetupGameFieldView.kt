@@ -336,7 +336,6 @@ class SetupGameFieldView(context: Context, attributeSet: AttributeSet?) :
             val bounds = Rect()
             RectF(left, top, right, bottom).round(bounds)
 
-
             canvas.save()
             if (ship.orientation == Orientation.VERTICAL) {
                 canvas.rotate(90f, left + cellSize / 2, top + cellSize / 2)
