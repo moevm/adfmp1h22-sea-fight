@@ -1,6 +1,5 @@
 package ru.etu.battleships.activities
 
-import android.content.ClipData
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
@@ -10,7 +9,7 @@ import ru.etu.battleships.Application
 import ru.etu.battleships.R
 import ru.etu.battleships.databinding.ActivitySetupRightBinding
 import ru.etu.battleships.databinding.DialogQuestionBinding
-import ru.etu.battleships.views.GameFieldView
+import ru.etu.battleships.views.ShipView
 
 class SetupRight : AppCompatActivity() {
     private lateinit var binding: ActivitySetupRightBinding
@@ -38,11 +37,8 @@ class SetupRight : AppCompatActivity() {
 
             gameFieldView.addOnShipDragListener { ship, view ->
                 gameFieldView.removeShip(ship)
-                val (_, length, id) = view.resources.getResourceName(view.id)
-                    .split("/")[1].split("_")
-                val data = ClipData("Ship", arrayOf(GameFieldView.MIME_TYPE), ClipData.Item("${length}_$id"))
-                val shadowBuilder = View.DragShadowBuilder(view)
-                view.startDragAndDrop(data, shadowBuilder, view, 0)
+                val shadowBuilder = ShipView.DragShadowBuilder(view as ShipView)
+                view.startDragAndDrop(null, shadowBuilder, view, 0)
             }
         }
     }
