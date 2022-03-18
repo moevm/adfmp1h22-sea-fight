@@ -8,7 +8,8 @@ import ru.etu.battleships.databinding.DialogQuestionBinding
 class QuestionDialog(context: Context) {
     private var acceptListener: (() -> Unit)? = null
     private var alertDialog: AlertDialog
-    private var binding: DialogQuestionBinding = DialogQuestionBinding.inflate(LayoutInflater.from(context))
+    private var binding: DialogQuestionBinding =
+        DialogQuestionBinding.inflate(LayoutInflater.from(context))
 
     init {
         alertDialog = AlertDialog.Builder(context)

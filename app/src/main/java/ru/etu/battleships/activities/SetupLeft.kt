@@ -40,7 +40,11 @@ class SetupLeft : AppCompatActivity() {
             btNext.setOnClickListener {
                 if (gameFieldView.allShipsArePlaced()) {
                     val app = application as Application
-                    app.setPlayer1State(etPlayerName.text.toString().ifEmpty { resources.getString(R.string.nickname_hint_1) }, gameFieldView.getShips())
+                    app.setPlayer1State(
+                        etPlayerName.text.toString()
+                            .ifEmpty { resources.getString(R.string.nickname_hint_1) },
+                        gameFieldView.getShips()
+                    )
 
                     val intent = Intent(this@SetupLeft, SetupRight::class.java)
                     startActivity(intent)
