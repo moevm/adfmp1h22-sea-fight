@@ -7,6 +7,7 @@
     <string name="back_button">Back</string>
     <string name="next_button">Next</string>
     <string name="scoreboard_button">Scoreboard</string>
+    <string name="help_button">Help</string>
 
     <!--    Main Activity-->
     <string name="pvp_button">Player VS Player</string>
@@ -36,4 +37,18 @@
     <string name="accept_button">Yes</string>
     <string name="decline_button">No</string>
     <string name="not_all_ships_are_placed">Not all ships are placed</string>
+
+    <string name="how_to_place_ships">Drag ship with your fingers from blue-squared pull to game field</string>
+    <string name="how_to_rotate_ships">Tap on placed ships to rotate them</string>
+    <string name="how_to_randomize_ships">You can randomly place ships on the field with the following button</string>
+    <string name="ok_button">Got it!</string>
+
+    <string name="turn_rule">This arrow between the fields indicates which player is attacking, directed towards the attacked field</string>
+    <string name="how_to_fire">Tap on the field to fire at the corresponding cell</string>
+    <string name="what_is_hit_indicator">When hitting an enemy ship, the cell becomes like</string>
+    <string name="what_is_miss_indicator">When hitting an empty cell, it becomes like</string>
+    <string name="fire_rule">When hitting an enemy ship, you can make the next shot. When you miss an enemy ship, the turn is passed to another player</string>
+    <string name="destroy_rule">Enemy ship destroying automatically hits surrounding cells</string>
+    <string name="winning_rule">The first player to lose all ships is the loser.</string>
+
 </resources>

@@ -218,4 +218,20 @@
         android:layout_marginStart="5dp"
         android:layout_marginEnd="10dp"/>
 
+    <ImageButton
+        android:id="@+id/bt_help"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintDimensionRatio="w, 1:1"
+
+        android:contentDescription="@string/help_button"
+        android:scaleType="centerInside"
+        android:padding="0dp"
+        android:backgroundTint="#00000000"
+
+        app:layout_constraintLeft_toRightOf="@id/pointer_left_guideline"
+        app:layout_constraintRight_toLeftOf="@id/pointer_right_guideline"
+        app:layout_constraintBottom_toBottomOf="@id/left_player"
+        app:srcCompat="@drawable/ic_help" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
