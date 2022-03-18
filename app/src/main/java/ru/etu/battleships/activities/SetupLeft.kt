@@ -27,7 +27,11 @@ class SetupLeft : AppCompatActivity() {
             btNext.setOnClickListener {
                 if (gameFieldView.allShipsArePlaced()) {
                     val app = application as Application
-                    app.setPlayer1State(etPlayerName.text.toString().ifEmpty { resources.getString(R.string.nickname_hint_1) }, gameFieldView.getShips())
+                    app.setPlayer1State(
+                        etPlayerName.text.toString()
+                            .ifEmpty { resources.getString(R.string.nickname_hint_1) },
+                        gameFieldView.getShips()
+                    )
 
                     val intent = Intent(this@SetupLeft, SetupRight::class.java)
                     startActivity(intent)
@@ -46,6 +50,15 @@ class SetupLeft : AppCompatActivity() {
                 gameFieldView.removeShip(ship)
                 val shadowBuilder = ShipView.DragShadowBuilder(view as ShipView)
                 view.startDragAndDrop(null, shadowBuilder, view, 0)
+            }
+
+            shuffleButton.setOnClickListener {
+                gameFieldView.shuffleShips(
+                    listOf(
+                        ship41, ship31, ship32, ship21, ship22, ship23,
+                        ship11, ship12, ship13, ship14
+                    )
+                )
             }
         }
     }
