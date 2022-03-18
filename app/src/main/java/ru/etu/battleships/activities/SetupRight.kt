@@ -26,7 +26,11 @@ class SetupRight : AppCompatActivity() {
 
             btNext.setOnClickListener {
                 val app = application as Application
-                app.setPlayer2State(etPlayerName.text.toString().ifEmpty { resources.getString(R.string.nickname_hint_2) }, gameFieldView.getShips())
+                app.setPlayer2State(
+                    etPlayerName.text.toString()
+                        .ifEmpty { resources.getString(R.string.nickname_hint_2) },
+                    gameFieldView.getShips()
+                )
 
                 val intent = Intent(this@SetupRight, Game::class.java)
                 startActivity(intent)
