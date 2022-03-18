@@ -9,11 +9,7 @@ import ru.etu.battleships.Application
 import ru.etu.battleships.R
 import ru.etu.battleships.databinding.ActivitySetupLeftBinding
 import ru.etu.battleships.databinding.DialogQuestionBinding
-import ru.etu.battleships.model.Orientation
-import ru.etu.battleships.model.Point
-import ru.etu.battleships.model.Ship
 import ru.etu.battleships.views.ShipView
-import java.lang.IllegalStateException
 
 class SetupLeft : AppCompatActivity() {
     private lateinit var binding: ActivitySetupLeftBinding
