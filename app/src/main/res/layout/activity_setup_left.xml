@@ -288,28 +288,11 @@
                         android:contentDescription="@string/shuffle_button"
                         app:srcCompat="@drawable/ic_shuffle"
 
-                        android:layout_width="0dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="0dp"
+                        android:layout_weight="3"
                         android:backgroundTint="#0000"
-                        android:scaleType="centerInside"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintDimensionRatio="h, 1:1"
-                        app:layout_constraintLeft_toLeftOf="parent"/>
-
-                    <ImageButton
-                        android:id="@+id/rotateButton"
-                        android:contentDescription="@string/shuffle_button"
-                        app:srcCompat="@drawable/ic_shuffle"
-
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        android:backgroundTint="#0000"
-                        android:scaleType="centerInside"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintDimensionRatio="h, 1:1"
-                        app:layout_constraintRight_toRightOf="parent"/>
+                        android:scaleType="centerInside" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
