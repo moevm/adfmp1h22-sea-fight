@@ -115,17 +115,15 @@ class GameModel(listOfShips: Set<Ship>) {
                 length = 1
                 var additionalLength = check(x, y, isAdd = true, isRow = true)
                 if (additionalLength > -1) {
-                    tempKilled = tempKilled.and(true)
                     length += additionalLength
                 } else {
-                    tempKilled = tempKilled.and(false)
+                    tempKilled = false
                 }
                 additionalLength = check(x, y, isAdd = false, isRow = true)
                 if (additionalLength > -1) {
-                    tempKilled = tempKilled.and(true)
                     length += additionalLength
                 } else {
-                    tempKilled = tempKilled.and(false)
+                    tempKilled = false
                 }
                 if (length > 1) {
                     killed = tempKilled
@@ -135,17 +133,15 @@ class GameModel(listOfShips: Set<Ship>) {
                     length = 1
                     additionalLength = check(x, y, isAdd = true, isRow = false)
                     if (additionalLength > -1) {
-                        tempKilled = tempKilled.and(true)
                         length += additionalLength
                     } else {
-                        tempKilled = tempKilled.and(false)
-                        additionalLength = check(x, y, isAdd = false, isRow = false)
+                        tempKilled = false
                     }
+                    additionalLength = check(x, y, isAdd = false, isRow = false)
                     if (additionalLength > -1) {
-                        tempKilled = tempKilled.and(true)
                         length += additionalLength
                     } else {
-                        tempKilled = tempKilled.and(false)
+                        tempKilled = false
                     }
                     if (length > 1) {
                         killed = tempKilled
