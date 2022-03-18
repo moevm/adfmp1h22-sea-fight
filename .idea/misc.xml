@@ -20,6 +20,8 @@
         <entry key="app/src/main/res/drawable/rounded_corners.xml" value="0.306" />
         <entry key="app/src/main/res/drawable/shape_circle_button.xml" value="0.193" />
         <entry key="app/src/main/res/drawable/shape_circular_button.xml" value="0.193" />
+        <entry key="app/src/main/res/drawable/splash.xml" value="0.2825" />
+        <entry key="app/src/main/res/drawable/splash_animation.xml" value="0.2825" />
         <entry key="app/src/main/res/drawable/table.xml" value="0.222" />
         <entry key="app/src/main/res/drawable/table_border.xml" value="0.222" />
         <entry key="app/src/main/res/drawable/table_header.xml" value="0.222" />

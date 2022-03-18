@@ -2,9 +2,18 @@ package ru.etu.battleships.views
 
 import android.content.Context
 import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.Paint
+import android.graphics.Rect
+import android.graphics.RectF
+import android.graphics.drawable.AnimationDrawable
 import android.util.AttributeSet
 import android.util.Log
 import android.view.MotionEvent
+import androidx.core.content.res.ResourcesCompat
+import ru.etu.battleships.BuildConfig
+import ru.etu.battleships.R
+import ru.etu.battleships.extUI.AnimationDrawableCallback
 import ru.etu.battleships.model.CellState
 import ru.etu.battleships.model.GameModel
 import ru.etu.battleships.model.Orientation
@@ -15,20 +24,53 @@ class PlayingGameFieldView(context: Context, attributeSet: AttributeSet?) :
     GameFieldView(context, attributeSet) {
 
     private val ships: MutableSet<Ship> = mutableSetOf()
+    private val fillPaint = Paint()
 
     private val onTapListenerCallbacks: MutableList<(Point) -> Unit> = mutableListOf()
 
     private val hitCells: MutableList<Pair<Point, CellState>> = mutableListOf()
+    private val splashAnimations = mutableListOf<AnimationDrawable>()
 
     var gameModel: GameModel? = null
 
+    init {
+        fillPaint.style = Paint.Style.FILL
+    }
+
     fun hitCell(point: Point) = hitCell(point.x, point.y)
 
+    @Suppress("MemberVisibilityCanBePrivate")
     fun hitCell(x: Int, y: Int): Boolean {
         if (x < 1 || y < 1 || x > 10 || y > 10) {
             return false
         }
-        hitCells.add(Pair(Point(x, y), gameModel!!.getCell(x, y)))
+        val cellState = gameModel!!.getCell(x - 1, y - 1)
+
+        Log.d("TAP", "($x;$y) - $cellState")
+
+        if (cellState == CellState.FREE) {
+            val animation = ResourcesCompat.getDrawable(
+                resources,
+                R.drawable.splash_animation,
+                null
+            ) as AnimationDrawable
+            splashAnimations.add(animation)
+
+            val (left, top) = coordsGameToView(x, y)
+            val (right, bottom) = coordsGameToView(x + 1, y + 1)
+            val bounds = Rect()
+            RectF(left, top, right, bottom).round(bounds)
+
+            animation.bounds = bounds
+            animation.callback = object : AnimationDrawableCallback(animation, view = this) {
+                override fun onAnimationComplete() {
+                    splashAnimations.remove(animation)
+                    hitCells.add(Pair(Point(x, y), cellState))
+                }
+            }
+            animation.start()
+        }
+
         return true
     }
 
@@ -47,7 +89,6 @@ class PlayingGameFieldView(context: Context, attributeSet: AttributeSet?) :
 
             MotionEvent.ACTION_UP -> {
                 this.performClick()
-                Log.d("TAP", "($x;$y)")
                 if (x > 0 && y > 0) {
                     onTapListenerCallbacks.forEach { callback ->
                         callback(Point(x, y))
@@ -64,7 +105,27 @@ class PlayingGameFieldView(context: Context, attributeSet: AttributeSet?) :
         return true
     }
 
+    private val intToColor = mapOf(
+        Pair(0, Color.argb(0, 0, 0, 0)),
+        Pair(1, Color.argb(128, 0, 0, 255)),
+        Pair(2, Color.argb(128, 255, 255, 0)),
+        Pair(3, Color.argb(128, 255, 0, 0)),
+        Pair(4, Color.argb(128, 0, 255, 0)),
+    )
+
     override fun drawState(canvas: Canvas) {
+        if (BuildConfig.DEBUG) {
+            gameModel?.getMatrix()?.forEachIndexed { y, row ->
+                row.forEachIndexed { x, value ->
+                    val (l, t) = coordsGameToView(x + 1, y + 1)
+                    val (r, b) = coordsGameToView(x + 2, y + 2)
+
+                    fillPaint.color = intToColor[value]!!
+                    canvas.drawRect(l, t, r, b, fillPaint)
+                }
+            }
+        }
+
         ships.forEach { ship ->
             val x = ship.position.x
             val y = ship.position.y
@@ -80,7 +141,11 @@ class PlayingGameFieldView(context: Context, attributeSet: AttributeSet?) :
             }
         }
 
-        hitCells.forEach { (point, cellState) ->
+        splashAnimations.forEach { anim ->
+            anim.draw(canvas)
+        }
+
+        hitCells.forEach { (point, _) ->
             drawText(canvas, "X", point)
         }
     }
