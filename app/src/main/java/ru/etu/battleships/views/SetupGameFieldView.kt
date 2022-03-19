@@ -39,28 +39,11 @@ class SetupGameFieldView(context: Context, attributeSet: AttributeSet?) :
         Pair(4, ResourcesCompat.getDrawable(resources, R.drawable.ic_ship_4, null)),
     )
 
-    private val allShips = listOf(
-        Ship(4, Point(0, 0), Orientation.HORIZONTAL, 1),
-
-        Ship(3, Point(0, 0), Orientation.HORIZONTAL, 1),
-        Ship(3, Point(0, 0), Orientation.HORIZONTAL, 2),
-
-        Ship(2, Point(0, 0), Orientation.HORIZONTAL, 1),
-        Ship(2, Point(0, 0), Orientation.HORIZONTAL, 2),
-        Ship(2, Point(0, 0), Orientation.HORIZONTAL, 3),
-
-        Ship(1, Point(0, 0), Orientation.HORIZONTAL, 1),
-        Ship(1, Point(0, 0), Orientation.HORIZONTAL, 2),
-        Ship(1, Point(0, 0), Orientation.HORIZONTAL, 3),
-        Ship(1, Point(0, 0), Orientation.HORIZONTAL, 4),
-    )
-
     private var previousTouchAction = MotionEvent.ACTION_UP
     private var lastDraggedShip: Ship? = null
     private var pressedX = 0f
     private var pressedY = 0f
 
-    private val size = 10
 
     init {
         paint.style = Paint.Style.STROKE
@@ -161,7 +144,8 @@ class SetupGameFieldView(context: Context, attributeSet: AttributeSet?) :
                 }
 
                 val ship = Ship(shipView.length, Point(x, y), shipView.orientation, shipView.index)
-                highlighterPaint.color = if (validateShipPosition(ship)) Color.GREEN else Color.RED
+                highlighterPaint.color =
+                    if (validateShipPosition(ship, ships)) Color.GREEN else Color.RED
                 setHighlighter(ship)
 
                 invalidate()
@@ -212,50 +196,6 @@ class SetupGameFieldView(context: Context, attributeSet: AttributeSet?) :
         }
     }
 
-    private fun validateShipPosition(currentShip: Ship): Boolean {
-        fun getEndPoint(ship: Ship) = when (ship.orientation) {
-            Orientation.VERTICAL -> Point(ship.position.x, ship.position.y + ship.length - 1)
-            Orientation.HORIZONTAL -> Point(ship.position.x + ship.length - 1, ship.position.y)
-        }
-
-        val startCurrentPoint = currentShip.position
-        val endCurrentPoint = getEndPoint(currentShip)
-        if (
-            startCurrentPoint.x < 1 ||
-            startCurrentPoint.y < 1 ||
-            endCurrentPoint.x > 10 ||
-            endCurrentPoint.y > 10
-        ) {
-            return false
-        }
-
-        val currentShipRect = RectF(
-            offsetX + (startCurrentPoint.x - 1) * cellSize,
-            offsetY + (startCurrentPoint.y - 1) * cellSize,
-            offsetX + (endCurrentPoint.x + 2) * cellSize,
-            offsetY + (endCurrentPoint.y + 2) * cellSize
-        )
-
-        ships.filter { ship ->
-            // TO THINK: maybe we need use different ids for all ships
-            ship.length != currentShip.length || ship.id != currentShip.id
-        }.forEach { ship ->
-            val startPoint = ship.position
-            val endPoint = getEndPoint(ship)
-            val rect = RectF(
-                offsetX + startPoint.x * cellSize,
-                offsetY + startPoint.y * cellSize,
-                offsetX + (endPoint.x + 1) * cellSize,
-                offsetY + (endPoint.y + 1) * cellSize
-            )
-
-            if (currentShipRect.intersect(rect)) {
-                return false
-            }
-        }
-        return true
-    }
-
     private fun addShip(
         length: Int,
         index: Int,
@@ -266,7 +206,7 @@ class SetupGameFieldView(context: Context, attributeSet: AttributeSet?) :
     ): Boolean {
         val ship = Ship(length, Point(x, y), rot, index)
 
-        if (validateShipPosition(ship)) {
+        if (validateShipPosition(ship, ships)) {
             ships.add(ship)
             shipToViewMap[ship] = view
             view.visibility = GONE
@@ -306,7 +246,7 @@ class SetupGameFieldView(context: Context, attributeSet: AttributeSet?) :
                 this.performClick()
                 if (ship != null) {
                     ship.rotate()
-                    if (validateShipPosition(ship)) {
+                    if (validateShipPosition(ship, ships)) {
                         shipToViewMap[ship]?.rotate()
                     } else {
                         // TODO: Notify about bad rotation
@@ -372,11 +312,11 @@ class SetupGameFieldView(context: Context, attributeSet: AttributeSet?) :
         ships.clear()
         allShips.zip(shipViews).forEach { (ship, shipView) ->
             ship.orientation = Orientation.values().random()
-            var points = findPossiblePoints(ship)
+            var points = findPossiblePoints(ship, ships)
 
             if (points.isEmpty()) {
                 ship.orientation = ship.orientation.next()
-                points = findPossiblePoints(ship)
+                points = findPossiblePoints(ship, ships)
             }
 
             if (points.isEmpty()) {
@@ -397,9 +337,96 @@ class SetupGameFieldView(context: Context, attributeSet: AttributeSet?) :
         addShip(ship.length, ship.id, ship.orientation, ship.position.x, ship.position.y, shipView)
     }
 
-    private fun findPossiblePoints(ship: Ship): List<Point> {
-        return (0 until size)
-            .flatMap { i -> (0 until size).map { j -> Point(i, j) } }
-            .filter { validateShipPosition(Ship(ship.length, it, ship.orientation, -1)) }
+    companion object {
+        private const val size = 10
+
+        private val allShips = listOf(
+            Ship(4, Point(0, 0), Orientation.HORIZONTAL, 1),
+
+            Ship(3, Point(0, 0), Orientation.HORIZONTAL, 1),
+            Ship(3, Point(0, 0), Orientation.HORIZONTAL, 2),
+
+            Ship(2, Point(0, 0), Orientation.HORIZONTAL, 1),
+            Ship(2, Point(0, 0), Orientation.HORIZONTAL, 2),
+            Ship(2, Point(0, 0), Orientation.HORIZONTAL, 3),
+
+            Ship(1, Point(0, 0), Orientation.HORIZONTAL, 1),
+            Ship(1, Point(0, 0), Orientation.HORIZONTAL, 2),
+            Ship(1, Point(0, 0), Orientation.HORIZONTAL, 3),
+            Ship(1, Point(0, 0), Orientation.HORIZONTAL, 4),
+        )
+
+        fun shuffleShips(): Set<Ship> {
+            val ships = mutableSetOf<Ship>()
+            allShips.forEach { ship ->
+                ship.orientation = Orientation.values().random()
+                var points = findPossiblePoints(ship, ships)
+
+                if (points.isEmpty()) {
+                    ship.orientation = ship.orientation.next()
+                    points = findPossiblePoints(ship, ships)
+                }
+
+                if (points.isEmpty()) {
+                    Log.e("shuffleShipsRecursion", "no available points")
+                    shuffleShips()
+                    return@forEach
+                }
+
+                val point = points.random()
+                val shipToPlace = Ship(ship.length, point, ship.orientation, ship.id)
+                ships.add(shipToPlace)
+            }
+            return ships
+        }
+
+        fun findPossiblePoints(ship: Ship, ships: Set<Ship>): List<Point> {
+            return (0 until size)
+                .flatMap { i -> (0 until size).map { j -> Point(i, j) } }
+                .filter { validateShipPosition(Ship(ship.length, it, ship.orientation, -1), ships) }
+        }
+
+        private fun validateShipPosition(currentShip: Ship, ships: Set<Ship>): Boolean {
+            fun getEndPoint(ship: Ship) = when (ship.orientation) {
+                Orientation.VERTICAL -> Point(ship.position.x, ship.position.y + ship.length - 1)
+                Orientation.HORIZONTAL -> Point(ship.position.x + ship.length - 1, ship.position.y)
+            }
+
+            val startCurrentPoint = currentShip.position
+            val endCurrentPoint = getEndPoint(currentShip)
+            if (
+                startCurrentPoint.x < 1 ||
+                startCurrentPoint.y < 1 ||
+                endCurrentPoint.x > 10 ||
+                endCurrentPoint.y > 10
+            ) {
+                return false
+            }
+
+            val currentShipRect = Rect(
+                startCurrentPoint.x - 1,
+                startCurrentPoint.y - 1,
+                endCurrentPoint.x + 2,
+                endCurrentPoint.y + 2
+            )
+
+            ships.filter { ship ->
+                // TO THINK: maybe we need use different ids for all ships
+                ship.length != currentShip.length || ship.id != currentShip.id
+            }.forEach { ship ->
+                val startPoint = ship.position
+                val endPoint = getEndPoint(ship)
+                val rect = Rect(
+                    startPoint.x,
+                    startPoint.y,
+                    endPoint.x + 1,
+                    endPoint.y + 1
+                )
+                if (currentShipRect.intersect(rect)) {
+                    return false
+                }
+            }
+            return true
+        }
     }
 }

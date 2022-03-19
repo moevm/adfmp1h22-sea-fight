@@ -90,7 +90,7 @@ class PlayingGameFieldView(context: Context, attributeSet: AttributeSet?) :
     }
 
     fun initGameField(ships: Set<Ship>) {
-//        this.ships.addAll(ships)
+        this.ships.addAll(ships)
         gameModel = GameModel(ships)
         gameModel!!.setOnShipKilled { ship: Ship ->
             val point = ship.position

@@ -4,9 +4,11 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import ru.etu.battleships.Application
 import ru.etu.battleships.R
 import ru.etu.battleships.databinding.ActivityEntryBinding
 import ru.etu.battleships.databinding.DialogQuestionBinding
+import ru.etu.battleships.model.GameMode
 import kotlin.system.exitProcess
 
 class Entry : AppCompatActivity() {
@@ -16,13 +18,16 @@ class Entry : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityEntryBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        val app = application as Application
 
         binding.apply {
             pvpButton.setOnClickListener {
+                app.gameMode = GameMode.PVP
                 val intent = Intent(this@Entry, SetupLeft::class.java)
                 startActivity(intent)
             }
             pveButton.setOnClickListener {
+                app.gameMode = GameMode.PVE
                 val intent = Intent(this@Entry, SetupLeft::class.java)
                 startActivity(intent)
             }

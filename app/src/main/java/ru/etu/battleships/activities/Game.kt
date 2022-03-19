@@ -11,6 +11,7 @@ import ru.etu.battleships.Application
 import ru.etu.battleships.R
 import ru.etu.battleships.databinding.ActivityGameBinding
 import ru.etu.battleships.databinding.DialogQuestionBinding
+import ru.etu.battleships.model.GameMode
 import ru.etu.battleships.model.Point
 import kotlin.system.exitProcess
 
@@ -44,27 +45,34 @@ class Game : AppCompatActivity() {
             leftPlayer.initGameField(app.player1.ships)
             rightPlayer.initGameField(app.player2.ships)
 
+            Log.d("QWEQWE", app.player1.name)
+            Log.d("QWEQWE", app.player2.name)
+
             leftPlayer.invalidate()
             rightPlayer.invalidate()
 
             leftPlayer.setOnTapListener { point: Point ->
                 Log.d("TAP", "left player | (${point.x};${point.y})")
-                if (currentPlayer == 1) {
-                    leftPlayer.hitCell(point)
-                    val (isKeep, _) = leftPlayer.gameModel!!.hit(point.x - 1, point.y - 1)
-                    if (leftPlayer.gameModel!!.isOver()) {
-                        Toast.makeText(
-                            this@Game,
-                            "Player 1 lost!",
-                            Toast.LENGTH_SHORT
-                        ).show()
+                if (app.gameMode == GameMode.PVP) {
+                    if (currentPlayer == 1) {
+                        leftPlayer.hitCell(point)
+                        val (isKeep, _) = leftPlayer.gameModel!!.hit(point.x - 1, point.y - 1)
+                        if (leftPlayer.gameModel!!.isOver()) {
+                            Toast.makeText(
+                                this@Game,
+                                "Player 1 lost!",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                        currentPlayer = if (isKeep) {
+                            1
+                        } else {
+                            playerTurnArrow.animate().rotation(0f).start()
+                            2
+                        }
                     }
-                    currentPlayer = if (isKeep) {
-                        1
-                    } else {
-                        playerTurnArrow.animate().rotation(0f).start()
-                        2
-                    }
+                } else {
+
                 }
                 leftPlayer.invalidate()
             }
@@ -87,8 +95,8 @@ class Game : AppCompatActivity() {
                         playerTurnArrow.animate().rotation(180f).start()
                         1
                     }
+                    rightPlayer.invalidate()
                 }
-                rightPlayer.invalidate()
             }
         }
     }

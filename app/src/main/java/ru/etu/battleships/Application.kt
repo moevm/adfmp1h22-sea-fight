@@ -1,5 +1,6 @@
 package ru.etu.battleships
 
+import ru.etu.battleships.model.GameMode
 import ru.etu.battleships.model.Player
 import ru.etu.battleships.model.Ship
 import android.app.Application as BaseApplication
@@ -9,6 +10,12 @@ class Application : BaseApplication() {
         get() = Player(field)
     var player2 = Player()
         get() = Player(field)
+
+    var gameMode = GameMode.PREPARE
+        get() = field
+        set(value) {
+            field = value
+        }
 
     fun setPlayer1State(username: String, ships: Set<Ship>) {
         player1 = Player(username, ships)
