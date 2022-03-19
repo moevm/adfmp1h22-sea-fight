@@ -23,7 +23,6 @@ import ru.etu.battleships.model.Ship
 class PlayingGameFieldView(context: Context, attributeSet: AttributeSet?) :
     GameFieldView(context, attributeSet) {
 
-    private val ships: MutableSet<Ship> = mutableSetOf()
     private val fillPaint = Paint()
 
     private val onTapListenerCallbacks: MutableList<(Point) -> Unit> = mutableListOf()
@@ -105,13 +104,13 @@ class PlayingGameFieldView(context: Context, attributeSet: AttributeSet?) :
         return true
     }
 
-    private val intToColor = mapOf(
-        Pair(0, Color.argb(0, 0, 0, 0)),
-        Pair(1, Color.argb(128, 0, 0, 255)),
-        Pair(2, Color.argb(128, 255, 255, 0)),
-        Pair(3, Color.argb(128, 255, 0, 0)),
-        Pair(4, Color.argb(128, 0, 255, 0)),
-    )
+    private fun intToColor(i: Int) = when(i) {
+        1 -> Color.argb(128, 0, 0, 255)
+        2 -> Color.argb(128, 255, 255, 0)
+        3 -> Color.argb(128, 255, 0, 0)
+        4 -> Color.argb(128, 0, 255, 0)
+        else -> Color.argb(0, 0, 0, 0)
+    }
 
     override fun drawState(canvas: Canvas) {
         if (BuildConfig.DEBUG) {
@@ -120,23 +119,8 @@ class PlayingGameFieldView(context: Context, attributeSet: AttributeSet?) :
                     val (l, t) = coordsGameToView(x + 1, y + 1)
                     val (r, b) = coordsGameToView(x + 2, y + 2)
 
-                    fillPaint.color = intToColor[value]!!
+                    fillPaint.color = intToColor(value)
                     canvas.drawRect(l, t, r, b, fillPaint)
-                }
-            }
-        }
-
-        ships.forEach { ship ->
-            val x = ship.position.x
-            val y = ship.position.y
-            repeat(ship.length) {
-                when (ship.orientation) {
-                    Orientation.HORIZONTAL -> {
-                        drawText(canvas, "S", x + it, y)
-                    }
-                    Orientation.VERTICAL -> {
-                        drawText(canvas, "S", x, y + it)
-                    }
                 }
             }
         }
@@ -155,7 +139,6 @@ class PlayingGameFieldView(context: Context, attributeSet: AttributeSet?) :
     }
 
     fun initGameField(ships: Set<Ship>) {
-//        this.ships.addAll(ships)
         gameModel = GameModel(ships)
         gameModel!!.setOnShipKilled { ship: Ship ->
             val point = ship.position
