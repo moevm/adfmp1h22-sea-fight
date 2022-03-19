@@ -5,15 +5,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import ru.etu.battleships.R
 import ru.etu.battleships.databinding.ActivityScoreBoardBinding
-import ru.etu.battleships.databinding.DialogQuestionBinding
 import ru.etu.battleships.databinding.ScoreBoardItemBinding
 import ru.etu.battleships.db.UsersDBHelper
+import ru.etu.battleships.extUI.QuestionDialog
 import ru.etu.battleships.model.UserScore
 import kotlin.system.exitProcess
 
@@ -52,6 +51,8 @@ class ScoreBoard : AppCompatActivity() {
     }
 
     private lateinit var binding: ActivityScoreBoardBinding
+    private lateinit var questionDialog: QuestionDialog
+
     private val adapter = ScoreboardAdapter()
     lateinit var usersDBHelper: UsersDBHelper
 
@@ -60,10 +61,18 @@ class ScoreBoard : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityScoreBoardBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        questionDialog = QuestionDialog(this)
+            .setMessage(resources.getString(R.string.exit_dialog_message))
+            .setOnAcceptListener {
+                finishAffinity()
+                exitProcess(0)
+            }
+
         usersDBHelper = UsersDBHelper(this)
         users = usersDBHelper.readAllUsers()
         init()
+
+        setContentView(binding.root)
     }
 
     private fun init() {
@@ -72,32 +81,12 @@ class ScoreBoard : AppCompatActivity() {
                 finish()
             }
             exitButton.setOnClickListener {
-                this@ScoreBoard.openDialog(resources.getString(R.string.exit_dialog_message))
+                questionDialog.show()
             }
 
             scoreboardTable.layoutManager = LinearLayoutManager(this@ScoreBoard)
             scoreboardTable.adapter = adapter
             adapter.setUserScoreList(users)
         }
-    }
-
-    private fun openDialog(message: String) {
-        val viewBinding = DialogQuestionBinding.inflate(layoutInflater)
-
-        val alertDialog = AlertDialog.Builder(this)
-            .setCancelable(true)
-            .setView(viewBinding.root)
-            .create()
-
-        viewBinding.message.text = message
-        viewBinding.accept.setOnClickListener {
-            finishAffinity()
-            exitProcess(0)
-        }
-        viewBinding.decline.setOnClickListener {
-            alertDialog.dismiss()
-        }
-
-        alertDialog.show()
     }
 }
