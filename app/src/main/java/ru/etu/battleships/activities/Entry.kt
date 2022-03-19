@@ -2,25 +2,20 @@ package ru.etu.battleships.activities
 
 import android.content.Intent
 import android.os.Bundle
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import ru.etu.battleships.R
 import ru.etu.battleships.databinding.ActivityEntryBinding
-import ru.etu.battleships.extUI.QuestionDialog
+import ru.etu.battleships.databinding.DialogQuestionBinding
 import kotlin.system.exitProcess
 
 class Entry : AppCompatActivity() {
     private lateinit var binding: ActivityEntryBinding
-    private lateinit var questionDialog: QuestionDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityEntryBinding.inflate(layoutInflater)
-        questionDialog = QuestionDialog(this)
-            .setMessage(resources.getString(R.string.exit_dialog_message))
-            .setOnAcceptListener {
-                finishAffinity()
-                exitProcess(0)
-            }
+        setContentView(binding.root)
 
         binding.apply {
             pvpButton.setOnClickListener {
@@ -40,14 +35,32 @@ class Entry : AppCompatActivity() {
                 startActivity(intent)
             }
             exitButton.setOnClickListener {
-                questionDialog.show()
+                this@Entry.openDialog(resources.getString(R.string.exit_dialog_message))
             }
         }
-
-        setContentView(binding.root)
     }
 
     override fun onBackPressed() {
-        questionDialog.show()
+        this.openDialog(resources.getString(R.string.exit_dialog_message))
+    }
+
+    private fun openDialog(message: String) {
+        val viewBinding = DialogQuestionBinding.inflate(layoutInflater)
+
+        val alertDialog = AlertDialog.Builder(this)
+            .setCancelable(true)
+            .setView(viewBinding.root)
+            .create()
+
+        viewBinding.message.text = message
+        viewBinding.accept.setOnClickListener {
+            finishAffinity()
+            exitProcess(0)
+        }
+        viewBinding.decline.setOnClickListener {
+            alertDialog.dismiss()
+        }
+
+        alertDialog.show()
     }
 }

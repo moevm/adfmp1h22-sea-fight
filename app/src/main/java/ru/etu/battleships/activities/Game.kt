@@ -3,53 +3,42 @@ package ru.etu.battleships.activities
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import ru.etu.battleships.Application
 import ru.etu.battleships.R
 import ru.etu.battleships.databinding.ActivityGameBinding
-import ru.etu.battleships.extUI.InfoGameDialog
-import ru.etu.battleships.extUI.QuestionDialog
+import ru.etu.battleships.databinding.DialogQuestionBinding
 import ru.etu.battleships.model.Point
 import kotlin.system.exitProcess
 
 class Game : AppCompatActivity() {
     private lateinit var binding: ActivityGameBinding
-    private lateinit var questionDialog: QuestionDialog
-    private lateinit var helpDialog: InfoGameDialog
     private var currentPlayer = 2
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityGameBinding.inflate(layoutInflater)
-        questionDialog = QuestionDialog(this)
-        helpDialog = InfoGameDialog(this)
         setContentView(binding.root)
 
         val app = application as Application
 
         binding.apply {
             btBack.setOnClickListener {
-                questionDialog.setMessage(resources.getString(R.string.back_dialog_message))
-                questionDialog.setOnAcceptListener {
+                this@Game.openDialog(resources.getString(R.string.back_dialog_message)) {
                     val intent = Intent(this@Game, Entry::class.java)
                     intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
                     startActivity(intent)
                 }
-                questionDialog.show()
             }
 
             btExit.setOnClickListener {
-                questionDialog.setMessage(resources.getString(R.string.exit_dialog_message))
-                questionDialog.setOnAcceptListener {
+                this@Game.openDialog(resources.getString(R.string.exit_dialog_message)) {
                     finishAffinity()
                     exitProcess(0)
                 }
-                questionDialog.show()
-            }
-
-            btHelp.setOnClickListener {
-                helpDialog.show()
             }
 
             leftPlayer.initGameField(app.player1.ships)
@@ -105,12 +94,30 @@ class Game : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        questionDialog.setMessage(resources.getString(R.string.back_dialog_message))
-        questionDialog.setOnAcceptListener {
+        this.openDialog(resources.getString(R.string.back_dialog_message)) {
             val intent = Intent(this@Game, Entry::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
             startActivity(intent)
         }
-        questionDialog.show()
+    }
+
+    private fun openDialog(message: String, acceptListener: View.OnClickListener) {
+        val viewBinding = DialogQuestionBinding.inflate(layoutInflater)
+
+        val alertDialog = AlertDialog.Builder(this)
+            .setCancelable(true)
+            .setView(viewBinding.root)
+            .create()
+
+        viewBinding.message.text = message
+        viewBinding.accept.setOnClickListener {
+            alertDialog.dismiss()
+            acceptListener.onClick(it)
+        }
+        viewBinding.decline.setOnClickListener {
+            alertDialog.dismiss()
+        }
+
+        alertDialog.show()
     }
 }
