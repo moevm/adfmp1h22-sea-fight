@@ -128,10 +128,6 @@ class PlayingGameFieldView(context: Context, attributeSet: AttributeSet?) :
         splashAnimations.forEach { anim ->
             anim.draw(canvas)
         }
-
-        hitCells.forEach { (point, _) ->
-            drawText(canvas, "X", point)
-        }
     }
 
     fun setOnTapListener(function: (Point) -> Unit) {
