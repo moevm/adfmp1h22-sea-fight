@@ -3,7 +3,6 @@ package ru.etu.battleships.views
 import android.content.Context
 import android.graphics.Canvas
 import android.util.AttributeSet
-import android.util.Log
 import android.view.MotionEvent
 import ru.etu.battleships.model.CellState
 import ru.etu.battleships.model.GameModel
@@ -14,7 +13,8 @@ import ru.etu.battleships.model.Ship
 class PlayingGameFieldView(context: Context, attributeSet: AttributeSet?) :
     GameFieldView(context, attributeSet) {
 
-    private val ships: MutableSet<Ship> = mutableSetOf()
+//    private val ships: MutableSet<Ship> = mutableSetOf()
+    private val fillPaint = Paint()
 
     private val onTapListenerCallbacks: MutableList<(Point) -> Unit> = mutableListOf()
 
@@ -28,7 +28,31 @@ class PlayingGameFieldView(context: Context, attributeSet: AttributeSet?) :
         if (x < 1 || y < 1 || x > 10 || y > 10) {
             return false
         }
-        hitCells.add(Pair(Point(x, y), gameModel!!.getCell(x, y)))
+        val cellState = gameModel!!.getCell(x - 1, y - 1)
+
+        if (cellState == CellState.FREE) {
+            val animation = ResourcesCompat.getDrawable(
+                resources,
+                R.drawable.splash_animation,
+                null
+            ) as AnimationDrawable
+            splashAnimations.add(animation)
+
+            val (left, top) = coordsGameToView(x, y)
+            val (right, bottom) = coordsGameToView(x + 1, y + 1)
+            val bounds = Rect()
+            RectF(left, top, right, bottom).round(bounds)
+
+            animation.bounds = bounds
+            animation.callback = object : AnimationDrawableCallback(animation, view = this) {
+                override fun onAnimationComplete() {
+                    splashAnimations.remove(animation)
+                    hitCells.add(Pair(Point(x, y), cellState))
+                }
+            }
+            animation.start()
+        }
+
         return true
     }
 
@@ -62,25 +86,35 @@ class PlayingGameFieldView(context: Context, attributeSet: AttributeSet?) :
         return true
     }
 
+
+    private fun intToColor(i: Int?): Int = when (i) {
+//        1    -> Color.argb(128, 0  , 0  , 255) // occupied
+        2    -> Color.argb(128, 255, 255, 0  ) // hit
+        3    -> Color.argb(128, 255, 0  , 0  ) // killed
+        4    -> Color.argb(128, 0  , 255, 0  ) // miss
+        else -> Color.argb(0  , 0  , 0  , 0  )
+    }
+
     override fun drawState(canvas: Canvas) {
-        ships.forEach { ship ->
-            val x = ship.position.x
-            val y = ship.position.y
-            repeat(ship.length) {
-                when (ship.orientation) {
-                    Orientation.HORIZONTAL -> {
-                        drawText(canvas, "S", x + it, y)
-                    }
-                    Orientation.VERTICAL -> {
-                        drawText(canvas, "S", x, y + it)
-                    }
+        if (BuildConfig.DEBUG) {
+            gameModel?.getMatrix()?.forEachIndexed { y, row ->
+                row.forEachIndexed { x, value ->
+                    val (l, t) = coordsGameToView(x + 1, y + 1)
+                    val (r, b) = coordsGameToView(x + 2, y + 2)
+
+                    fillPaint.color = intToColor(value)
+                    canvas.drawRect(l, t, r, b, fillPaint)
                 }
             }
         }
 
-        hitCells.forEach { (point, cellState) ->
-            drawText(canvas, "X", point)
+        splashAnimations.forEach { anim ->
+            anim.draw(canvas)
         }
+
+//        hitCells.forEach { (point, _) ->
+//            drawText(canvas, "X", point)
+//        }
     }
 
     fun setOnTapListener(function: (Point) -> Unit) {
@@ -88,7 +122,6 @@ class PlayingGameFieldView(context: Context, attributeSet: AttributeSet?) :
     }
 
     fun initGameField(ships: Set<Ship>) {
-//        this.ships.addAll(ships)
         gameModel = GameModel(ships)
         gameModel!!.setOnShipKilled { ship: Ship ->
             val point = ship.position
