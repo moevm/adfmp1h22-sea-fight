@@ -79,7 +79,7 @@
                 app:layout_constraintStart_toStartOf="@+id/right_guideline"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <ru.etu.battleships.views.DragIgnoreEditText
+            <ru.etu.battleships.views.DragIgnoreEditTextView
                 android:id="@+id/et_player_name"
                 style="@style/TextInput"
                 android:layout_width="wrap_content"
@@ -114,6 +114,18 @@
                 app:layout_constraintEnd_toStartOf="@+id/ll_tools"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageButton
+                android:id="@+id/bt_help"
+                android:contentDescription="@string/help_button"
+                app:srcCompat="@drawable/ic_help"
+
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:backgroundTint="#0000"
+                android:scaleType="centerInside"
+                app:layout_constraintTop_toTopOf="@id/ll_tools"
+                app:layout_constraintEnd_toEndOf="@id/ll_tools"/>
 
             <LinearLayout
                 android:id="@+id/ll_tools"
@@ -288,11 +300,15 @@
                         android:contentDescription="@string/shuffle_button"
                         app:srcCompat="@drawable/ic_shuffle"
 
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="0dp"
-                        android:layout_weight="3"
                         android:backgroundTint="#0000"
-                        android:scaleType="centerInside" />
+                        android:scaleType="centerInside"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintDimensionRatio="w, 1:1" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 

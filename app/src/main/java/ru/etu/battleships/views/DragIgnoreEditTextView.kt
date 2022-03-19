@@ -5,7 +5,7 @@ import android.util.AttributeSet
 import android.view.DragEvent
 import android.view.inputmethod.EditorInfo
 
-class DragIgnoreEditText(context: Context, attrs: AttributeSet?) :
+class DragIgnoreEditTextView(context: Context, attrs: AttributeSet?) :
     androidx.appcompat.widget.AppCompatEditText(context, attrs) {
     override fun onDragEvent(event: DragEvent?): Boolean {
         return when (event?.action) {
