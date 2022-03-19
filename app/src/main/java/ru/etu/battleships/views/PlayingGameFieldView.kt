@@ -72,10 +72,8 @@ class PlayingGameFieldView(context: Context, attributeSet: AttributeSet?) :
             MotionEvent.ACTION_UP -> {
                 this.performClick()
                 Log.d("TAP", "($x;$y)")
-                if (x > 0 && y > 0) {
-                    onTapListenerCallbacks.forEach { callback ->
-                        callback(Point(x, y))
-                    }
+                onTapListenerCallbacks.forEach { callback ->
+                    callback(Point(x, y))
                 }
             }
         }
