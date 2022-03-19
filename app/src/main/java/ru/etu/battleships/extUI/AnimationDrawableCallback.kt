@@ -6,7 +6,7 @@ import android.os.SystemClock
 import android.view.View
 
 
-abstract class AnimationDrawableCallback(
+open class AnimationDrawableCallback(
     animationDrawable: AnimationDrawable,
     callback: Drawable.Callback? = null,
     view: View? = null
@@ -54,5 +54,5 @@ abstract class AnimationDrawableCallback(
     // Public methods.
     //
 
-    abstract fun onAnimationComplete()
+    open fun onAnimationComplete() {}
 }

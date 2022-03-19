@@ -6,12 +6,15 @@
         <entry key="../../../../layout/custom_preview.xml" value="0.2421875" />
         <entry key="app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.216" />
         <entry key="app/src/main/res/drawable/TextButton.xml" value="0.3315" />
+        <entry key="app/src/main/res/drawable/aa.xml" value="0.222" />
+        <entry key="app/src/main/res/drawable/anim_cross.xml" value="0.2825" />
+        <entry key="app/src/main/res/drawable/anim_explosion.xml" value="0.2825" />
+        <entry key="app/src/main/res/drawable/anim_splash.xml" value="0.2825" />
+        <entry key="app/src/main/res/drawable/blur_point.xml" value="0.2825" />
         <entry key="app/src/main/res/drawable/button_menu.xml" value="0.3315" />
         <entry key="app/src/main/res/drawable/cell.xml" value="0.222" />
         <entry key="app/src/main/res/drawable/dialog_shape.xml" value="0.1955" />
         <entry key="app/src/main/res/drawable/divider.xml" value="0.222" />
-        <entry key="app/src/main/res/drawable/ic_help.xml" value="0.2825" />
-        <entry key="app/src/main/res/drawable/ic_help_32.xml" value="0.222" />
         <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.216" />
         <entry key="app/src/main/res/drawable/ic_triangle.xml" value="0.222" />
         <entry key="app/src/main/res/drawable/menu_button_disabled.xml" value="0.3315" />
@@ -19,6 +22,7 @@
         <entry key="app/src/main/res/drawable/menu_button_focused.xml" value="0.3315" />
         <entry key="app/src/main/res/drawable/menu_button_pressed.xml" value="0.3315" />
         <entry key="app/src/main/res/drawable/oval_button.xml" value="0.205" />
+        <entry key="app/src/main/res/drawable/point.xml" value="0.2825" />
         <entry key="app/src/main/res/drawable/rounded_corners.xml" value="0.306" />
         <entry key="app/src/main/res/drawable/shape_circle_button.xml" value="0.193" />
         <entry key="app/src/main/res/drawable/shape_circular_button.xml" value="0.193" />
@@ -32,16 +36,13 @@
         <entry key="app/src/main/res/drawable/text_button_pressed.xml" value="0.3315" />
         <entry key="app/src/main/res/drawable/vertical_divider.xml" value="0.222" />
         <entry key="app/src/main/res/layout-land/activity_setup_right.xml" value="0.18209876543209877" />
-        <entry key="app/src/main/res/layout/activity_entry.xml" value="0.32690124858115777" />
+        <entry key="app/src/main/res/layout/activity_entry.xml" value="0.4588584136397331" />
         <entry key="app/src/main/res/layout/activity_game.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_menu.xml" value="0.5" />
-        <entry key="app/src/main/res/layout/activity_score_board.xml" value="0.33" />
+        <entry key="app/src/main/res/layout/activity_score_board.xml" value="0.4813374805598756" />
         <entry key="app/src/main/res/layout/activity_setup_left.xml" value="0.2859399684044234" />
         <entry key="app/src/main/res/layout/activity_setup_right.xml" value="0.36354166666666665" />
         <entry key="app/src/main/res/layout/dialog_exit.xml" value="0.33" />
-        <entry key="app/src/main/res/layout/dialog_info.xml" value="0.15" />
-        <entry key="app/src/main/res/layout/dialog_info_game.xml" value="0.36354166666666665" />
-        <entry key="app/src/main/res/layout/dialog_info_setup.xml" value="0.33" />
         <entry key="app/src/main/res/layout/dialog_question.xml" value="0.21510416666666668" />
         <entry key="app/src/main/res/layout/layout_list_item.xml" value="0.36354166666666665" />
       </map>

@@ -5,18 +5,15 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Rect
-import android.graphics.RectF
 import android.graphics.drawable.AnimationDrawable
+import android.graphics.drawable.Drawable
 import android.util.AttributeSet
-import android.util.Log
 import android.view.MotionEvent
 import androidx.core.content.res.ResourcesCompat
 import ru.etu.battleships.BuildConfig
 import ru.etu.battleships.R
 import ru.etu.battleships.extUI.AnimationDrawableCallback
-import ru.etu.battleships.model.CellState
 import ru.etu.battleships.model.GameModel
-import ru.etu.battleships.model.Orientation
 import ru.etu.battleships.model.Point
 import ru.etu.battleships.model.Ship
 
@@ -27,8 +24,7 @@ class PlayingGameFieldView(context: Context, attributeSet: AttributeSet?) :
 
     private val onTapListenerCallbacks: MutableList<(Point) -> Unit> = mutableListOf()
 
-    private val hitCells: MutableList<Pair<Point, CellState>> = mutableListOf()
-    private val splashAnimations = mutableListOf<AnimationDrawable>()
+    private val cellDrawables = mutableListOf<Drawable>()
 
     var gameModel: GameModel? = null
 
@@ -36,6 +32,38 @@ class PlayingGameFieldView(context: Context, attributeSet: AttributeSet?) :
         fillPaint.style = Paint.Style.FILL
     }
 
+    private fun getDrawable(resource: Int, bounds: Rect): Drawable {
+        val drawable = ResourcesCompat.getDrawable(resources, resource,null)!!
+        drawable.bounds = bounds
+        return drawable
+    }
+
+    @Suppress("MemberVisibilityCanBePrivate")
+    fun missCell(point: Point) = missCell(point.x, point.y)
+
+    @Suppress("MemberVisibilityCanBePrivate")
+    fun missCell(x: Int, y: Int): Boolean {
+        if (x < 1 || y < 1 || x > 10 || y > 10) {
+            return false
+        }
+
+        val bounds = Rect()
+        cellGameToView(x, y).round(bounds)
+
+        val animation = getDrawable(R.drawable.anim_splash, bounds) as AnimationDrawable
+        animation.callback = object: AnimationDrawableCallback(animation, view = this) {
+            override fun onAnimationComplete() {
+                cellDrawables.remove(animation)
+                cellDrawables.add(getDrawable(R.drawable.blur_point, bounds))
+            }
+        }
+        cellDrawables.add(animation)
+        animation.start()
+
+        return true
+    }
+
+    @Suppress("MemberVisibilityCanBePrivate")
     fun hitCell(point: Point) = hitCell(point.x, point.y)
 
     @Suppress("MemberVisibilityCanBePrivate")
@@ -43,32 +71,22 @@ class PlayingGameFieldView(context: Context, attributeSet: AttributeSet?) :
         if (x < 1 || y < 1 || x > 10 || y > 10) {
             return false
         }
-        val cellState = gameModel!!.getCell(x - 1, y - 1)
 
-        Log.d("TAP", "($x;$y) - $cellState")
+        val bounds = Rect()
+        cellGameToView(x, y).round(bounds)
 
-        if (cellState == CellState.FREE) {
-            val animation = ResourcesCompat.getDrawable(
-                resources,
-                R.drawable.splash_animation,
-                null
-            ) as AnimationDrawable
-            splashAnimations.add(animation)
-
-            val (left, top) = coordsGameToView(x, y)
-            val (right, bottom) = coordsGameToView(x + 1, y + 1)
-            val bounds = Rect()
-            RectF(left, top, right, bottom).round(bounds)
-
-            animation.bounds = bounds
-            animation.callback = object : AnimationDrawableCallback(animation, view = this) {
-                override fun onAnimationComplete() {
-                    splashAnimations.remove(animation)
-                    hitCells.add(Pair(Point(x, y), cellState))
-                }
+        val animation = getDrawable(R.drawable.anim_explosion, bounds) as AnimationDrawable
+        animation.callback = object: AnimationDrawableCallback(animation, view = this) {
+            override fun onAnimationComplete() {
+                cellDrawables.remove(animation)
+                val cross = getDrawable(R.drawable.anim_cross, bounds) as AnimationDrawable
+                cross.callback = AnimationDrawableCallback(cross, view = this@PlayingGameFieldView)
+                cellDrawables.add(cross)
+                cross.start()
             }
-            animation.start()
         }
+        cellDrawables.add(animation)
+        animation.start()
 
         return true
     }
@@ -125,7 +143,7 @@ class PlayingGameFieldView(context: Context, attributeSet: AttributeSet?) :
             }
         }
 
-        splashAnimations.forEach { anim ->
+        cellDrawables.forEach { anim ->
             anim.draw(canvas)
         }
     }
@@ -136,23 +154,25 @@ class PlayingGameFieldView(context: Context, attributeSet: AttributeSet?) :
 
     fun initGameField(ships: Set<Ship>) {
         gameModel = GameModel(ships)
-        gameModel!!.setOnShipKilled { ship: Ship ->
-            val point = ship.position
-            val vertical = ship.orientation == Orientation.VERTICAL
-            val length = ship.length
-            if (vertical) {
-                ((point.x - 1)..(point.x + 1)).forEach { x ->
-                    ((point.y - 1)..(point.y + length)).forEach { y ->
-                        hitCell(x, y)
-                    }
-                }
-            } else {
-                ((point.x - 1)..(point.x + length)).forEach { x ->
-                    ((point.y - 1)..(point.y + 1)).forEach { y ->
-                        hitCell(x, y)
-                    }
-                }
-            }
-        }
+        gameModel?.addOnHit { point -> hitCell(point.x + 1, point.y + 1) }
+        gameModel?.addOnMiss { point -> missCell(point.x + 1, point.y + 1)}
+//        gameModel!!.setOnShipKilled { ship: Ship ->
+//            val point = ship.position
+//            val vertical = ship.orientation == Orientation.VERTICAL
+//            val length = ship.length
+//            if (vertical) {
+//                ((point.x - 1)..(point.x + 1)).forEach { x ->
+//                    ((point.y - 1)..(point.y + length)).forEach { y ->
+//                        missCell(x, y)
+//                    }
+//                }
+//            } else {
+//                ((point.x - 1)..(point.x + length)).forEach { x ->
+//                    ((point.y - 1)..(point.y + 1)).forEach { y ->
+//                        missCell(x, y)
+//                    }
+//                }
+//            }
+//        }
     }
 }
