@@ -43,6 +43,11 @@ class Game : AppCompatActivity() {
             }
 
             leftPlayer.initGameField(app.player1.ships)
+            val ai = when (app.gameMode) {
+                GameMode.PVP -> rightPlayer.initGameField(app.player2.ships)
+                GameMode.PVE -> rightPlayer.initGameField(app.player2.ships, isBot = true)
+                else -> throw IllegalStateException()
+            }
             rightPlayer.initGameField(app.player2.ships)
 
             Log.d("QWEQWE", app.player1.name)
@@ -71,14 +76,13 @@ class Game : AppCompatActivity() {
                             2
                         }
                     }
-                } else {
-
                 }
                 leftPlayer.invalidate()
             }
 
             rightPlayer.setOnTapListener { point: Point ->
                 Log.d("TAP", "right player | (${point.x};${point.y})")
+                leftPlayer.invalidate()
                 if (currentPlayer == 2) {
                     rightPlayer.hitCell(point)
                     val (isKeep, _) = rightPlayer.gameModel!!.hit(point.x - 1, point.y - 1)
@@ -93,7 +97,20 @@ class Game : AppCompatActivity() {
                         2
                     } else {
                         playerTurnArrow.animate().rotation(180f).start()
-                        1
+                        when (app.gameMode) {
+                            GameMode.PVP -> {
+                                rightPlayer.initGameField(app.player2.ships)
+                                1
+                            }
+                            GameMode.PVE -> {
+                                ai?.getPointToShot()?.let {
+                                    val (isKeep, _) = leftPlayer.gameModel!!.hit(it.x, it.y)
+                                    leftPlayer.hitCell(it)
+                                }
+                                2
+                            }
+                            else -> throw IllegalStateException()
+                        }
                     }
                     rightPlayer.invalidate()
                 }

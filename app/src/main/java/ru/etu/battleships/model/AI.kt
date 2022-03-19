@@ -1,10 +1,7 @@
 package ru.etu.battleships.model
 
-class AI {
+class AI(private var gameModel: GameModel) {
     private val size = 10
-
-    // TODO: FIX IT
-    private val gameModel = GameModel(emptySet())
 
     private val enemyShips = mutableListOf(
         1, 1, 1, 1,
@@ -18,18 +15,16 @@ class AI {
     private val availableCells =
         (0 until size).flatMap { i -> (0 until size).map { j -> Point(i, j) } }.toMutableSet()
 
-    init {
 
-    }
-
-    fun makeShot(): Point {
+    fun getPointToShot(): Point {
         recalculateWeightMap()
         val maxWeight = weights.flatten().maxOrNull()
         val index = weights.flatten().indexOf(maxWeight)
         val y = index / size
         val x = index % size
-        val pointToShot = Point(x, y)
-        return pointToShot
+        val point = Point(x, y)
+        gameModel.hit(point.x, point.y)
+        return point
     }
 
     // TODO: remove cells after destroying ship

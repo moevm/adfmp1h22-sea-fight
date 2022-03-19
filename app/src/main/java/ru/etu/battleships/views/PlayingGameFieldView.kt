@@ -2,9 +2,12 @@ package ru.etu.battleships.views
 
 import android.content.Context
 import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.Paint
 import android.util.AttributeSet
 import android.util.Log
 import android.view.MotionEvent
+import ru.etu.battleships.model.AI
 import ru.etu.battleships.model.CellState
 import ru.etu.battleships.model.GameModel
 import ru.etu.battleships.model.Orientation
@@ -21,6 +24,12 @@ class PlayingGameFieldView(context: Context, attributeSet: AttributeSet?) :
     private val hitCells: MutableList<Pair<Point, CellState>> = mutableListOf()
 
     var gameModel: GameModel? = null
+
+    private val fillPaint = Paint()
+
+    init {
+        fillPaint.style = Paint.Style.FILL
+    }
 
     fun hitCell(point: Point) = hitCell(point.x, point.y)
 
@@ -64,24 +73,23 @@ class PlayingGameFieldView(context: Context, attributeSet: AttributeSet?) :
         return true
     }
 
-    override fun drawState(canvas: Canvas) {
-        ships.forEach { ship ->
-            val x = ship.position.x
-            val y = ship.position.y
-            repeat(ship.length) {
-                when (ship.orientation) {
-                    Orientation.HORIZONTAL -> {
-                        drawText(canvas, "S", x + it, y)
-                    }
-                    Orientation.VERTICAL -> {
-                        drawText(canvas, "S", x, y + it)
-                    }
-                }
-            }
-        }
+    private fun intToColor(i: Int) = when (i) {
+        1 -> Color.argb(128, 0, 0, 255)
+        2 -> Color.argb(128, 255, 255, 0)
+        3 -> Color.argb(128, 255, 0, 0)
+        4 -> Color.argb(128, 0, 255, 0)
+        else -> Color.argb(0, 0, 0, 0)
+    }
 
-        hitCells.forEach { (point, cellState) ->
-            drawText(canvas, "X", point)
+    override fun drawState(canvas: Canvas) {
+        gameModel?.getMatrix()?.forEachIndexed { y, row ->
+            row.forEachIndexed { x, value ->
+                val (l, t) = coordsGameToView(x + 1, y + 1)
+                val (r, b) = coordsGameToView(x + 2, y + 2)
+
+                fillPaint.color = intToColor(value)
+                canvas.drawRect(l, t, r, b, fillPaint)
+            }
         }
     }
 
@@ -89,9 +97,14 @@ class PlayingGameFieldView(context: Context, attributeSet: AttributeSet?) :
         onTapListenerCallbacks.add(function)
     }
 
-    fun initGameField(ships: Set<Ship>) {
+    fun initGameField(ships: Set<Ship>, isBot: Boolean = false): AI? {
         this.ships.addAll(ships)
         gameModel = GameModel(ships)
+        val ai = if (isBot) {
+            AI(gameModel!!)
+        } else {
+            null
+        }
         gameModel!!.setOnShipKilled { ship: Ship ->
             val point = ship.position
             val vertical = ship.orientation == Orientation.VERTICAL
@@ -110,5 +123,7 @@ class PlayingGameFieldView(context: Context, attributeSet: AttributeSet?) :
                 }
             }
         }
+
+        return ai
     }
 }
