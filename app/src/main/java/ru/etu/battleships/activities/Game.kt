@@ -61,7 +61,6 @@ class Game : AppCompatActivity() {
             leftPlayer.setOnTapListener { point: Point ->
                 Log.d("TAP", "left player | (${point.x};${point.y})")
                 if (currentPlayer == 1) {
-                    leftPlayer.hitCell(point)
                     val (isKeep, _) = leftPlayer.gameModel!!.hit(point.x - 1, point.y - 1)
                     if (leftPlayer.gameModel!!.isOver()) {
                         Toast.makeText(
@@ -83,7 +82,6 @@ class Game : AppCompatActivity() {
             rightPlayer.setOnTapListener { point: Point ->
                 Log.d("TAP", "right player | (${point.x};${point.y})")
                 if (currentPlayer == 2) {
-                    rightPlayer.hitCell(point)
                     val (isKeep, _) = rightPlayer.gameModel!!.hit(point.x - 1, point.y - 1)
                     if (rightPlayer.gameModel!!.isOver()) {
                         Toast.makeText(

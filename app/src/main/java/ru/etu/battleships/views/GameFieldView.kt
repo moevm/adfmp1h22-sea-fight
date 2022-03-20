@@ -54,6 +54,12 @@ open class GameFieldView(context: Context, attributeSet: AttributeSet?) :
         ((y - offsetY) / cellSize).toInt()
     )
 
+    protected fun cellGameToView(x: Int, y: Int): RectF {
+        val (left, top) = coordsGameToView(x, y)
+        val (right, bottom) = coordsGameToView(x + 1, y + 1)
+        return RectF(left, top, right, bottom)
+    }
+
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
 

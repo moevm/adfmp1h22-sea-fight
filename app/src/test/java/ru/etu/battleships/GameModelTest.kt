@@ -192,4 +192,28 @@ class GameModelTest : TestCase() {
             model.getMatrix()
         )
     }
+
+    fun testLongVerticalShip() {
+        val model = GameModel(emptySet())
+        model.setMatrix(initField)
+        model.hit(5, 0)
+        model.hit(5, 1)
+        model.hit(5, 2)
+        model.hit(5, 3)
+        Assert.assertEquals(
+            listOf(
+                listOf(1, 1, 1, 1, 4, 4, 4, 0, 0, 0),
+                listOf(0, 0, 0, 0, 4, 3, 4, 1, 0, 1),
+                listOf(0, 1, 1, 1, 4, 3, 4, 1, 0, 0),
+                listOf(0, 0, 0, 0, 4, 3, 4, 0, 0, 0),
+                listOf(0, 0, 1, 1, 4, 4, 4, 0, 0, 0),
+                listOf(1, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+                listOf(0, 0, 0, 1, 0, 0, 1, 1, 0, 0),
+                listOf(0, 1, 0, 0, 0, 0, 0, 0, 0, 0),
+                listOf(0, 0, 0, 1, 0, 0, 0, 0, 0, 0),
+                listOf(1, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+            ),
+            model.getMatrix()
+        )
+    }
 }
