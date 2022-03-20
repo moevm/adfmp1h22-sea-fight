@@ -44,7 +44,6 @@ class SetupGameFieldView(context: Context, attributeSet: AttributeSet?) :
     private var pressedX = 0f
     private var pressedY = 0f
 
-
     init {
         paint.style = Paint.Style.STROKE
         paint.color = Color.YELLOW

@@ -16,7 +16,6 @@ class SetupRight : AppCompatActivity() {
     private lateinit var questionDialog: QuestionDialog
     private lateinit var helpDialog: InfoSetupDialog
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySetupRightBinding.inflate(layoutInflater)
