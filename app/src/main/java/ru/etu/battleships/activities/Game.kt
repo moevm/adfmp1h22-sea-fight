@@ -3,7 +3,6 @@ package ru.etu.battleships.activities
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import ru.etu.battleships.Application
 import ru.etu.battleships.R
@@ -11,7 +10,6 @@ import ru.etu.battleships.databinding.ActivityGameBinding
 import ru.etu.battleships.extUI.InfoGameDialog
 import ru.etu.battleships.extUI.QuestionDialog
 import ru.etu.battleships.extUI.WinnerDialog
-import ru.etu.battleships.model.CellState
 import ru.etu.battleships.model.Point
 import ru.etu.battleships.model.UserScore
 import kotlin.system.exitProcess
