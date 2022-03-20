@@ -2,16 +2,17 @@ package ru.etu.battleships.activities
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import ru.etu.battleships.Application
 import ru.etu.battleships.R
 import ru.etu.battleships.databinding.ActivityGameBinding
-import ru.etu.battleships.model.GameMode
 import ru.etu.battleships.extUI.InfoGameDialog
 import ru.etu.battleships.extUI.QuestionDialog
 import ru.etu.battleships.model.AI
+import ru.etu.battleships.model.GameMode
 import ru.etu.battleships.model.Point
 import kotlin.system.exitProcess
 
@@ -19,7 +20,6 @@ class Game : AppCompatActivity() {
     enum class Turn {
         LEFT_PLAYER,
         RIGHT_PLAYER,
-        BOT,
     }
 
     private lateinit var binding: ActivityGameBinding
@@ -112,19 +112,26 @@ class Game : AppCompatActivity() {
                         Turn.LEFT_PLAYER
                     } else {
                         playerTurnArrow.animate().rotation(180f).start()
-//                        Turn.LEFT_PLAYER
-                        when (app.gameMode) {
-                            GameMode.PVP -> {
-                                Turn.RIGHT_PLAYER
-                            }
-                            GameMode.PVE -> {
-                                val (isKeep, _) = ai!!.hit()
-                                Turn.LEFT_PLAYER
-                            }
-                            else -> throw IllegalStateException()
-                        }
+                        val handler = Handler()
+                        handler.postDelayed(
+                            Runnable { ai?.hit() },
+                            500
+                        )
+                        Turn.RIGHT_PLAYER
                     }
                 }
+            }
+
+            leftPlayer.gameModel?.addOnHit {
+                val handler = Handler()
+                handler.postDelayed(
+                    Runnable { ai?.hit() },
+                    500
+                )
+            }
+
+            leftPlayer.gameModel?.addOnMiss {
+                currentPlayer = Turn.LEFT_PLAYER
             }
         }
     }

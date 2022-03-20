@@ -83,8 +83,6 @@ class GameModel(listOfShips: Set<Ship>) {
         squashedMatrix.filter { it == CellState.KILLED }
     }.size == (4 * 1 + 3 * 2 + 2 * 3 + 1 * 4)
 
-    fun hit(point: Point) = hit(point.x, point.y)
-
     fun hit(x: Int, y: Int): Pair<Boolean, CellState> {
         val cell = getCell(x, y)
         if (

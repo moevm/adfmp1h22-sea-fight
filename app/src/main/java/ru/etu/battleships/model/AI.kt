@@ -16,7 +16,7 @@ class AI(val gameModel: GameModel) {
         (0 until size).flatMap { i -> (0 until size).map { j -> Point(i, j) } }.toMutableSet()
 
 
-    fun hit(): Pair<Boolean, CellState> {
+    fun hit() {
         recalculateWeightMap()
         val maxWeight = weights.flatten().maxOrNull()
 
@@ -27,8 +27,7 @@ class AI(val gameModel: GameModel) {
 
         val y = index / size
         val x = index % size
-        val point = Point(x, y)
-        return gameModel.hit(point.x, point.y)
+        gameModel.hit(x, y)
     }
 
     // TODO: remove cells after destroying ship
