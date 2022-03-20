@@ -6,6 +6,11 @@
         <entry key="../../../../layout/custom_preview.xml" value="0.2421875" />
         <entry key="app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.216" />
         <entry key="app/src/main/res/drawable/TextButton.xml" value="0.3315" />
+        <entry key="app/src/main/res/drawable/aa.xml" value="0.222" />
+        <entry key="app/src/main/res/drawable/anim_cross.xml" value="0.2825" />
+        <entry key="app/src/main/res/drawable/anim_explosion.xml" value="0.2825" />
+        <entry key="app/src/main/res/drawable/anim_splash.xml" value="0.2825" />
+        <entry key="app/src/main/res/drawable/blur_point.xml" value="0.2825" />
         <entry key="app/src/main/res/drawable/button_menu.xml" value="0.3315" />
         <entry key="app/src/main/res/drawable/cell.xml" value="0.222" />
         <entry key="app/src/main/res/drawable/dialog_shape.xml" value="0.1955" />
@@ -17,9 +22,12 @@
         <entry key="app/src/main/res/drawable/menu_button_focused.xml" value="0.3315" />
         <entry key="app/src/main/res/drawable/menu_button_pressed.xml" value="0.3315" />
         <entry key="app/src/main/res/drawable/oval_button.xml" value="0.205" />
+        <entry key="app/src/main/res/drawable/point.xml" value="0.2825" />
         <entry key="app/src/main/res/drawable/rounded_corners.xml" value="0.306" />
         <entry key="app/src/main/res/drawable/shape_circle_button.xml" value="0.193" />
         <entry key="app/src/main/res/drawable/shape_circular_button.xml" value="0.193" />
+        <entry key="app/src/main/res/drawable/splash.xml" value="0.2825" />
+        <entry key="app/src/main/res/drawable/splash_animation.xml" value="0.2825" />
         <entry key="app/src/main/res/drawable/table.xml" value="0.222" />
         <entry key="app/src/main/res/drawable/table_border.xml" value="0.222" />
         <entry key="app/src/main/res/drawable/table_header.xml" value="0.222" />
