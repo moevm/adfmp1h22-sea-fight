@@ -16,7 +16,10 @@ class WinnerDialog(context: Context) {
     init {
         alertDialog = AlertDialog.Builder(context)
             .setView(binding.root)
+            .setCancelable(false)
             .create()
+
+        alertDialog.setCanceledOnTouchOutside(false)
 
         alertDialog.setOnCancelListener {
             onBackListener?.invoke()
