@@ -153,13 +153,8 @@ class PlayingGameFieldView(context: Context, attributeSet: AttributeSet?) :
         onTapListenerCallbacks.add(function)
     }
 
-    fun initGameField(ships: Set<Ship>, isBot: Boolean = false): AI? {
+    fun initGameField(ships: Set<Ship>) {
         gameModel = GameModel(ships)
-        val ai = if (isBot) {
-            AI(gameModel!!)
-        } else {
-            null
-        }
         gameModel?.addOnHit { point -> hitCell(point.x + 1, point.y + 1) }
         gameModel?.addOnMiss { point -> missCell(point.x + 1, point.y + 1) }
 //        gameModel!!.setOnShipKilled { ship: Ship ->
@@ -180,6 +175,5 @@ class PlayingGameFieldView(context: Context, attributeSet: AttributeSet?) :
 //                }
 //            }
 //        }
-        return ai
     }
 }

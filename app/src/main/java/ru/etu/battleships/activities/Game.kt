@@ -11,6 +11,7 @@ import ru.etu.battleships.databinding.ActivityGameBinding
 import ru.etu.battleships.model.GameMode
 import ru.etu.battleships.extUI.InfoGameDialog
 import ru.etu.battleships.extUI.QuestionDialog
+import ru.etu.battleships.model.AI
 import ru.etu.battleships.model.Point
 import kotlin.system.exitProcess
 
@@ -60,12 +61,13 @@ class Game : AppCompatActivity() {
             }
 
             leftPlayer.initGameField(app.player1.ships)
+            rightPlayer.initGameField(app.player2.ships)
+
             val ai = when (app.gameMode) {
-                GameMode.PVP -> rightPlayer.initGameField(app.player2.ships)
-                GameMode.PVE -> rightPlayer.initGameField(app.player2.ships, isBot = true)
+                GameMode.PVP -> null
+                GameMode.PVE -> AI(leftPlayer.gameModel!!)
                 else -> throw IllegalStateException()
             }
-            rightPlayer.initGameField(app.player2.ships)
 
             Log.d("QWEQWE", app.player1.name)
             Log.d("QWEQWE", app.player2.name)
@@ -116,9 +118,7 @@ class Game : AppCompatActivity() {
                                 Turn.RIGHT_PLAYER
                             }
                             GameMode.PVE -> {
-                                ai?.getPointToShot()?.let {
-                                    val (isKeep, _) = leftPlayer.gameModel!!.hit(it.x, it.y)
-                                }
+                                val (isKeep, _) = ai!!.hit()
                                 Turn.LEFT_PLAYER
                             }
                             else -> throw IllegalStateException()
