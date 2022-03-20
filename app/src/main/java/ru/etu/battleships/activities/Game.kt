@@ -70,10 +70,8 @@ class Game : AppCompatActivity() {
 
             leftPlayer.setOnTapListener { point: Point ->
                 Log.d("TAP", "left player | (${point.x};${point.y})")
-//<<<<<<< HEAD
                 if (app.gameMode == GameMode.PVP) {
                     if (currentPlayer == 1) {
-                        leftPlayer.hitCell(point)
                         val (isKeep, _) = leftPlayer.gameModel!!.hit(point.x - 1, point.y - 1)
                         if (leftPlayer.gameModel!!.isOver()) {
                             Toast.makeText(
@@ -88,22 +86,6 @@ class Game : AppCompatActivity() {
                             playerTurnArrow.animate().rotation(0f).start()
                             2
                         }
-//=======
-                if (currentPlayer == 1) {
-                    val (isKeep, _) = leftPlayer.gameModel!!.hit(point.x - 1, point.y - 1)
-                    if (leftPlayer.gameModel!!.isOver()) {
-                        Toast.makeText(
-                            this@Game,
-                            "Player 1 lost!",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
-                    currentPlayer = if (isKeep) {
-                        1
-                    } else {
-                        playerTurnArrow.animate().rotation(0f).start()
-                        2
-//>>>>>>> main
                     }
                 }
                 leftPlayer.invalidate()
