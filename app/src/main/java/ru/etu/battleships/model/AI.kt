@@ -15,7 +15,6 @@ class AI(val gameModel: GameModel) {
     private val availableCells =
         (0 until size).flatMap { i -> (0 until size).map { j -> Point(i, j) } }.toMutableSet()
 
-
     fun hit() {
         recalculateWeightMap()
         val maxWeight = weights.flatten().maxOrNull()
