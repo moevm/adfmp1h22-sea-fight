@@ -95,7 +95,7 @@ class GameModel(listOfShips: Set<Ship>) {
 
         if (cell == CellState.FREE) {
             setCell(x, y, CellState.MISS)
-            onMissCallbacks.forEach { f -> f(Point(x, y))}
+            onMissCallbacks.forEach { f -> f(Point(x, y)) }
             return Pair(false, getCell(x, y))
         }
 
