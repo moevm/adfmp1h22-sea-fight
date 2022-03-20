@@ -7,11 +7,10 @@ import androidx.appcompat.app.AppCompatActivity
 import ru.etu.battleships.Application
 import ru.etu.battleships.R
 import ru.etu.battleships.databinding.ActivitySetupLeftBinding
-import ru.etu.battleships.databinding.DialogQuestionBinding
-import ru.etu.battleships.model.GameMode
-import ru.etu.battleships.views.SetupGameFieldView
 import ru.etu.battleships.extUI.InfoSetupDialog
 import ru.etu.battleships.extUI.QuestionDialog
+import ru.etu.battleships.model.GameMode
+import ru.etu.battleships.views.SetupGameFieldView
 import ru.etu.battleships.views.ShipView
 
 class SetupLeft : AppCompatActivity() {
@@ -57,7 +56,7 @@ class SetupLeft : AppCompatActivity() {
                         }
                         else -> throw IllegalStateException()
                     }
-                    startActivity (intent)
+                    startActivity(intent)
                 } else {
                     Toast.makeText(
                         this@SetupLeft,

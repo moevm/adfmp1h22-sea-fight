@@ -13,7 +13,6 @@ import androidx.core.content.res.ResourcesCompat
 import ru.etu.battleships.BuildConfig
 import ru.etu.battleships.R
 import ru.etu.battleships.extUI.AnimationDrawableCallback
-import ru.etu.battleships.model.AI
 import ru.etu.battleships.model.GameModel
 import ru.etu.battleships.model.Point
 import ru.etu.battleships.model.Ship

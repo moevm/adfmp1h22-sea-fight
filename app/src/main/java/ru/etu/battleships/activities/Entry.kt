@@ -6,9 +6,8 @@ import androidx.appcompat.app.AppCompatActivity
 import ru.etu.battleships.Application
 import ru.etu.battleships.R
 import ru.etu.battleships.databinding.ActivityEntryBinding
-import ru.etu.battleships.databinding.DialogQuestionBinding
-import ru.etu.battleships.model.GameMode
 import ru.etu.battleships.extUI.QuestionDialog
+import ru.etu.battleships.model.GameMode
 import kotlin.system.exitProcess
 
 class Entry : AppCompatActivity() {

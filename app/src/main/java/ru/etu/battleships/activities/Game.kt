@@ -131,6 +131,7 @@ class Game : AppCompatActivity() {
             }
 
             leftPlayer.gameModel?.addOnMiss {
+                playerTurnArrow.animate().rotation(0f).start()
                 currentPlayer = Turn.LEFT_PLAYER
             }
         }
