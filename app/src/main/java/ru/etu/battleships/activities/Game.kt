@@ -8,7 +8,6 @@ import androidx.appcompat.app.AppCompatActivity
 import ru.etu.battleships.Application
 import ru.etu.battleships.R
 import ru.etu.battleships.databinding.ActivityGameBinding
-import ru.etu.battleships.databinding.DialogQuestionBinding
 import ru.etu.battleships.model.GameMode
 import ru.etu.battleships.extUI.InfoGameDialog
 import ru.etu.battleships.extUI.QuestionDialog
@@ -16,10 +15,16 @@ import ru.etu.battleships.model.Point
 import kotlin.system.exitProcess
 
 class Game : AppCompatActivity() {
+    enum class Turn {
+        LEFT_PLAYER,
+        RIGHT_PLAYER,
+        BOT,
+    }
+
     private lateinit var binding: ActivityGameBinding
     private lateinit var questionDialog: QuestionDialog
     private lateinit var helpDialog: InfoGameDialog
-    private var currentPlayer = 2
+    private var currentPlayer = Turn.LEFT_PLAYER
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -71,7 +76,7 @@ class Game : AppCompatActivity() {
             leftPlayer.setOnTapListener { point: Point ->
                 Log.d("TAP", "left player | (${point.x};${point.y})")
                 if (app.gameMode == GameMode.PVP) {
-                    if (currentPlayer == 1) {
+                    if (currentPlayer == Turn.RIGHT_PLAYER) {
                         val (isKeep, _) = leftPlayer.gameModel!!.hit(point.x - 1, point.y - 1)
                         if (leftPlayer.gameModel!!.isOver()) {
                             Toast.makeText(
@@ -81,20 +86,18 @@ class Game : AppCompatActivity() {
                             ).show()
                         }
                         currentPlayer = if (isKeep) {
-                            1
+                            Turn.RIGHT_PLAYER
                         } else {
                             playerTurnArrow.animate().rotation(0f).start()
-                            2
+                            Turn.LEFT_PLAYER
                         }
                     }
                 }
-                leftPlayer.invalidate()
             }
 
             rightPlayer.setOnTapListener { point: Point ->
                 Log.d("TAP", "right player | (${point.x};${point.y})")
-                leftPlayer.invalidate()
-                if (currentPlayer == 2) {
+                if (currentPlayer == Turn.LEFT_PLAYER) {
                     val (isKeep, _) = rightPlayer.gameModel!!.hit(point.x - 1, point.y - 1)
                     if (rightPlayer.gameModel!!.isOver()) {
                         Toast.makeText(
@@ -104,25 +107,23 @@ class Game : AppCompatActivity() {
                         ).show()
                     }
                     currentPlayer = if (isKeep) {
-                        2
+                        Turn.LEFT_PLAYER
                     } else {
                         playerTurnArrow.animate().rotation(180f).start()
+//                        Turn.LEFT_PLAYER
                         when (app.gameMode) {
                             GameMode.PVP -> {
-                                rightPlayer.initGameField(app.player2.ships)
-                                1
+                                Turn.RIGHT_PLAYER
                             }
                             GameMode.PVE -> {
                                 ai?.getPointToShot()?.let {
                                     val (isKeep, _) = leftPlayer.gameModel!!.hit(it.x, it.y)
-                                    leftPlayer.hitCell(it)
                                 }
-                                2
+                                Turn.LEFT_PLAYER
                             }
                             else -> throw IllegalStateException()
                         }
                     }
-                    rightPlayer.invalidate()
                 }
             }
         }

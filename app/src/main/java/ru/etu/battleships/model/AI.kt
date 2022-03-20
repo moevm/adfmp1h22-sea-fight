@@ -23,7 +23,7 @@ class AI(private var gameModel: GameModel) {
         val y = index / size
         val x = index % size
         val point = Point(x, y)
-        gameModel.hit(point.x, point.y)
+//        gameModel.hit(point.x, point.y)
         return point
     }
 
