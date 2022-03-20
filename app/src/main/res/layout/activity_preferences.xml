@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.Menu">
+    tools:context=".activities.Preferences">
 
     <ImageView
         android:id="@+id/backgroundImageView"
@@ -30,6 +30,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="1.0">
+
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/topButtonsLayout"
@@ -87,59 +88,37 @@
             android:gravity="center"
             android:orientation="vertical">
 
-            <LinearLayout
+            <androidx.appcompat.widget.AppCompatCheckBox
                 style="@style/TextButton"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
                 android:layout_marginHorizontal="5dp"
-                android:layout_marginVertical="10dp" >
+                android:layout_marginVertical="10dp"
 
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="6"
-                    android:paddingTop="9dp"
-                    android:text="@string/sound_setting"
-                    android:textAlignment="center"
-                    android:textAppearance="@style/TextButton"
-                    android:textSize="24sp" />
+                android:text="@string/sound_setting"
+                android:includeFontPadding="false"
+                android:textAlignment="center"
+                android:textAppearance="@style/TextButton"
+                android:textSize="24sp"
 
-                <ImageView
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="4"
-                    android:contentDescription="@string/sound_setting"
-                    app:srcCompat="@drawable/ic_checkbox_disabled" />
+                android:layoutDirection="rtl"
+                android:button="@drawable/checkbox" />
 
-            </LinearLayout>
-
-            <LinearLayout
+            <androidx.appcompat.widget.AppCompatCheckBox
                 style="@style/TextButton"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
                 android:layout_marginHorizontal="5dp"
-                android:layout_marginVertical="10dp" >
+                android:layout_marginVertical="10dp"
 
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="6"
-                    android:paddingTop="9dp"
-                    android:text="@string/vibration_setting"
-                    android:textAlignment="center"
-                    android:textAppearance="@style/TextButton"
-                    android:textSize="24sp" />
+                android:text="@string/vibration_setting"
+                android:includeFontPadding="false"
+                android:textAlignment="center"
+                android:textAppearance="@style/TextButton"
+                android:textSize="24sp"
 
-                <ImageView
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="4"
-                    android:contentDescription="@string/vibration_setting"
-                    app:srcCompat="@drawable/ic_checkbox_disabled" />
-
-            </LinearLayout>
-
-
+                android:layoutDirection="rtl"
+                android:button="@drawable/checkbox" />
 
         </LinearLayout>
 
