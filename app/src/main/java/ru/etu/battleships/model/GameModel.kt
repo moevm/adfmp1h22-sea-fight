@@ -101,7 +101,7 @@ class GameModel(listOfShips: Set<Ship>) {
 
         if (cell == CellState.OCCUPIED) {
             setCell(x, y, CellState.HIT)
-            onHitCallbacks.forEach { f -> f(Point(x, y))}
+            onHitCallbacks.forEach { f -> f(Point(x, y)) }
             var killed = false
             var vertical = false
             var length: Int

@@ -33,7 +33,7 @@ class PlayingGameFieldView(context: Context, attributeSet: AttributeSet?) :
     }
 
     private fun getDrawable(resource: Int, bounds: Rect): Drawable {
-        val drawable = ResourcesCompat.getDrawable(resources, resource,null)!!
+        val drawable = ResourcesCompat.getDrawable(resources, resource, null)!!
         drawable.bounds = bounds
         return drawable
     }
@@ -51,7 +51,7 @@ class PlayingGameFieldView(context: Context, attributeSet: AttributeSet?) :
         cellGameToView(x, y).round(bounds)
 
         val animation = getDrawable(R.drawable.anim_splash, bounds) as AnimationDrawable
-        animation.callback = object: AnimationDrawableCallback(animation, view = this) {
+        animation.callback = object : AnimationDrawableCallback(animation, view = this) {
             override fun onAnimationComplete() {
                 cellDrawables.remove(animation)
                 cellDrawables.add(getDrawable(R.drawable.blur_point, bounds))
@@ -76,7 +76,7 @@ class PlayingGameFieldView(context: Context, attributeSet: AttributeSet?) :
         cellGameToView(x, y).round(bounds)
 
         val animation = getDrawable(R.drawable.anim_explosion, bounds) as AnimationDrawable
-        animation.callback = object: AnimationDrawableCallback(animation, view = this) {
+        animation.callback = object : AnimationDrawableCallback(animation, view = this) {
             override fun onAnimationComplete() {
                 cellDrawables.remove(animation)
                 val cross = getDrawable(R.drawable.anim_cross, bounds) as AnimationDrawable
@@ -122,7 +122,7 @@ class PlayingGameFieldView(context: Context, attributeSet: AttributeSet?) :
         return true
     }
 
-    private fun intToColor(i: Int) = when(i) {
+    private fun intToColor(i: Int) = when (i) {
         1 -> Color.argb(128, 0, 0, 255)
         2 -> Color.argb(128, 255, 255, 0)
         3 -> Color.argb(128, 255, 0, 0)
@@ -155,7 +155,7 @@ class PlayingGameFieldView(context: Context, attributeSet: AttributeSet?) :
     fun initGameField(ships: Set<Ship>) {
         gameModel = GameModel(ships)
         gameModel?.addOnHit { point -> hitCell(point.x + 1, point.y + 1) }
-        gameModel?.addOnMiss { point -> missCell(point.x + 1, point.y + 1)}
+        gameModel?.addOnMiss { point -> missCell(point.x + 1, point.y + 1) }
 //        gameModel!!.setOnShipKilled { ship: Ship ->
 //            val point = ship.position
 //            val vertical = ship.orientation == Orientation.VERTICAL

@@ -10,7 +10,6 @@ import ru.etu.battleships.R
 import ru.etu.battleships.databinding.ActivityGameBinding
 import ru.etu.battleships.extUI.InfoGameDialog
 import ru.etu.battleships.extUI.QuestionDialog
-import ru.etu.battleships.model.CellState
 import ru.etu.battleships.model.Point
 import kotlin.system.exitProcess
 

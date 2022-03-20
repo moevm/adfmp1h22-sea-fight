@@ -5,7 +5,6 @@ import android.graphics.drawable.Drawable
 import android.os.SystemClock
 import android.view.View
 
-
 open class AnimationDrawableCallback(
     animationDrawable: AnimationDrawable,
     callback: Drawable.Callback? = null,
