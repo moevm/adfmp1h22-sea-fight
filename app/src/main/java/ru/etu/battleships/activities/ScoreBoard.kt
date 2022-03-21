@@ -24,7 +24,7 @@ class ScoreBoard : AppCompatActivity() {
             private var binding = ScoreBoardItemBinding.bind(item)
             fun bind(userScore: UserScore) = with(binding) {
                 username.text = userScore.username
-                victories.text = userScore.victories.toString()
+                victories.text = userScore.score.toString()
             }
         }
 
@@ -69,7 +69,7 @@ class ScoreBoard : AppCompatActivity() {
             }
 
         usersDBHelper = UsersDBHelper(this)
-        users = usersDBHelper.readAllUsers()
+        users = usersDBHelper.readAllUserScores().toMutableList()
         init()
 
         setContentView(binding.root)
