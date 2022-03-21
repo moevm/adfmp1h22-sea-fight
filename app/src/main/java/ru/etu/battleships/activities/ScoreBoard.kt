@@ -69,7 +69,7 @@ class ScoreBoard : AppCompatActivity() {
             }
 
         usersDBHelper = UsersDBHelper(this)
-        users = usersDBHelper.readAllUserScores().toMutableList()
+        users = usersDBHelper.getAllUserScores().toMutableList()
         init()
 
         setContentView(binding.root)

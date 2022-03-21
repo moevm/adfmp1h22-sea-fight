@@ -21,11 +21,17 @@ class UsersDBHelper(context: Context) :
         onCreate(db)
     }
 
+    fun recreateDb() {
+        val db = writableDatabase
+        db.execSQL(SQL_DELETE_ENTRIES)
+        onCreate(db)
+    }
+
     override fun onDowngrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
         onUpgrade(db, oldVersion, newVersion)
     }
 
-    fun readAllUserScores(): List<UserScore> {
+    fun getAllUserScores(): List<UserScore> {
         val gameScores = ArrayList<GameScore>()
         val db = writableDatabase
         var cursor: Cursor?
@@ -38,7 +44,7 @@ class UsersDBHelper(context: Context) :
 
         var winner: String
         var loser: String
-        var victories: String
+        var victories: Int
         if (cursor!!.moveToFirst()) {
             while (!cursor.isAfterLast) {
                 winner =
@@ -46,9 +52,9 @@ class UsersDBHelper(context: Context) :
                 loser =
                     cursor.getString(cursor.getColumnIndexOrThrow(DBContract.UserEntry.COLUMN_LOSER))
                 victories =
-                    cursor.getString(cursor.getColumnIndexOrThrow(DBContract.UserEntry.COLUMN_SCORE))
+                    cursor.getInt(cursor.getColumnIndexOrThrow(DBContract.UserEntry.COLUMN_SCORE))
 
-                gameScores.add(GameScore(winner, loser, victories.toInt()))
+                gameScores.add(GameScore(winner, loser, victories))
                 cursor.moveToNext()
             }
         }
@@ -72,6 +78,19 @@ class UsersDBHelper(context: Context) :
         insertPair(winner, loser)
     }
 
+    fun getWinnerLoserScore(winner: String, loser: String): Int {
+        val db = this.writableDatabase
+        val selectQuery =
+            "SELECT  * FROM ${DBContract.UserEntry.TABLE_NAME} WHERE ${DBContract.UserEntry.COLUMN_WINNER} = ? AND ${DBContract.UserEntry.COLUMN_LOSER} = ?"
+
+        db.rawQuery(selectQuery, arrayOf(winner, loser)).use {
+            if (it.moveToFirst()) {
+                return it.getInt(it.getColumnIndexOrThrow(DBContract.UserEntry.COLUMN_SCORE))
+            }
+        }
+        return 0
+    }
+
     @Throws(SQLiteConstraintException::class)
     private fun insertPair(winner: String, loser: String): Boolean {
         val db = writableDatabase
@@ -93,7 +112,8 @@ class UsersDBHelper(context: Context) :
         val values = ContentValues()
         values.put(DBContract.UserEntry.COLUMN_SCORE, score)
 
-        val whereClause = "${DBContract.UserEntry.COLUMN_WINNER}=? AND ${DBContract.UserEntry.COLUMN_LOSER}=?"
+        val whereClause =
+            "${DBContract.UserEntry.COLUMN_WINNER}=? AND ${DBContract.UserEntry.COLUMN_LOSER}=?"
         val whereArgs = arrayOf(winner, loser)
         db.update(DBContract.UserEntry.TABLE_NAME, values, whereClause, whereArgs)
 
@@ -102,13 +122,15 @@ class UsersDBHelper(context: Context) :
 
     companion object {
         // If you change the database schema, you must increment the database version.
-        val DATABASE_VERSION = 1
+        val DATABASE_VERSION = 2
         val DATABASE_NAME = "seafight.db"
 
         private val SQL_CREATE_ENTRIES =
             "CREATE TABLE " + DBContract.UserEntry.TABLE_NAME + " (" +
-                DBContract.UserEntry.COLUMN_LOSER + " TEXT PRIMARY KEY," +
-                DBContract.UserEntry.COLUMN_SCORE + " TEXT)"
+                DBContract.UserEntry.ID + " INT PRIMARY KEY," +
+                DBContract.UserEntry.COLUMN_WINNER + " TEXT," +
+                DBContract.UserEntry.COLUMN_LOSER + " TEXT," +
+                DBContract.UserEntry.COLUMN_SCORE + " INT)"
 
         private val SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS " + DBContract.UserEntry.TABLE_NAME
     }
