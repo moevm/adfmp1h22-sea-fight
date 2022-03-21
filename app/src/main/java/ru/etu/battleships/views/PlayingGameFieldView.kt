@@ -28,6 +28,8 @@ class PlayingGameFieldView(context: Context, attributeSet: AttributeSet?) :
 
     var gameModel: GameModel? = null
 
+    val crossedPoints = mutableSetOf<Point>()
+
     init {
         fillPaint.style = Paint.Style.FILL
     }
@@ -92,29 +94,43 @@ class PlayingGameFieldView(context: Context, attributeSet: AttributeSet?) :
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
-        val x = ((event.x - offsetX) / cellSize).toInt()
-        val y = ((event.y - offsetY) / cellSize).toInt()
+        val (x, y) = coordsViewToGame(event.x, event.y)
 
-        when (event.action) {
+        return when (event.action) {
             MotionEvent.ACTION_DOWN -> {
-                // TODO: draw lines crossed at the cell
+                crossedPoints.addAll((0 until 10).map { Point(it, y - 1) })
+                crossedPoints.addAll((0 until 10).map { Point(x - 1, it) })
+                invalidate()
+                true
             }
 
             MotionEvent.ACTION_MOVE -> {
-                // TODO: draw lines crossed at the cell
+                crossedPoints.clear()
+
+                if (x in 1..10 && y in 1..10) {
+                    crossedPoints.addAll((0 until 10).map { Point(it, y - 1) })
+                    crossedPoints.addAll((0 until 10).map { Point(x - 1, it) })
+                    invalidate()
+                    true
+                } else {
+                    invalidate()
+                    false
+                }
             }
 
             MotionEvent.ACTION_UP -> {
                 this.performClick()
+                crossedPoints.clear()
                 if (x > 0 && y > 0) {
                     onTapListenerCallbacks.forEach { callback ->
                         callback(Point(x, y))
                     }
                 }
+                invalidate()
+                true
             }
+            else -> true
         }
-
-        return true
     }
 
     override fun performClick(): Boolean {
@@ -145,6 +161,17 @@ class PlayingGameFieldView(context: Context, attributeSet: AttributeSet?) :
 
         cellDrawables.forEach { anim ->
             anim.draw(canvas)
+        }
+
+        val color = Color.argb(128, 255, 0, 0)
+        crossedPoints.forEach { point ->
+            val x = point.x
+            val y = point.y
+            val (l, t) = coordsGameToView(x + 1, y + 1)
+            val (r, b) = coordsGameToView(x + 2, y + 2)
+
+            fillPaint.color = color
+            canvas.drawRect(l, t, r, b, fillPaint)
         }
     }
 
