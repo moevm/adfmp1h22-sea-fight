@@ -13,6 +13,7 @@ import androidx.core.content.res.ResourcesCompat
 import ru.etu.battleships.BuildConfig
 import ru.etu.battleships.R
 import ru.etu.battleships.extUI.AnimationDrawableCallback
+import ru.etu.battleships.model.CellState
 import ru.etu.battleships.model.GameModel
 import ru.etu.battleships.model.Point
 import ru.etu.battleships.model.Ship
@@ -28,7 +29,7 @@ class PlayingGameFieldView(context: Context, attributeSet: AttributeSet?) :
 
     var gameModel: GameModel? = null
 
-    val crossedPoints = mutableSetOf<Point>()
+    var selectedPoint: Point? = null
 
     init {
         fillPaint.style = Paint.Style.FILL
@@ -98,21 +99,18 @@ class PlayingGameFieldView(context: Context, attributeSet: AttributeSet?) :
 
         return when (event.action) {
             MotionEvent.ACTION_DOWN -> {
-                crossedPoints.addAll((0 until 10).map { Point(it, y - 1) })
-                crossedPoints.addAll((0 until 10).map { Point(x - 1, it) })
+                selectedPoint = Point(x - 1, y - 1)
                 invalidate()
                 true
             }
 
             MotionEvent.ACTION_MOVE -> {
-                crossedPoints.clear()
-
                 if (x in 1..10 && y in 1..10) {
-                    crossedPoints.addAll((0 until 10).map { Point(it, y - 1) })
-                    crossedPoints.addAll((0 until 10).map { Point(x - 1, it) })
+                    selectedPoint = Point(x - 1, y - 1)
                     invalidate()
                     true
                 } else {
+                    selectedPoint = null
                     invalidate()
                     false
                 }
@@ -120,7 +118,7 @@ class PlayingGameFieldView(context: Context, attributeSet: AttributeSet?) :
 
             MotionEvent.ACTION_UP -> {
                 this.performClick()
-                crossedPoints.clear()
+                selectedPoint = null
                 if (x > 0 && y > 0) {
                     onTapListenerCallbacks.forEach { callback ->
                         callback(Point(x, y))
@@ -163,15 +161,25 @@ class PlayingGameFieldView(context: Context, attributeSet: AttributeSet?) :
             anim.draw(canvas)
         }
 
-        val color = Color.argb(128, 255, 0, 0)
-        crossedPoints.forEach { point ->
-            val x = point.x
-            val y = point.y
-            val (l, t) = coordsGameToView(x + 1, y + 1)
-            val (r, b) = coordsGameToView(x + 2, y + 2)
 
-            fillPaint.color = color
-            canvas.drawRect(l, t, r, b, fillPaint)
+        if (selectedPoint != null) {
+            val cell = gameModel!!.getCell(selectedPoint!!)
+            val color = when (cell) {
+                CellState.FREE, CellState.OCCUPIED -> Color.argb(128, 0, 255, 0)
+                CellState.MISS, CellState.HIT, CellState.KILLED -> Color.argb(128, 255, 0, 0)
+            }
+            val crossedPoints = mutableSetOf<Point>()
+            crossedPoints.addAll((0 until 10).map { Point(it, selectedPoint!!.y) })
+            crossedPoints.addAll((0 until 10).map { Point(selectedPoint!!.x, it) })
+            crossedPoints.forEach { point ->
+                val x = point.x
+                val y = point.y
+                val (l, t) = coordsGameToView(x + 1, y + 1)
+                val (r, b) = coordsGameToView(x + 2, y + 2)
+
+                fillPaint.color = color
+                canvas.drawRect(l, t, r, b, fillPaint)
+            }
         }
     }
 
