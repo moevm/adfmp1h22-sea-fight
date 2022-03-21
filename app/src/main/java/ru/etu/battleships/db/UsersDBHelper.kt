@@ -60,6 +60,7 @@ class UsersDBHelper(context: Context) :
         }
         return gameScores.groupBy { it.winner }
             .map { UserScore(it.key, it.value.sumOf { it.score }) }
+            .sortedWith(compareBy<UserScore> { it.score }.thenByDescending { it.username })
     }
 
     fun addScoreForPair(winner: String, loser: String) {
