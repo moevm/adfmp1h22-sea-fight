@@ -7,6 +7,8 @@ class GameModel(listOfShips: Set<Ship>) {
         MutableList(10) { MutableList(10) { CellState.FREE } }
 
     private val onShipKillCallbacks: MutableList<(Ship) -> Unit> = mutableListOf()
+    private val onHitCallbacks: MutableList<(Point) -> Unit> = mutableListOf()
+    private val onMissCallbacks: MutableList<(Point) -> Unit> = mutableListOf()
 
     init {
         listOfShips.forEach { ship ->
@@ -39,9 +41,9 @@ class GameModel(listOfShips: Set<Ship>) {
         return matrix[y][x]
     }
 
-    fun setCell(point: Point, state: CellState) = setCell(point.x, point.y, state)
+    private fun setCell(point: Point, state: CellState) = setCell(point.x, point.y, state)
 
-    fun setCell(x: Int, y: Int, state: CellState) {
+    private fun setCell(x: Int, y: Int, state: CellState) {
         if (!(x in 0 until 10 && y in 0 until 10)) {
             return
         }
@@ -93,11 +95,13 @@ class GameModel(listOfShips: Set<Ship>) {
 
         if (cell == CellState.FREE) {
             setCell(x, y, CellState.MISS)
+            onMissCallbacks.forEach { f -> f(Point(x, y)) }
             return Pair(false, getCell(x, y))
         }
 
         if (cell == CellState.OCCUPIED) {
             setCell(x, y, CellState.HIT)
+            onHitCallbacks.forEach { f -> f(Point(x, y)) }
             var killed = false
             var vertical = false
             var length: Int
@@ -115,17 +119,15 @@ class GameModel(listOfShips: Set<Ship>) {
                 length = 1
                 var additionalLength = check(x, y, isAdd = true, isRow = true)
                 if (additionalLength > -1) {
-                    tempKilled = tempKilled.and(true)
                     length += additionalLength
                 } else {
-                    tempKilled = tempKilled.and(false)
+                    tempKilled = false
                 }
                 additionalLength = check(x, y, isAdd = false, isRow = true)
                 if (additionalLength > -1) {
-                    tempKilled = tempKilled.and(true)
                     length += additionalLength
                 } else {
-                    tempKilled = tempKilled.and(false)
+                    tempKilled = false
                 }
                 if (length > 1) {
                     killed = tempKilled
@@ -135,17 +137,15 @@ class GameModel(listOfShips: Set<Ship>) {
                     length = 1
                     additionalLength = check(x, y, isAdd = true, isRow = false)
                     if (additionalLength > -1) {
-                        tempKilled = tempKilled.and(true)
                         length += additionalLength
                     } else {
-                        tempKilled = tempKilled.and(false)
-                        additionalLength = check(x, y, isAdd = false, isRow = false)
+                        tempKilled = false
                     }
+                    additionalLength = check(x, y, isAdd = false, isRow = false)
                     if (additionalLength > -1) {
-                        tempKilled = tempKilled.and(true)
                         length += additionalLength
                     } else {
-                        tempKilled = tempKilled.and(false)
+                        tempKilled = false
                     }
                     if (length > 1) {
                         killed = tempKilled
@@ -155,15 +155,15 @@ class GameModel(listOfShips: Set<Ship>) {
             if (killed) {
                 val point = findLeftShipCorner(x, y, vertical)
                 hitAroundCells(point, length, vertical)
-                val orientation = if (vertical) {
-                    Orientation.VERTICAL
-                } else {
-                    Orientation.HORIZONTAL
-                }
-                onShipKillCallbacks.forEach { callback ->
-                    callback(Ship(length, Point(point.x + 1, point.y + 1), orientation, -1))
-                }
-                println(matrix)
+//                val orientation = if (vertical) {
+//                    Orientation.VERTICAL
+//                } else {
+//                    Orientation.HORIZONTAL
+//                }
+//                onShipKillCallbacks.forEach { callback ->
+//                    callback(Ship(length, Point(point.x + 1, point.y + 1), orientation, -1))
+//                }
+//                println(matrix)
             }
             return Pair(true, getCell(x, y))
         }
@@ -174,7 +174,7 @@ class GameModel(listOfShips: Set<Ship>) {
         if (vertical) {
             ((point.x - 1)..(point.x + 1)).forEach { x ->
                 ((point.y - 1)..(point.y + length)).forEach { y ->
-                    setCell(x, y, CellState.MISS)
+                    hit(x, y)
                 }
             }
             (point.y until (point.y + length)).forEach { y ->
@@ -183,7 +183,7 @@ class GameModel(listOfShips: Set<Ship>) {
         } else {
             ((point.x - 1)..(point.x + length)).forEach { x ->
                 ((point.y - 1)..(point.y + 1)).forEach { y ->
-                    setCell(x, y, CellState.MISS)
+                    hit(x, y)
                 }
             }
             (point.x until (point.x + length)).forEach { x ->
@@ -211,5 +211,13 @@ class GameModel(listOfShips: Set<Ship>) {
 
     fun setOnShipKilled(function: (Ship) -> Unit) {
         onShipKillCallbacks.add((function))
+    }
+
+    fun addOnHit(function: (Point) -> Unit) {
+        onHitCallbacks.add(function)
+    }
+
+    fun addOnMiss(function: (Point) -> Unit) {
+        onMissCallbacks.add(function)
     }
 }

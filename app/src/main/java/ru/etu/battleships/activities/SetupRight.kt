@@ -2,6 +2,7 @@ package ru.etu.battleships.activities
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import ru.etu.battleships.Application
 import ru.etu.battleships.R
@@ -38,15 +39,23 @@ class SetupRight : AppCompatActivity() {
             }
 
             btNext.setOnClickListener {
-                val app = application as Application
-                app.setPlayer2State(
-                    etPlayerName.text.toString()
-                        .ifEmpty { resources.getString(R.string.nickname_hint_2) },
-                    gameFieldView.getShips()
-                )
+                if (gameFieldView.allShipsArePlaced()) {
+                    val app = application as Application
+                    app.setPlayer2State(
+                        etPlayerName.text.toString()
+                            .ifEmpty { resources.getString(R.string.nickname_hint_2) },
+                        gameFieldView.getShips()
+                    )
 
-                val intent = Intent(this@SetupRight, Game::class.java)
-                startActivity(intent)
+                    val intent = Intent(this@SetupRight, Game::class.java)
+                    startActivity(intent)
+                } else {
+                    Toast.makeText(
+                        this@SetupRight,
+                        resources.getString(R.string.not_all_ships_are_placed),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
             }
 
             gameFieldView.setupPullView(llTools)
