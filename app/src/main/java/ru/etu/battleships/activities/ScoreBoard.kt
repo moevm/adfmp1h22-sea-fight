@@ -69,7 +69,7 @@ class ScoreBoard : AppCompatActivity() {
             }
 
         usersDBHelper = UsersDBHelper(this)
-        users = usersDBHelper.getAllUserScores().toMutableList()
+        users = usersDBHelper.getAllUserScores().asReversed().toMutableList()
         init()
 
         setContentView(binding.root)
