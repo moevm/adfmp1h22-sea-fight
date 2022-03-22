@@ -89,6 +89,7 @@
             android:orientation="vertical">
 
             <androidx.appcompat.widget.AppCompatCheckBox
+                android:id="@+id/sound"
                 style="@style/TextButton"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
@@ -105,6 +106,7 @@
                 android:button="@drawable/checkbox" />
 
             <androidx.appcompat.widget.AppCompatCheckBox
+                android:id="@+id/vibration"
                 style="@style/TextButton"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
