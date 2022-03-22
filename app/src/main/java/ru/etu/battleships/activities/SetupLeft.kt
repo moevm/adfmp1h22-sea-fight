@@ -9,6 +9,8 @@ import ru.etu.battleships.R
 import ru.etu.battleships.databinding.ActivitySetupLeftBinding
 import ru.etu.battleships.extUI.InfoSetupDialog
 import ru.etu.battleships.extUI.QuestionDialog
+import ru.etu.battleships.model.GameMode
+import ru.etu.battleships.views.SetupGameFieldView
 import ru.etu.battleships.views.ShipView
 
 class SetupLeft : AppCompatActivity() {
@@ -45,8 +47,15 @@ class SetupLeft : AppCompatActivity() {
                             .ifEmpty { resources.getString(R.string.nickname_hint_1) },
                         gameFieldView.getShips()
                     )
-
-                    val intent = Intent(this@SetupLeft, SetupRight::class.java)
+                    val intent = when (app.gameMode) {
+                        GameMode.PVP -> Intent(this@SetupLeft, SetupRight::class.java)
+                        GameMode.PVE -> {
+                            val ships = SetupGameFieldView.shuffleShips()
+                            app.setPlayer2State("OpenAI", ships)
+                            Intent(this@SetupLeft, Game::class.java)
+                        }
+                        else -> throw IllegalStateException()
+                    }
                     startActivity(intent)
                 } else {
                     Toast.makeText(

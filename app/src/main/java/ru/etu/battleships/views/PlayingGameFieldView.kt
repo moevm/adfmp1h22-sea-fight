@@ -119,7 +119,7 @@ class PlayingGameFieldView(context: Context, attributeSet: AttributeSet?) :
             MotionEvent.ACTION_UP -> {
                 this.performClick()
                 selectedPoint = null
-                if (x > 0 && y > 0) {
+                if (x in 1..10 && y in 1..10) {
                     onTapListenerCallbacks.forEach { callback ->
                         callback(Point(x, y))
                     }
