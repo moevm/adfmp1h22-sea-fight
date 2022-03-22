@@ -1,8 +1,11 @@
 package ru.etu.battleships.activities
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
+import android.os.VibrationEffect
+import android.os.Vibrator
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import ru.etu.battleships.Application
@@ -10,9 +13,10 @@ import ru.etu.battleships.R
 import ru.etu.battleships.databinding.ActivityGameBinding
 import ru.etu.battleships.extUI.InfoGameDialog
 import ru.etu.battleships.extUI.QuestionDialog
-import ru.etu.battleships.model.AI
-import ru.etu.battleships.model.GameMode
 import ru.etu.battleships.extUI.WinnerDialog
+import ru.etu.battleships.model.AI
+import ru.etu.battleships.model.CellState
+import ru.etu.battleships.model.GameMode
 import ru.etu.battleships.model.Point
 import ru.etu.battleships.model.UserScore
 import kotlin.system.exitProcess
@@ -22,6 +26,9 @@ class Game : AppCompatActivity() {
         LEFT_PLAYER,
         RIGHT_PLAYER,
     }
+
+    private val durationForAllowedShot = 50L
+    private val durationForDeniedShot = 1000L
 
     private lateinit var binding: ActivityGameBinding
     private lateinit var questionDialog: QuestionDialog
@@ -40,6 +47,7 @@ class Game : AppCompatActivity() {
         setContentView(binding.root)
 
         val app = application as Application
+        val vibrator = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
 
         binding.apply {
             btBack.setOnClickListener {
@@ -86,11 +94,28 @@ class Game : AppCompatActivity() {
                 Log.d("TAP", "left player | (${point.x};${point.y})")
                 if (app.gameMode == GameMode.PVP) {
                     if (currentPlayer == Turn.RIGHT_PLAYER) {
+                        val milliseconds =
+                            when (leftPlayer.gameModel!!.getCell(point.x - 1, point.y - 1)) {
+                                CellState.FREE, CellState.OCCUPIED -> durationForAllowedShot
+                                CellState.MISS, CellState.HIT, CellState.KILLED -> durationForDeniedShot
+                            }
+                        vibrator.vibrate(
+                            VibrationEffect.createOneShot(
+                                milliseconds,
+                                VibrationEffect.DEFAULT_AMPLITUDE
+                            )
+                        )
                         val (isKeep, _) = leftPlayer.gameModel!!.hit(point.x - 1, point.y - 1)
                         if (leftPlayer.gameModel!!.isOver()) {
                             winnerDialog.setScore(
-                                UserScore(usernamePlayer1.text.toString(), victoriesPlayer1.text.toString().toInt()),
-                                UserScore(usernamePlayer2.text.toString(), victoriesPlayer2.text.toString().toInt())
+                                UserScore(
+                                    usernamePlayer1.text.toString(),
+                                    victoriesPlayer1.text.toString().toInt()
+                                ),
+                                UserScore(
+                                    usernamePlayer2.text.toString(),
+                                    victoriesPlayer2.text.toString().toInt()
+                                )
                             ).setWinner(usernamePlayer2.text.toString()).show()
                         }
                         currentPlayer = if (isKeep) {
@@ -106,11 +131,28 @@ class Game : AppCompatActivity() {
             rightPlayer.setOnTapListener { point: Point ->
                 Log.d("TAP", "right player | (${point.x};${point.y})")
                 if (currentPlayer == Turn.LEFT_PLAYER) {
+                    val milliseconds =
+                        when (rightPlayer.gameModel!!.getCell(point.x - 1, point.y - 1)) {
+                            CellState.FREE, CellState.OCCUPIED -> durationForAllowedShot
+                            CellState.MISS, CellState.HIT, CellState.KILLED -> durationForDeniedShot
+                        }
+                    vibrator.vibrate(
+                        VibrationEffect.createOneShot(
+                            milliseconds,
+                            VibrationEffect.DEFAULT_AMPLITUDE
+                        )
+                    )
                     val (isKeep, _) = rightPlayer.gameModel!!.hit(point.x - 1, point.y - 1)
                     if (rightPlayer.gameModel!!.isOver()) {
                         winnerDialog.setScore(
-                            UserScore(usernamePlayer1.text.toString(), victoriesPlayer1.text.toString().toInt()),
-                            UserScore(usernamePlayer2.text.toString(), victoriesPlayer2.text.toString().toInt())
+                            UserScore(
+                                usernamePlayer1.text.toString(),
+                                victoriesPlayer1.text.toString().toInt()
+                            ),
+                            UserScore(
+                                usernamePlayer2.text.toString(),
+                                victoriesPlayer2.text.toString().toInt()
+                            )
                         ).setWinner(usernamePlayer1.text.toString()).show()
                     }
                     currentPlayer = if (isKeep) {
