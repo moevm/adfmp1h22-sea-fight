@@ -50,7 +50,7 @@ class GameModel(listOfShips: Set<Ship>) {
             return
         }
 
-        if(matrix[y][x] != state) {
+        if (matrix[y][x] != state) {
             onCellChangeCallbacks.forEach { it(Point(x, y), matrix[y][x], state) }
         }
 

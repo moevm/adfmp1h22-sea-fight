@@ -191,7 +191,6 @@ class PlayingGameFieldView(context: Context, attributeSet: AttributeSet?) :
             if (prev == CellState.FREE && next == CellState.MISS) {
                 missCell(point.x + 1, point.y + 1)
             }
-
             else if (prev == CellState.OCCUPIED && next == CellState.HIT) {
                 hitCell(point.x + 1, point.y + 1)
             }

@@ -69,7 +69,6 @@ class SetupLeft : AppCompatActivity() {
                     else -> throw IllegalStateException()
                 }
                 startActivity(intent)
-
             }
 
             gameFieldView.setupPullView(llTools)

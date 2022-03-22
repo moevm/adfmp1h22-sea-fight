@@ -33,7 +33,6 @@ class Game : AppCompatActivity() {
     private var botTurnReactionTimeMs = 700L
     private var botHitReactionTimeMs = 1000L
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityGameBinding.inflate(layoutInflater)
