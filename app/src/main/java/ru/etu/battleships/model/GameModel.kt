@@ -7,8 +7,10 @@ class GameModel(listOfShips: Set<Ship>) {
         MutableList(10) { MutableList(10) { CellState.FREE } }
 
     private val onShipKillCallbacks: MutableList<(Ship) -> Unit> = mutableListOf()
+
     private val onHitCallbacks: MutableList<(Point) -> Unit> = mutableListOf()
     private val onMissCallbacks: MutableList<(Point) -> Unit> = mutableListOf()
+    private val onCellChangeCallbacks: MutableList<(Point, CellState, CellState) -> Unit> = mutableListOf()
 
     init {
         listOfShips.forEach { ship ->
@@ -47,6 +49,11 @@ class GameModel(listOfShips: Set<Ship>) {
         if (!(x in 0 until 10 && y in 0 until 10)) {
             return
         }
+
+        if(matrix[y][x] != state) {
+            onCellChangeCallbacks.forEach { it(Point(x, y), matrix[y][x], state) }
+        }
+
         matrix[y][x] = state
     }
 
@@ -172,22 +179,38 @@ class GameModel(listOfShips: Set<Ship>) {
 
     private fun hitAroundCells(point: Point, length: Int, vertical: Boolean) {
         if (vertical) {
-            ((point.x - 1)..(point.x + 1)).forEach { x ->
-                ((point.y - 1)..(point.y + length)).forEach { y ->
-                    hit(x, y)
-                }
+//            ((point.x - 1)..(point.x + 1)).forEach { x ->
+//                ((point.y - 1)..(point.y + length)).forEach { y ->
+//                    setCell(x, y, CellState.MISS)
+//                }
+//            }
+            // hit back and front of ship
+            (point.x - 1 until (point.x + 2)).forEach { x ->
+                setCell(x, point.y - 1, CellState.MISS)
+                setCell(x, point.y + length, CellState.MISS)
             }
+            // hit along ship
             (point.y until (point.y + length)).forEach { y ->
                 setCell(point.x, y, CellState.KILLED)
+                setCell(point.x - 1, y, CellState.MISS)
+                setCell(point.x + 1, y, CellState.MISS)
             }
         } else {
-            ((point.x - 1)..(point.x + length)).forEach { x ->
-                ((point.y - 1)..(point.y + 1)).forEach { y ->
-                    hit(x, y)
-                }
+//            ((point.x - 1)..(point.x + length)).forEach { x ->
+//                ((point.y - 1)..(point.y + 1)).forEach { y ->
+//                    hit(x, y)
+//                }
+//            }
+            // hit back and front of ship
+            (point.y - 1 until (point.y + 2)).forEach { y ->
+                setCell(point.x - 1, y, CellState.MISS)
+                setCell(point.x + length, y, CellState.MISS)
             }
+            // hit along ship
             (point.x until (point.x + length)).forEach { x ->
                 setCell(x, point.y, CellState.KILLED)
+                setCell(x, point.y - 1, CellState.MISS)
+                setCell(x, point.y + 1, CellState.MISS)
             }
         }
     }
@@ -219,5 +242,9 @@ class GameModel(listOfShips: Set<Ship>) {
 
     fun addOnMiss(function: (Point) -> Unit) {
         onMissCallbacks.add(function)
+    }
+
+    fun addOnCellChange(function: (Point, prev: CellState, next: CellState) -> Unit) {
+        onCellChangeCallbacks.add(function)
     }
 }

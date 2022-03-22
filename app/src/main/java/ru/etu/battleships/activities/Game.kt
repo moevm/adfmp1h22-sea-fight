@@ -3,6 +3,7 @@ package ru.etu.battleships.activities
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import ru.etu.battleships.Application
@@ -26,8 +27,12 @@ class Game : AppCompatActivity() {
     private lateinit var binding: ActivityGameBinding
     private lateinit var questionDialog: QuestionDialog
     private lateinit var helpDialog: InfoGameDialog
-    private var currentPlayer = Turn.LEFT_PLAYER
     private lateinit var winnerDialog: WinnerDialog
+
+    private var currentPlayer = Turn.LEFT_PLAYER
+    private var botTurnReactionTimeMs = 700L
+    private var botHitReactionTimeMs = 1000L
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -83,7 +88,6 @@ class Game : AppCompatActivity() {
             rightPlayer.invalidate()
 
             leftPlayer.setOnTapListener { point: Point ->
-                Log.d("TAP", "left player | (${point.x};${point.y})")
                 if (app.gameMode == GameMode.PVP) {
                     if (currentPlayer == Turn.RIGHT_PLAYER) {
                         val (isKeep, _) = leftPlayer.gameModel!!.hit(point.x - 1, point.y - 1)
@@ -117,10 +121,9 @@ class Game : AppCompatActivity() {
                         Turn.LEFT_PLAYER
                     } else {
                         playerTurnArrow.animate().rotation(180f).start()
-                        val handler = Handler()
-                        handler.postDelayed(
+                        Handler(Looper.getMainLooper()).postDelayed(
                             Runnable { ai?.hit() },
-                            500
+                            botTurnReactionTimeMs
                         )
                         Turn.RIGHT_PLAYER
                     }
@@ -128,11 +131,11 @@ class Game : AppCompatActivity() {
             }
 
             leftPlayer.gameModel?.addOnHit {
-                val handler = Handler()
-                handler.postDelayed(
+                Handler(Looper.getMainLooper()).postDelayed(
                     Runnable { ai?.hit() },
-                    500
+                    botHitReactionTimeMs
                 )
+                currentPlayer = Turn.RIGHT_PLAYER
             }
 
             leftPlayer.gameModel?.addOnMiss {

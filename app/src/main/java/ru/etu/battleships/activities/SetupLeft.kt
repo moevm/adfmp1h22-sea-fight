@@ -40,30 +40,36 @@ class SetupLeft : AppCompatActivity() {
             }
 
             btNext.setOnClickListener {
-                if (gameFieldView.allShipsArePlaced()) {
-                    val app = application as Application
-                    app.setPlayer1State(
-                        etPlayerName.text.toString()
-                            .ifEmpty { resources.getString(R.string.nickname_hint_1) },
-                        gameFieldView.getShips()
-                    )
-                    val intent = when (app.gameMode) {
-                        GameMode.PVP -> Intent(this@SetupLeft, SetupRight::class.java)
-                        GameMode.PVE -> {
-                            val ships = SetupGameFieldView.shuffleShips()
-                            app.setPlayer2State("OpenAI", ships)
-                            Intent(this@SetupLeft, Game::class.java)
-                        }
-                        else -> throw IllegalStateException()
-                    }
-                    startActivity(intent)
-                } else {
-                    Toast.makeText(
-                        this@SetupLeft,
-                        resources.getString(R.string.not_all_ships_are_placed),
-                        Toast.LENGTH_SHORT
-                    ).show()
+                if (!gameFieldView.allShipsArePlaced()) {
+                    toast(resources.getString(R.string.not_all_ships_are_placed))
+                    return@setOnClickListener
                 }
+
+                val app = application as Application
+                val playerName = etPlayerName.text.toString().ifEmpty { resources.getString(R.string.nickname_hint_1) }
+
+                resources.getString(R.string.bot_name).let { botName ->
+                    if (playerName == botName) {
+                        toast(resources.getString(R.string.bot_name_conflict, botName))
+                        return@setOnClickListener
+                    }
+                }
+
+                app.setPlayer1State(
+                    playerName,
+                    gameFieldView.getShips()
+                )
+                val intent = when (app.gameMode) {
+                    GameMode.PVP -> Intent(this@SetupLeft, SetupRight::class.java)
+                    GameMode.PVE -> {
+                        val ships = SetupGameFieldView.shuffleShips()
+                        app.setPlayer2State(resources.getString(R.string.bot_name), ships)
+                        Intent(this@SetupLeft, Game::class.java)
+                    }
+                    else -> throw IllegalStateException()
+                }
+                startActivity(intent)
+
             }
 
             gameFieldView.setupPullView(llTools)
@@ -85,6 +91,10 @@ class SetupLeft : AppCompatActivity() {
         }
 
         setContentView(binding.root)
+    }
+
+    fun toast(text: String) {
+        Toast.makeText(this, text, Toast.LENGTH_SHORT).show()
     }
 
     override fun onBackPressed() {
