@@ -3,9 +3,11 @@ package ru.etu.battleships.activities
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import ru.etu.battleships.Application
 import ru.etu.battleships.R
 import ru.etu.battleships.databinding.ActivityEntryBinding
 import ru.etu.battleships.extUI.QuestionDialog
+import ru.etu.battleships.model.GameMode
 import kotlin.system.exitProcess
 
 class Entry : AppCompatActivity() {
@@ -15,6 +17,8 @@ class Entry : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityEntryBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        val app = application as Application
         questionDialog = QuestionDialog(this)
             .setMessage(resources.getString(R.string.exit_dialog_message))
             .setOnAcceptListener {
@@ -24,10 +28,12 @@ class Entry : AppCompatActivity() {
 
         binding.apply {
             pvpButton.setOnClickListener {
+                app.gameMode = GameMode.PVP
                 val intent = Intent(this@Entry, SetupLeft::class.java)
                 startActivity(intent)
             }
             pveButton.setOnClickListener {
+                app.gameMode = GameMode.PVE
                 val intent = Intent(this@Entry, SetupLeft::class.java)
                 startActivity(intent)
             }

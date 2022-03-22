@@ -77,6 +77,7 @@
         app:srcCompat="@drawable/ic_exit" />
 
     <TextView
+        android:id="@+id/username_player1"
         style="@style/TextInput"
 
         android:layout_width="0dp"
@@ -93,6 +94,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
+        android:id="@+id/username_player2"
         style="@style/TextInput"
 
         android:layout_width="0dp"

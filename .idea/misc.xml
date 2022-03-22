@@ -44,6 +44,7 @@
         <entry key="app/src/main/res/layout/activity_setup_right.xml" value="0.36354166666666665" />
         <entry key="app/src/main/res/layout/dialog_exit.xml" value="0.33" />
         <entry key="app/src/main/res/layout/dialog_question.xml" value="0.21510416666666668" />
+        <entry key="app/src/main/res/layout/dialog_winner.xml" value="0.5" />
         <entry key="app/src/main/res/layout/layout_list_item.xml" value="0.36354166666666665" />
       </map>
     </option>
