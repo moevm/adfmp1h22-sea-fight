@@ -68,7 +68,7 @@ class Game : AppCompatActivity() {
             }
 
             usernamePlayer1.text = app.player1.name
-            usernamePlayer1.text = app.player2.name
+            usernamePlayer2.text = app.player2.name
 
             leftPlayer.initGameField(app.player1.ships)
             rightPlayer.initGameField(app.player2.ships)
