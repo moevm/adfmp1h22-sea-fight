@@ -6,28 +6,28 @@ import android.os.Handler
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import ru.etu.battleships.Application
+import ru.etu.battleships.BuildConfig
 import ru.etu.battleships.R
 import ru.etu.battleships.databinding.ActivityGameBinding
 import ru.etu.battleships.extUI.InfoGameDialog
 import ru.etu.battleships.extUI.QuestionDialog
+import ru.etu.battleships.extUI.WinnerDialog
 import ru.etu.battleships.model.AI
 import ru.etu.battleships.model.GameMode
-import ru.etu.battleships.extUI.WinnerDialog
+import ru.etu.battleships.model.PlayerStep
 import ru.etu.battleships.model.Point
+import ru.etu.battleships.model.Turn
 import ru.etu.battleships.model.UserScore
 import kotlin.system.exitProcess
 
 class Game : AppCompatActivity() {
-    enum class Turn {
-        LEFT_PLAYER,
-        RIGHT_PLAYER,
-    }
-
     private lateinit var binding: ActivityGameBinding
     private lateinit var questionDialog: QuestionDialog
     private lateinit var helpDialog: InfoGameDialog
     private var currentPlayer = Turn.LEFT_PLAYER
     private lateinit var winnerDialog: WinnerDialog
+
+    private val turnHistory = mutableListOf<PlayerStep>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -86,8 +86,16 @@ class Game : AppCompatActivity() {
                 Log.d("TAP", "left player | (${point.x};${point.y})")
                 if (app.gameMode == GameMode.PVP) {
                     if (currentPlayer == Turn.RIGHT_PLAYER) {
-                        val (isKeep, _) = leftPlayer.gameModel!!.hit(point.x - 1, point.y - 1)
+                        val previousCellState = leftPlayer.gameModel!!.getCell(point.x - 1, point.y - 1)
+                        val (isKeep, nextCellState) = leftPlayer.gameModel!!.hit(point.x - 1, point.y - 1)
+                        turnHistory.add(PlayerStep(currentPlayer, point, previousCellState, nextCellState))
                         if (leftPlayer.gameModel!!.isOver()) {
+                            app.turnHistory = turnHistory
+                            if (BuildConfig.DEBUG) {
+                                turnHistory.forEach { turn ->
+                                    Log.d("turnHistory", "${turn.player} | ${turn.point} ${turn.previousCellState} -> ${turn.nextCellState}")
+                                }
+                            }
                             winnerDialog.setScore(
                                 UserScore(usernamePlayer1.text.toString(), victoriesPlayer1.text.toString().toInt()),
                                 UserScore(usernamePlayer2.text.toString(), victoriesPlayer2.text.toString().toInt())
@@ -106,8 +114,16 @@ class Game : AppCompatActivity() {
             rightPlayer.setOnTapListener { point: Point ->
                 Log.d("TAP", "right player | (${point.x};${point.y})")
                 if (currentPlayer == Turn.LEFT_PLAYER) {
-                    val (isKeep, _) = rightPlayer.gameModel!!.hit(point.x - 1, point.y - 1)
+                    val previousCellState = rightPlayer.gameModel!!.getCell(point.x - 1, point.y - 1)
+                    val (isKeep, nextCellState) = rightPlayer.gameModel!!.hit(point.x - 1, point.y - 1)
+                    turnHistory.add(PlayerStep(currentPlayer, point, previousCellState, nextCellState))
                     if (rightPlayer.gameModel!!.isOver()) {
+                        app.turnHistory = turnHistory
+                        if (BuildConfig.DEBUG) {
+                            turnHistory.forEach { turn ->
+                                Log.d("turnHistory", "${turn.player} | ${turn.point} ${turn.previousCellState} -> ${turn.nextCellState}")
+                            }
+                        }
                         winnerDialog.setScore(
                             UserScore(usernamePlayer1.text.toString(), victoriesPlayer1.text.toString().toInt()),
                             UserScore(usernamePlayer2.text.toString(), victoriesPlayer2.text.toString().toInt())
@@ -119,7 +135,11 @@ class Game : AppCompatActivity() {
                         playerTurnArrow.animate().rotation(180f).start()
                         val handler = Handler()
                         handler.postDelayed(
-                            Runnable { ai?.hit() },
+                            {
+                                val (aiPoint, aiPreviousCellState) = ai!!.hit()
+                                val aiNextCellState = leftPlayer.gameModel!!.getCell(aiPoint)
+                                turnHistory.add(PlayerStep(Turn.RIGHT_PLAYER, aiPoint + Point(1, 1), aiPreviousCellState, aiNextCellState))
+                            },
                             500
                         )
                         Turn.RIGHT_PLAYER
@@ -130,7 +150,11 @@ class Game : AppCompatActivity() {
             leftPlayer.gameModel?.addOnHit {
                 val handler = Handler()
                 handler.postDelayed(
-                    Runnable { ai?.hit() },
+                    {
+                        val (aiPoint, aiPreviousCellState) = ai!!.hit()
+                        val aiNextCellState = leftPlayer.gameModel!!.getCell(aiPoint)
+                        turnHistory.add(PlayerStep(Turn.RIGHT_PLAYER, aiPoint + Point(1, 1), aiPreviousCellState, aiNextCellState))
+                    },
                     500
                 )
             }
