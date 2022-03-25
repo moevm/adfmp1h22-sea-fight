@@ -8,6 +8,7 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import ru.etu.battleships.Application
 import ru.etu.battleships.BuildConfig
+import ru.etu.battleships.GameVibrator
 import ru.etu.battleships.R
 import ru.etu.battleships.SFXPlayer
 import ru.etu.battleships.databinding.ActivityGameBinding
@@ -31,6 +32,8 @@ class Game : AppCompatActivity() {
     private lateinit var dbHelper: UsersDBHelper
     private lateinit var sfxPlayer: SFXPlayer
 
+    private lateinit var vibrator: GameVibrator
+
     private val turnHistory = mutableListOf<PlayerStep>()
     private var currentPlayer = Turn.LEFT_PLAYER
     private var botTurnReactionTimeMs = 700L
@@ -40,6 +43,7 @@ class Game : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityGameBinding.inflate(layoutInflater)
         dbHelper = UsersDBHelper(this)
+        vibrator = GameVibrator(this)
         sfxPlayer = SFXPlayer(this)
         questionDialog = QuestionDialog(this)
         helpDialog = InfoGameDialog(this)
@@ -177,6 +181,7 @@ class Game : AppCompatActivity() {
             }
 
             leftPlayer.gameModel?.addOnHit {
+                vibrator.explosion()
                 sfxPlayer.playExplosion()
                 Handler(Looper.getMainLooper()).postDelayed(
                     { ai?.hit() },
@@ -186,16 +191,19 @@ class Game : AppCompatActivity() {
             }
 
             leftPlayer.gameModel?.addOnMiss {
+                vibrator.splash()
                 sfxPlayer.playSplash()
                 playerTurnArrow.animate().rotation(0f).start()
                 currentPlayer = Turn.LEFT_PLAYER
             }
 
             rightPlayer.gameModel?.addOnHit {
+                vibrator.explosion()
                 sfxPlayer.playExplosion()
             }
 
             rightPlayer.gameModel?.addOnMiss {
+                vibrator.splash()
                 sfxPlayer.playSplash()
             }
         }
