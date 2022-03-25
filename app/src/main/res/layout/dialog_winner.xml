@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:padding="10dp"
     android:background="@drawable/dialog_shape">
@@ -38,6 +38,23 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toStartOf="@id/left_guideline"
         app:srcCompat="@drawable/ic_back" />
+
+    <ImageButton
+        android:id="@+id/bt_help"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:backgroundTint="#00000000"
+
+        android:contentDescription="@string/help_button"
+        android:padding="5dp"
+        android:scaleType="centerCrop"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="@id/top_buttons_divider"
+        app:layout_constraintStart_toStartOf="@id/bt_back"
+        app:layout_constraintEnd_toEndOf="@id/bt_exit"
+
+        app:layout_constraintDimensionRatio="w, 1:1"
+        app:srcCompat="@drawable/ic_book" />
 
     <ImageButton
         android:id="@+id/bt_exit"
@@ -134,14 +151,14 @@
 
             <TextView
                 android:id="@+id/victories_player1"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
 
                 android:fontFamily="@font/aladin__regular"
                 android:gravity="end"
 
-                android:text=""
+                android:text="1"
                 android:textColor="?colorOnPrimary"
                 android:textSize="24sp"
                 android:textStyle="bold" />
@@ -161,14 +178,14 @@
 
             <TextView
                 android:id="@+id/victories_player2"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
 
                 android:fontFamily="@font/aladin__regular"
                 android:gravity="start"
 
-                android:text=""
+                android:text="2"
                 android:textColor="?colorOnPrimary"
                 android:textSize="24sp"
                 android:textStyle="bold" />

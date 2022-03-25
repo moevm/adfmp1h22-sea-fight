@@ -221,6 +221,22 @@
         app:layout_constraintTop_toBottomOf="@id/bt_exit" />
 
     <ImageButton
+        android:id="@+id/bt_history"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:backgroundTint="#00000000"
+
+        android:contentDescription="@string/help_button"
+        android:padding="5dp"
+        android:scaleType="centerCrop"
+        app:layout_constraintTop_toTopOf="@id/left_player"
+
+        app:layout_constraintDimensionRatio="w, 1:1"
+        app:layout_constraintLeft_toRightOf="@id/pointer_left_guideline"
+        app:layout_constraintRight_toLeftOf="@id/pointer_right_guideline"
+        app:srcCompat="@drawable/ic_book" />
+
+    <ImageButton
         android:id="@+id/bt_help"
         android:layout_width="0dp"
         android:layout_height="0dp"
