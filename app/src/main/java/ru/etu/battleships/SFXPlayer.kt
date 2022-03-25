@@ -28,7 +28,7 @@ class SFXPlayer(context: Context) {
 
     fun playSplash() {
         if (prefs.getBoolean(Application.APP_SOUNDS_PREFERENCE, true)) {
-            soundPool.play(splash, 0.7f, 0.7f, 0, 0, 1f)
+            soundPool.play(splash, 1f, 1f, 0, 0, 1f)
         }
     }
 
