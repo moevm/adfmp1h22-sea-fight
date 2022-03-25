@@ -36,10 +36,10 @@ class WinnerDialog(context: Context) {
 
     fun setScore(player1Score: UserScore, player2Score: UserScore): WinnerDialog {
         binding.player1Name.text = player1Score.username
-        binding.victoriesPlayer1.text = player1Score.victories.toString()
+        binding.victoriesPlayer1.text = player1Score.score.toString()
 
         binding.player2Name.text = player2Score.username
-        binding.victoriesPlayer2.text = player2Score.victories.toString()
+        binding.victoriesPlayer2.text = player2Score.score.toString()
         return this
     }
 
