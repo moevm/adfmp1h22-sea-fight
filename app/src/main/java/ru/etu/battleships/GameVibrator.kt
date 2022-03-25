@@ -57,13 +57,21 @@ class GameVibrator(context: Context) {
 
     fun explosion() {
         if (prefs.getBoolean(Application.APP_VIBRATION_PREFERENCE, true)) {
-            vibrator.vibrate(explosionEffect, attrs)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                vibrator.vibrate(explosionEffect, attrs)
+            } else {
+                vibrator.vibrate(1000);
+            }
         }
     }
 
     fun splash() {
         if (prefs.getBoolean(Application.APP_VIBRATION_PREFERENCE, true)) {
-            vibrator.vibrate(splashEffect, attrs)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                vibrator.vibrate(splashEffect, attrs)
+            } else {
+                vibrator.vibrate(500);
+            }
         }
     }
 }
