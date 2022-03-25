@@ -5,10 +5,12 @@ import android.os.Bundle
 import android.os.Handler
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import androidx.test.core.app.ApplicationProvider
 import ru.etu.battleships.Application
 import ru.etu.battleships.BuildConfig
 import ru.etu.battleships.R
 import ru.etu.battleships.databinding.ActivityGameBinding
+import ru.etu.battleships.db.UsersDBHelper
 import ru.etu.battleships.extUI.InfoGameDialog
 import ru.etu.battleships.extUI.QuestionDialog
 import ru.etu.battleships.extUI.WinnerDialog
@@ -26,12 +28,14 @@ class Game : AppCompatActivity() {
     private lateinit var helpDialog: InfoGameDialog
     private var currentPlayer = Turn.LEFT_PLAYER
     private lateinit var winnerDialog: WinnerDialog
+    private lateinit var dbHelper: UsersDBHelper
 
     private val turnHistory = mutableListOf<PlayerStep>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityGameBinding.inflate(layoutInflater)
+        dbHelper = UsersDBHelper(this)
         questionDialog = QuestionDialog(this)
         helpDialog = InfoGameDialog(this)
         winnerDialog = WinnerDialog(this)
@@ -40,6 +44,9 @@ class Game : AppCompatActivity() {
         setContentView(binding.root)
 
         val app = application as Application
+
+        val leftPlayerScore = dbHelper.getWinnerLoserScore(app.player1.name, app.player2.name)
+        val rightPlayerScore = dbHelper.getWinnerLoserScore(app.player2.name, app.player1.name)
 
         binding.apply {
             btBack.setOnClickListener {
@@ -70,6 +77,9 @@ class Game : AppCompatActivity() {
             usernamePlayer1.text = app.player1.name
             usernamePlayer2.text = app.player2.name
 
+            victoriesPlayer1.text = leftPlayerScore.toString()
+            victoriesPlayer2.text = rightPlayerScore.toString()
+
             leftPlayer.initGameField(app.player1.ships)
             rightPlayer.initGameField(app.player2.ships)
 
@@ -96,9 +106,19 @@ class Game : AppCompatActivity() {
                                     Log.d("turnHistory", "${turn.player} | ${turn.point} ${turn.previousCellState} -> ${turn.nextCellState}")
                                 }
                             }
+                            dbHelper.addScoreForPair(
+                                winner = usernamePlayer2.text.toString(),
+                                loser = usernamePlayer1.text.toString(),
+                            )
                             winnerDialog.setScore(
-                                UserScore(usernamePlayer1.text.toString(), victoriesPlayer1.text.toString().toInt()),
-                                UserScore(usernamePlayer2.text.toString(), victoriesPlayer2.text.toString().toInt())
+                                UserScore(
+                                    usernamePlayer1.text.toString(),
+                                    victoriesPlayer1.text.toString().toInt()
+                                ),
+                                UserScore(
+                                    usernamePlayer2.text.toString(),
+                                    victoriesPlayer2.text.toString().toInt() + 1
+                                )
                             ).setWinner(usernamePlayer2.text.toString()).show()
                         }
                         currentPlayer = if (isKeep) {
@@ -124,9 +144,19 @@ class Game : AppCompatActivity() {
                                 Log.d("turnHistory", "${turn.player} | ${turn.point} ${turn.previousCellState} -> ${turn.nextCellState}")
                             }
                         }
+                        dbHelper.addScoreForPair(
+                            winner = usernamePlayer1.text.toString(),
+                            loser = usernamePlayer2.text.toString(),
+                        )
                         winnerDialog.setScore(
-                            UserScore(usernamePlayer1.text.toString(), victoriesPlayer1.text.toString().toInt()),
-                            UserScore(usernamePlayer2.text.toString(), victoriesPlayer2.text.toString().toInt())
+                            UserScore(
+                                usernamePlayer1.text.toString(),
+                                victoriesPlayer1.text.toString().toInt() + 1
+                            ),
+                            UserScore(
+                                usernamePlayer2.text.toString(),
+                                victoriesPlayer2.text.toString().toInt()
+                            )
                         ).setWinner(usernamePlayer1.text.toString()).show()
                     }
                     currentPlayer = if (isKeep) {
@@ -159,6 +189,7 @@ class Game : AppCompatActivity() {
                 )
             }
 
+            // TODO: <need to fix> rotate happens after destroy ship
             leftPlayer.gameModel?.addOnMiss {
                 playerTurnArrow.animate().rotation(0f).start()
                 currentPlayer = Turn.LEFT_PLAYER
