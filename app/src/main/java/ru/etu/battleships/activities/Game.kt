@@ -7,6 +7,7 @@ import android.os.Looper
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import ru.etu.battleships.Application
+import ru.etu.battleships.BuildConfig
 import ru.etu.battleships.GameVibrator
 import ru.etu.battleships.R
 import ru.etu.battleships.databinding.ActivityGameBinding
