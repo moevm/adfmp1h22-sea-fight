@@ -38,7 +38,7 @@ class Preferences : AppCompatActivity() {
             }
 
             sound.isChecked = prefs.getBoolean(Application.APP_SOUNDS_PREFERENCE, true)
-            sound.setOnCheckedChangeListener { _, b ->
+            sound.setOnCheckedChangeListener { _, b: Boolean ->
                 prefs.edit {
                     putBoolean(Application.APP_SOUNDS_PREFERENCE, b)
                     apply()
@@ -46,7 +46,7 @@ class Preferences : AppCompatActivity() {
             }
 
             vibration.isChecked = prefs.getBoolean(Application.APP_VIBRATION_PREFERENCE, true)
-            vibration.setOnCheckedChangeListener { _, b ->
+            vibration.setOnCheckedChangeListener { _, b: Boolean ->
                 prefs.edit {
                     putBoolean(Application.APP_VIBRATION_PREFERENCE, b)
                     apply()
