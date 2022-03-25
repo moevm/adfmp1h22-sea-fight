@@ -187,25 +187,12 @@ class PlayingGameFieldView(context: Context, attributeSet: AttributeSet?) :
 
     fun initGameField(ships: Set<Ship>) {
         gameModel = GameModel(ships)
-        gameModel?.addOnHit { point -> hitCell(point.x + 1, point.y + 1) }
-        gameModel?.addOnMiss { point -> missCell(point.x + 1, point.y + 1) }
-//        gameModel!!.setOnShipKilled { ship: Ship ->
-//            val point = ship.position
-//            val vertical = ship.orientation == Orientation.VERTICAL
-//            val length = ship.length
-//            if (vertical) {
-//                ((point.x - 1)..(point.x + 1)).forEach { x ->
-//                    ((point.y - 1)..(point.y + length)).forEach { y ->
-//                        missCell(x, y)
-//                    }
-//                }
-//            } else {
-//                ((point.x - 1)..(point.x + length)).forEach { x ->
-//                    ((point.y - 1)..(point.y + 1)).forEach { y ->
-//                        missCell(x, y)
-//                    }
-//                }
-//            }
-//        }
+        gameModel?.addOnCellChange { point, prev, next ->
+            if (prev == CellState.FREE && next == CellState.MISS) {
+                missCell(point.x + 1, point.y + 1)
+            } else if (prev == CellState.OCCUPIED && next == CellState.HIT) {
+                hitCell(point.x + 1, point.y + 1)
+            }
+        }
     }
 }

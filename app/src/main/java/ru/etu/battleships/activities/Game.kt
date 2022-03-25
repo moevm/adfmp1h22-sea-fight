@@ -3,6 +3,7 @@ package ru.etu.battleships.activities
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.test.core.app.ApplicationProvider
@@ -26,11 +27,13 @@ class Game : AppCompatActivity() {
     private lateinit var binding: ActivityGameBinding
     private lateinit var questionDialog: QuestionDialog
     private lateinit var helpDialog: InfoGameDialog
-    private var currentPlayer = Turn.LEFT_PLAYER
     private lateinit var winnerDialog: WinnerDialog
     private lateinit var dbHelper: UsersDBHelper
 
     private val turnHistory = mutableListOf<PlayerStep>()
+    private var currentPlayer = Turn.LEFT_PLAYER
+    private var botTurnReactionTimeMs = 700L
+    private var botHitReactionTimeMs = 1000L
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -93,7 +96,6 @@ class Game : AppCompatActivity() {
             rightPlayer.invalidate()
 
             leftPlayer.setOnTapListener { point: Point ->
-                Log.d("TAP", "left player | (${point.x};${point.y})")
                 if (app.gameMode == GameMode.PVP) {
                     if (currentPlayer == Turn.RIGHT_PLAYER) {
                         val previousCellState = leftPlayer.gameModel!!.getCell(point.x - 1, point.y - 1)
@@ -187,6 +189,7 @@ class Game : AppCompatActivity() {
                     },
                     500
                 )
+                currentPlayer = Turn.RIGHT_PLAYER
             }
 
             // TODO: <need to fix> rotate happens after destroy ship
