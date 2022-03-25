@@ -1,29 +1,26 @@
 name: Android CI
 
-on: [pull_request, push]
+on: [push]
 
 jobs:
   build:
-    name: Build & Unit Test
-    runs-on: ubuntu-latest
+    name: Unit Test
+    runs-on: macOS-latest
 
     steps:
-      - uses: eskatos/gradle-command-action@v1
-        with:
-          gradle-version: 6.8-rc-4
       - uses: actions/checkout@v2
-      - name: set up JDK 11
+
+      - name: set up JDK 1.8
         uses: actions/setup-java@v1
         with:
-          java-version: 11
-      - name: Make gradlew executable
-        run: chmod +x ./gradlew
-      - name: Build with Gradle
-        run: ./gradlew build --warning-mode=all --stacktrace
-      - name: Unit Test
-        run: ./gradlew testDebugUnitTest
-      - name: Android Test Report Action
-        uses: asadmansr/android-test-report-action@v1.2.0
+          java-version: "11"
+
+      - uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 30
+          arch: x86_64
+          target: default
+          script: ./gradlew check && ./gradlew connectedCheck
 
   linter:
     name: Check Code Quality

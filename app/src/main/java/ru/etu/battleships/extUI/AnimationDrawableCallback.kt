@@ -22,7 +22,7 @@ open class AnimationDrawableCallback(
     }
 
     override fun invalidateDrawable(who: Drawable) {
-        mView?.postInvalidateOnAnimation(
+        mView?.postInvalidate(
             who.bounds.left,
             who.bounds.top,
             who.bounds.right,
@@ -36,7 +36,7 @@ open class AnimationDrawableCallback(
     }
 
     override fun scheduleDrawable(who: Drawable, what: Runnable, `when`: Long) {
-        mView?.postOnAnimationDelayed(what, `when` - SystemClock.uptimeMillis())
+        mView?.postDelayed(what, `when` - SystemClock.uptimeMillis())
         mWrappedCallback?.scheduleDrawable(who, what, `when`)
     }
 

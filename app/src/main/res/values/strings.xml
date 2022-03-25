@@ -26,10 +26,13 @@
     <string name="nickname_hint_1">Player 1</string>
     <string name="nickname_hint_2">Player 2</string>
     <string name="shuffle_button">Shuffle</string>
+    <string name="previous_player_name_conflict">Sorry, name \"%1$s\" taken by previous player :(</string>
+    <string name="bot_name_conflict">Sorry, name \"%1$s\" taken by our bot :(</string>
 
     <!--    Game state-->
     <string name="victories_delimiter">:</string>
     <string name="turn_indicator">Turn</string>
+    <string name="bot_name">CaptainAI</string>
 
     <!--    Dialogs-->
     <string name="exit_dialog_message">Are you sure want to exit game?</string>

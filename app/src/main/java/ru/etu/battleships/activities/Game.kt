@@ -6,11 +6,14 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.VibrationEffect
 import android.os.Vibrator
+import android.os.Looper
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import androidx.test.core.app.ApplicationProvider
 import ru.etu.battleships.Application
 import ru.etu.battleships.R
 import ru.etu.battleships.databinding.ActivityGameBinding
+import ru.etu.battleships.db.UsersDBHelper
 import ru.etu.battleships.extUI.InfoGameDialog
 import ru.etu.battleships.extUI.QuestionDialog
 import ru.etu.battleships.extUI.WinnerDialog
@@ -33,12 +36,17 @@ class Game : AppCompatActivity() {
     private lateinit var binding: ActivityGameBinding
     private lateinit var questionDialog: QuestionDialog
     private lateinit var helpDialog: InfoGameDialog
-    private var currentPlayer = Turn.LEFT_PLAYER
     private lateinit var winnerDialog: WinnerDialog
+    private lateinit var dbHelper: UsersDBHelper
+
+    private var currentPlayer = Turn.LEFT_PLAYER
+    private var botTurnReactionTimeMs = 700L
+    private var botHitReactionTimeMs = 1000L
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityGameBinding.inflate(layoutInflater)
+        dbHelper = UsersDBHelper(this)
         questionDialog = QuestionDialog(this)
         helpDialog = InfoGameDialog(this)
         winnerDialog = WinnerDialog(this)
@@ -48,6 +56,9 @@ class Game : AppCompatActivity() {
 
         val app = application as Application
         val vibrator = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+
+        val leftPlayerScore = dbHelper.getWinnerLoserScore(app.player1.name, app.player2.name)
+        val rightPlayerScore = dbHelper.getWinnerLoserScore(app.player2.name, app.player1.name)
 
         binding.apply {
             btBack.setOnClickListener {
@@ -78,6 +89,9 @@ class Game : AppCompatActivity() {
             usernamePlayer1.text = app.player1.name
             usernamePlayer2.text = app.player2.name
 
+            victoriesPlayer1.text = leftPlayerScore.toString()
+            victoriesPlayer2.text = rightPlayerScore.toString()
+
             leftPlayer.initGameField(app.player1.ships)
             rightPlayer.initGameField(app.player2.ships)
 
@@ -91,7 +105,6 @@ class Game : AppCompatActivity() {
             rightPlayer.invalidate()
 
             leftPlayer.setOnTapListener { point: Point ->
-                Log.d("TAP", "left player | (${point.x};${point.y})")
                 if (app.gameMode == GameMode.PVP) {
                     if (currentPlayer == Turn.RIGHT_PLAYER) {
                         val milliseconds =
@@ -107,6 +120,10 @@ class Game : AppCompatActivity() {
                         )
                         val (isKeep, _) = leftPlayer.gameModel!!.hit(point.x - 1, point.y - 1)
                         if (leftPlayer.gameModel!!.isOver()) {
+                            dbHelper.addScoreForPair(
+                                winner = usernamePlayer2.text.toString(),
+                                loser = usernamePlayer1.text.toString(),
+                            )
                             winnerDialog.setScore(
                                 UserScore(
                                     usernamePlayer1.text.toString(),
@@ -114,7 +131,7 @@ class Game : AppCompatActivity() {
                                 ),
                                 UserScore(
                                     usernamePlayer2.text.toString(),
-                                    victoriesPlayer2.text.toString().toInt()
+                                    victoriesPlayer2.text.toString().toInt() + 1
                                 )
                             ).setWinner(usernamePlayer2.text.toString()).show()
                         }
@@ -144,10 +161,14 @@ class Game : AppCompatActivity() {
                     )
                     val (isKeep, _) = rightPlayer.gameModel!!.hit(point.x - 1, point.y - 1)
                     if (rightPlayer.gameModel!!.isOver()) {
+                        dbHelper.addScoreForPair(
+                            winner = usernamePlayer1.text.toString(),
+                            loser = usernamePlayer2.text.toString(),
+                        )
                         winnerDialog.setScore(
                             UserScore(
                                 usernamePlayer1.text.toString(),
-                                victoriesPlayer1.text.toString().toInt()
+                                victoriesPlayer1.text.toString().toInt() + 1
                             ),
                             UserScore(
                                 usernamePlayer2.text.toString(),
@@ -159,10 +180,9 @@ class Game : AppCompatActivity() {
                         Turn.LEFT_PLAYER
                     } else {
                         playerTurnArrow.animate().rotation(180f).start()
-                        val handler = Handler()
-                        handler.postDelayed(
+                        Handler(Looper.getMainLooper()).postDelayed(
                             Runnable { ai?.hit() },
-                            500
+                            botTurnReactionTimeMs
                         )
                         Turn.RIGHT_PLAYER
                     }
@@ -170,13 +190,14 @@ class Game : AppCompatActivity() {
             }
 
             leftPlayer.gameModel?.addOnHit {
-                val handler = Handler()
-                handler.postDelayed(
+                Handler(Looper.getMainLooper()).postDelayed(
                     Runnable { ai?.hit() },
-                    500
+                    botHitReactionTimeMs
                 )
+                currentPlayer = Turn.RIGHT_PLAYER
             }
 
+            // TODO: <need to fix> rotate happens after destroy ship
             leftPlayer.gameModel?.addOnMiss {
                 playerTurnArrow.animate().rotation(0f).start()
                 currentPlayer = Turn.LEFT_PLAYER
