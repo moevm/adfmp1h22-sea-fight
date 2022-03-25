@@ -6,6 +6,7 @@ import android.os.Build
 import android.os.VibrationEffect
 import android.os.Vibrator
 import android.os.VibratorManager
+import java.lang.Integer.max
 
 class GameVibrator(context: Context) {
     private val prefs = context.getSharedPreferences(Application.APP_NAME, Context.MODE_PRIVATE)
@@ -33,7 +34,7 @@ class GameVibrator(context: Context) {
             intArrayOf(68, 49, 76, 22, 127, 93, 35, 20, 12, 9, 6, 5, 5, 9, 9)
 
         val splashTimesPattern =
-            LongArray(splashAmplitudePattern.size) { 1000L / splashAmplitudePattern.size }
+            LongArray(splashAmplitudePattern.size) { 1000L / max(splashAmplitudePattern.size, 20) }
 
         splashEffect =
             VibrationEffect.createWaveform(splashTimesPattern, splashAmplitudePattern, -1)
@@ -43,7 +44,7 @@ class GameVibrator(context: Context) {
             intArrayOf(79, 255, 200, 127, 174, 144, 155, 118, 97, 72, 51, 43, 46, 44, 45, 37, 31, 27, 27, 19)
 
         val explosionTimePattern =
-            LongArray(explosionAmplitudePattern.size) { 2000L / explosionAmplitudePattern.size }
+            LongArray(explosionAmplitudePattern.size) { 2000L / max(explosionAmplitudePattern.size, 20) }
 
         explosionEffect =
             VibrationEffect.createWaveform(explosionTimePattern, explosionAmplitudePattern, -1)
