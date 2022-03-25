@@ -38,7 +38,7 @@ class Entry : AppCompatActivity() {
                 startActivity(intent)
             }
             settingsButton.setOnClickListener {
-                val intent = Intent(this@Entry, Menu::class.java)
+                val intent = Intent(this@Entry, Preferences::class.java)
                 startActivity(intent)
             }
             btScoreboard.setOnClickListener {
