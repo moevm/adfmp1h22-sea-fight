@@ -38,23 +38,33 @@ class SetupRight : AppCompatActivity() {
             }
 
             btNext.setOnClickListener {
-                if (gameFieldView.allShipsArePlaced()) {
-                    val app = application as Application
-                    app.setPlayer2State(
-                        etPlayerName.text.toString()
-                            .ifEmpty { resources.getString(R.string.nickname_hint_2) },
-                        gameFieldView.getShips()
-                    )
-
-                    val intent = Intent(this@SetupRight, Game::class.java)
-                    startActivity(intent)
-                } else {
-                    Toast.makeText(
-                        this@SetupRight,
-                        resources.getString(R.string.not_all_ships_are_placed),
-                        Toast.LENGTH_SHORT
-                    ).show()
+                if (!gameFieldView.allShipsArePlaced()) {
+                    toast(resources.getString(R.string.not_all_ships_are_placed))
+                    return@setOnClickListener
                 }
+
+                val app = application as Application
+                val playerName = etPlayerName.text.toString().ifEmpty { resources.getString(R.string.nickname_hint_2) }
+
+                resources.getString(R.string.bot_name).let { botName ->
+                    if (playerName == botName) {
+                        toast(resources.getString(R.string.bot_name_conflict, botName))
+                        return@setOnClickListener
+                    }
+                }
+
+                if (playerName == app.player1.name) {
+                    toast(resources.getString(R.string.previous_player_name_conflict, app.player1.name))
+                    return@setOnClickListener
+                }
+
+                app.setPlayer2State(
+                    playerName,
+                    gameFieldView.getShips()
+                )
+
+                val intent = Intent(this@SetupRight, Game::class.java)
+                startActivity(intent)
             }
 
             gameFieldView.setupPullView(llTools)
@@ -77,6 +87,8 @@ class SetupRight : AppCompatActivity() {
 
         setContentView(binding.root)
     }
+
+    private fun toast(text: String) = Toast.makeText(this, text, Toast.LENGTH_SHORT).show()
 
     override fun onBackPressed() {
         questionDialog.show()

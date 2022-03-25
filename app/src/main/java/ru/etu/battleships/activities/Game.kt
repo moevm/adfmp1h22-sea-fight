@@ -3,6 +3,7 @@ package ru.etu.battleships.activities
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.test.core.app.ApplicationProvider
@@ -12,9 +13,9 @@ import ru.etu.battleships.databinding.ActivityGameBinding
 import ru.etu.battleships.db.UsersDBHelper
 import ru.etu.battleships.extUI.InfoGameDialog
 import ru.etu.battleships.extUI.QuestionDialog
+import ru.etu.battleships.extUI.WinnerDialog
 import ru.etu.battleships.model.AI
 import ru.etu.battleships.model.GameMode
-import ru.etu.battleships.extUI.WinnerDialog
 import ru.etu.battleships.model.Point
 import ru.etu.battleships.model.UserScore
 import kotlin.system.exitProcess
@@ -28,9 +29,12 @@ class Game : AppCompatActivity() {
     private lateinit var binding: ActivityGameBinding
     private lateinit var questionDialog: QuestionDialog
     private lateinit var helpDialog: InfoGameDialog
-    private var currentPlayer = Turn.LEFT_PLAYER
     private lateinit var winnerDialog: WinnerDialog
     private lateinit var dbHelper: UsersDBHelper
+
+    private var currentPlayer = Turn.LEFT_PLAYER
+    private var botTurnReactionTimeMs = 700L
+    private var botHitReactionTimeMs = 1000L
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -93,7 +97,6 @@ class Game : AppCompatActivity() {
             rightPlayer.invalidate()
 
             leftPlayer.setOnTapListener { point: Point ->
-                Log.d("TAP", "left player | (${point.x};${point.y})")
                 if (app.gameMode == GameMode.PVP) {
                     if (currentPlayer == Turn.RIGHT_PLAYER) {
                         val (isKeep, _) = leftPlayer.gameModel!!.hit(point.x - 1, point.y - 1)
@@ -147,10 +150,9 @@ class Game : AppCompatActivity() {
                         Turn.LEFT_PLAYER
                     } else {
                         playerTurnArrow.animate().rotation(180f).start()
-                        val handler = Handler()
-                        handler.postDelayed(
+                        Handler(Looper.getMainLooper()).postDelayed(
                             Runnable { ai?.hit() },
-                            500
+                            botTurnReactionTimeMs
                         )
                         Turn.RIGHT_PLAYER
                     }
@@ -158,11 +160,11 @@ class Game : AppCompatActivity() {
             }
 
             leftPlayer.gameModel?.addOnHit {
-                val handler = Handler()
-                handler.postDelayed(
+                Handler(Looper.getMainLooper()).postDelayed(
                     Runnable { ai?.hit() },
-                    500
+                    botHitReactionTimeMs
                 )
+                currentPlayer = Turn.RIGHT_PLAYER
             }
 
             // TODO: <need to fix> rotate happens after destroy ship
