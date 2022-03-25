@@ -185,7 +185,7 @@ class GameModel(listOfShips: Set<Ship>) {
 //                }
 //            }
             // hit back and front of ship
-            (point.x - 1 until (point.x + 2)).forEach { x ->
+            ((point.x - 1)..(point.x + 1)).forEach { x ->
                 setCell(x, point.y - 1, CellState.MISS)
                 setCell(x, point.y + length, CellState.MISS)
             }
@@ -202,7 +202,7 @@ class GameModel(listOfShips: Set<Ship>) {
 //                }
 //            }
             // hit back and front of ship
-            (point.y - 1 until (point.y + 2)).forEach { y ->
+            ((point.y - 1)..(point.y + 1)).forEach { y ->
                 setCell(point.x - 1, y, CellState.MISS)
                 setCell(point.x + length, y, CellState.MISS)
             }

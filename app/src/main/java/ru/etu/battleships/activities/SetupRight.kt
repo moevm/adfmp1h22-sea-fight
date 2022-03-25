@@ -88,9 +88,7 @@ class SetupRight : AppCompatActivity() {
         setContentView(binding.root)
     }
 
-    fun toast(text: String) {
-        Toast.makeText(this, text, Toast.LENGTH_SHORT).show()
-    }
+    private fun toast(text: String) = Toast.makeText(this, text, Toast.LENGTH_SHORT).show()
 
     override fun onBackPressed() {
         questionDialog.show()

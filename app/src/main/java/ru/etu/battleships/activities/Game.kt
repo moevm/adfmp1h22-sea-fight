@@ -11,9 +11,9 @@ import ru.etu.battleships.R
 import ru.etu.battleships.databinding.ActivityGameBinding
 import ru.etu.battleships.extUI.InfoGameDialog
 import ru.etu.battleships.extUI.QuestionDialog
+import ru.etu.battleships.extUI.WinnerDialog
 import ru.etu.battleships.model.AI
 import ru.etu.battleships.model.GameMode
-import ru.etu.battleships.extUI.WinnerDialog
 import ru.etu.battleships.model.Point
 import ru.etu.battleships.model.UserScore
 import kotlin.system.exitProcess
