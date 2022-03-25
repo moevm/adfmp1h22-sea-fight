@@ -8,8 +8,8 @@ class SFXPlayer(context: Context) {
     private val prefs = context.getSharedPreferences(Application.APP_NAME, Context.MODE_PRIVATE)
     private val soundPool: SoundPool
 
-    private val splash: Int = 0
-    private val explosion: Int = 0
+    private val splash: Int
+    private val explosion: Int
 
     init {
         val audioAttributes = AudioAttributes.Builder()
@@ -22,13 +22,13 @@ class SFXPlayer(context: Context) {
             .setAudioAttributes(audioAttributes)
             .build()
 
-//        splash = soundPool.load(context, R.raw.splash, 1);
-//        explosion = soundPool.load(context, R.raw.splash, 1);
+        splash = soundPool.load(context, R.raw.sfx_splash, 1);
+        explosion = soundPool.load(context, R.raw.sfx_explosion, 1);
     }
 
     fun playSplash() {
         if (prefs.getBoolean(Application.APP_SOUNDS_PREFERENCE, true)) {
-            soundPool.play(splash, 1f, 1f, 0, 0, 1f)
+            soundPool.play(splash, 0.7f, 0.7f, 0, 0, 1f)
         }
     }
 
