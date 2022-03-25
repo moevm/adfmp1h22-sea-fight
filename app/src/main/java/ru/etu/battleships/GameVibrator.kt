@@ -11,7 +11,8 @@ class GameVibrator(context: Context) {
     private val prefs = context.getSharedPreferences(Application.APP_NAME, Context.MODE_PRIVATE)
 
     private val vibrator = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-        val vibrationManager = context.getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager
+        val vibrationManager =
+            context.getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager
         vibrationManager.defaultVibrator
     } else {
         context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
@@ -27,13 +28,25 @@ class GameVibrator(context: Context) {
     private val explosionEffect: VibrationEffect
 
     init {
-        val splashAmplitudePattern = intArrayOf(68, 49, 76, 22, 127, 93, 35, 20, 12, 9, 6, 5, 5, 9, 9)
-        val splashTimesPattern = LongArray(splashAmplitudePattern.size) { 1000L / splashAmplitudePattern.size }
-        splashEffect = VibrationEffect.createWaveform(splashTimesPattern, splashAmplitudePattern, -1)
+        // ho-ho, magic numbers
+        val splashAmplitudePattern =
+            intArrayOf(68, 49, 76, 22, 127, 93, 35, 20, 12, 9, 6, 5, 5, 9, 9)
 
-        val explosionAmplitudePattern = intArrayOf(79, 255, 200, 127, 174, 144, 155, 118, 97, 72, 51, 43, 46, 44, 45, 37, 31, 27, 27, 19)
-        val explosionTimePattern = LongArray(explosionAmplitudePattern.size) {2000L / explosionAmplitudePattern.size}
-        explosionEffect = VibrationEffect.createWaveform(explosionTimePattern, explosionAmplitudePattern, -1)
+        val splashTimesPattern =
+            LongArray(splashAmplitudePattern.size) { 1000L / splashAmplitudePattern.size }
+
+        splashEffect =
+            VibrationEffect.createWaveform(splashTimesPattern, splashAmplitudePattern, -1)
+
+        // ho-ho, magic numbers
+        val explosionAmplitudePattern =
+            intArrayOf(79, 255, 200, 127, 174, 144, 155, 118, 97, 72, 51, 43, 46, 44, 45, 37, 31, 27, 27, 19)
+
+        val explosionTimePattern =
+            LongArray(explosionAmplitudePattern.size) { 2000L / explosionAmplitudePattern.size }
+
+        explosionEffect =
+            VibrationEffect.createWaveform(explosionTimePattern, explosionAmplitudePattern, -1)
     }
 
     fun click() {

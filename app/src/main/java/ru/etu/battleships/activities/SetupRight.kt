@@ -44,7 +44,8 @@ class SetupRight : AppCompatActivity() {
                 }
 
                 val app = application as Application
-                val playerName = etPlayerName.text.toString().ifEmpty { resources.getString(R.string.nickname_hint_2) }
+                val playerName = etPlayerName.text.toString()
+                    .ifEmpty { resources.getString(R.string.nickname_hint_2) }
 
                 resources.getString(R.string.bot_name).let { botName ->
                     if (playerName == botName) {
