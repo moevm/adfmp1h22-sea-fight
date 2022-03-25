@@ -9,6 +9,14 @@ import android.os.VibratorManager
 import java.lang.Integer.max
 
 class GameVibrator(context: Context) {
+    companion object {
+        val explosionAmps = doubleArrayOf(0.313, 1.0, 0.786, 0.499, 0.684, 0.567, 0.609, 0.464, 0.381, 0.284, 0.201, 0.169, 0.184, 0.174, 0.179, 0.147, 0.125, 0.108, 0.109, 0.077)
+        const val explosionMax = 255
+
+        val splashAmps = doubleArrayOf(0.539, 0.388, 0.597, 0.174, 1.0, 0.736, 0.278, 0.162, 0.096, 0.072, 0.049, 0.043, 0.046, 0.072, 0.072, 0.052, 0.043, 0.067, 0.035, 0.012)
+        const val splashMax = 100
+    }
+
     private val prefs = context.getSharedPreferences(Application.APP_NAME, Context.MODE_PRIVATE)
 
     private val vibrator = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
@@ -30,9 +38,7 @@ class GameVibrator(context: Context) {
 
     init {
         // ho-ho, magic numbers
-        val splashAmplitudePattern =
-            intArrayOf(68, 49, 76, 22, 127, 93, 35, 20, 12, 9, 6, 5, 5, 9, 9)
-
+        val splashAmplitudePattern = splashAmps.map { (it * splashMax).toInt() }.toIntArray()
         val splashTimesPattern =
             LongArray(splashAmplitudePattern.size) { 1000L / max(splashAmplitudePattern.size, 20) }
 
@@ -40,9 +46,7 @@ class GameVibrator(context: Context) {
             VibrationEffect.createWaveform(splashTimesPattern, splashAmplitudePattern, -1)
 
         // ho-ho, magic numbers
-        val explosionAmplitudePattern =
-            intArrayOf(79, 255, 200, 127, 174, 144, 155, 118, 97, 72, 51, 43, 46, 44, 45, 37, 31, 27, 27, 19)
-
+        val explosionAmplitudePattern = explosionAmps.map { (it * explosionMax).toInt() }.toIntArray()
         val explosionTimePattern =
             LongArray(explosionAmplitudePattern.size) { 2000L / max(explosionAmplitudePattern.size, 20) }
 
