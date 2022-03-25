@@ -5,4 +5,6 @@ data class Point(
     val y: Int,
 ) {
     operator fun plus(otherPoint: Point) = Point(x + otherPoint.x, y + otherPoint.y)
+
+    override fun toString() = "($x;$y)"
 }

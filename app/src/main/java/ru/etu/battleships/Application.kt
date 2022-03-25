@@ -2,6 +2,7 @@ package ru.etu.battleships
 
 import ru.etu.battleships.model.GameMode
 import ru.etu.battleships.model.Player
+import ru.etu.battleships.model.PlayerStep
 import ru.etu.battleships.model.Ship
 import android.app.Application as BaseApplication
 
@@ -16,6 +17,12 @@ class Application : BaseApplication() {
         get() = Player(field)
     var player2 = Player()
         get() = Player(field)
+
+    var turnHistory = mutableListOf<PlayerStep>()
+        get() = field
+        set(value) {
+            field = value
+        }
 
     var gameMode = GameMode.PREPARE
         get() = field
