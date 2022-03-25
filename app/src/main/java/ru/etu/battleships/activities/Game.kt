@@ -1,16 +1,13 @@
 package ru.etu.battleships.activities
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
-import android.os.VibrationEffect
-import android.os.Vibrator
 import android.os.Looper
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
-import androidx.test.core.app.ApplicationProvider
 import ru.etu.battleships.Application
+import ru.etu.battleships.GameVibrator
 import ru.etu.battleships.R
 import ru.etu.battleships.databinding.ActivityGameBinding
 import ru.etu.battleships.db.UsersDBHelper
@@ -18,7 +15,6 @@ import ru.etu.battleships.extUI.InfoGameDialog
 import ru.etu.battleships.extUI.QuestionDialog
 import ru.etu.battleships.extUI.WinnerDialog
 import ru.etu.battleships.model.AI
-import ru.etu.battleships.model.CellState
 import ru.etu.battleships.model.GameMode
 import ru.etu.battleships.model.Point
 import ru.etu.battleships.model.UserScore
@@ -30,14 +26,13 @@ class Game : AppCompatActivity() {
         RIGHT_PLAYER,
     }
 
-    private val durationForAllowedShot = 50L
-    private val durationForDeniedShot = 1000L
-
     private lateinit var binding: ActivityGameBinding
     private lateinit var questionDialog: QuestionDialog
     private lateinit var helpDialog: InfoGameDialog
     private lateinit var winnerDialog: WinnerDialog
     private lateinit var dbHelper: UsersDBHelper
+
+    private lateinit var vibrator: GameVibrator
 
     private var currentPlayer = Turn.LEFT_PLAYER
     private var botTurnReactionTimeMs = 700L
@@ -47,6 +42,7 @@ class Game : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityGameBinding.inflate(layoutInflater)
         dbHelper = UsersDBHelper(this)
+        vibrator = GameVibrator(this)
         questionDialog = QuestionDialog(this)
         helpDialog = InfoGameDialog(this)
         winnerDialog = WinnerDialog(this)
@@ -55,7 +51,6 @@ class Game : AppCompatActivity() {
         setContentView(binding.root)
 
         val app = application as Application
-        val vibrator = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
 
         val leftPlayerScore = dbHelper.getWinnerLoserScore(app.player1.name, app.player2.name)
         val rightPlayerScore = dbHelper.getWinnerLoserScore(app.player2.name, app.player1.name)
@@ -107,17 +102,6 @@ class Game : AppCompatActivity() {
             leftPlayer.setOnTapListener { point: Point ->
                 if (app.gameMode == GameMode.PVP) {
                     if (currentPlayer == Turn.RIGHT_PLAYER) {
-                        val milliseconds =
-                            when (leftPlayer.gameModel!!.getCell(point.x - 1, point.y - 1)) {
-                                CellState.FREE, CellState.OCCUPIED -> durationForAllowedShot
-                                CellState.MISS, CellState.HIT, CellState.KILLED -> durationForDeniedShot
-                            }
-                        vibrator.vibrate(
-                            VibrationEffect.createOneShot(
-                                milliseconds,
-                                VibrationEffect.DEFAULT_AMPLITUDE
-                            )
-                        )
                         val (isKeep, _) = leftPlayer.gameModel!!.hit(point.x - 1, point.y - 1)
                         if (leftPlayer.gameModel!!.isOver()) {
                             dbHelper.addScoreForPair(
@@ -148,17 +132,6 @@ class Game : AppCompatActivity() {
             rightPlayer.setOnTapListener { point: Point ->
                 Log.d("TAP", "right player | (${point.x};${point.y})")
                 if (currentPlayer == Turn.LEFT_PLAYER) {
-                    val milliseconds =
-                        when (rightPlayer.gameModel!!.getCell(point.x - 1, point.y - 1)) {
-                            CellState.FREE, CellState.OCCUPIED -> durationForAllowedShot
-                            CellState.MISS, CellState.HIT, CellState.KILLED -> durationForDeniedShot
-                        }
-                    vibrator.vibrate(
-                        VibrationEffect.createOneShot(
-                            milliseconds,
-                            VibrationEffect.DEFAULT_AMPLITUDE
-                        )
-                    )
                     val (isKeep, _) = rightPlayer.gameModel!!.hit(point.x - 1, point.y - 1)
                     if (rightPlayer.gameModel!!.isOver()) {
                         dbHelper.addScoreForPair(
@@ -181,7 +154,7 @@ class Game : AppCompatActivity() {
                     } else {
                         playerTurnArrow.animate().rotation(180f).start()
                         Handler(Looper.getMainLooper()).postDelayed(
-                            Runnable { ai?.hit() },
+                            { ai?.hit() },
                             botTurnReactionTimeMs
                         )
                         Turn.RIGHT_PLAYER
@@ -190,18 +163,28 @@ class Game : AppCompatActivity() {
             }
 
             leftPlayer.gameModel?.addOnHit {
+                vibrator.explosion()
                 Handler(Looper.getMainLooper()).postDelayed(
-                    Runnable { ai?.hit() },
+                    { ai?.hit() },
                     botHitReactionTimeMs
                 )
                 currentPlayer = Turn.RIGHT_PLAYER
             }
 
-            // TODO: <need to fix> rotate happens after destroy ship
             leftPlayer.gameModel?.addOnMiss {
+                vibrator.splash()
                 playerTurnArrow.animate().rotation(0f).start()
                 currentPlayer = Turn.LEFT_PLAYER
             }
+
+            rightPlayer.gameModel?.addOnHit {
+                vibrator.explosion()
+            }
+
+            rightPlayer.gameModel?.addOnMiss {
+                vibrator.splash()
+            }
+
         }
     }
 
