@@ -3,10 +3,9 @@ package ru.etu.battleships.activities
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
-import android.util.Log
+import android.os.Looper
 import androidx.appcompat.app.AppCompatActivity
 import ru.etu.battleships.Application
-import ru.etu.battleships.BuildConfig
 import ru.etu.battleships.GameVibrator
 import ru.etu.battleships.R
 import ru.etu.battleships.SFXPlayer
@@ -16,6 +15,7 @@ import ru.etu.battleships.extUI.InfoGameDialog
 import ru.etu.battleships.extUI.QuestionDialog
 import ru.etu.battleships.extUI.WinnerDialog
 import ru.etu.battleships.model.AI
+import ru.etu.battleships.model.CellState
 import ru.etu.battleships.model.GameMode
 import ru.etu.battleships.model.PlayerStep
 import ru.etu.battleships.model.Point
@@ -133,7 +133,6 @@ class Game : AppCompatActivity() {
             }
 
             rightPlayer.setOnTapListener { point: Point ->
-                Log.d("TAP", "right player | (${point.x};${point.y})")
                 if (currentPlayer == Turn.LEFT_PLAYER) {
                     val (isKeep, _) = rightPlayer.gameModel!!.hit(point.x - 1, point.y - 1)
                     if (rightPlayer.gameModel!!.isOver()) {
@@ -167,14 +166,6 @@ class Game : AppCompatActivity() {
                 }
             }
 
-            leftPlayer.gameModel?.addOnCellChange { point, prev, next ->
-                turnHistory.add(PlayerStep(Turn.RIGHT_PLAYER, point + Point(1, 1), prev, next))
-            }
-
-            rightPlayer.gameModel?.addOnCellChange { point, prev, next ->
-                turnHistory.add(PlayerStep(Turn.LEFT_PLAYER, point + Point(1, 1), prev, next))
-            }
-
             leftPlayer.gameModel?.addOnHit {
                 vibrator.explosion()
                 sfxPlayer.playExplosion()
@@ -183,6 +174,8 @@ class Game : AppCompatActivity() {
                     botHitReactionTimeMs
                 )
                 currentPlayer = Turn.RIGHT_PLAYER
+
+                turnHistory.add(PlayerStep(Turn.RIGHT_PLAYER, it + Point(1, 1), CellState.HIT))
             }
 
             leftPlayer.gameModel?.addOnMiss {
@@ -190,16 +183,22 @@ class Game : AppCompatActivity() {
                 sfxPlayer.playSplash()
                 playerTurnArrow.animate().rotation(0f).start()
                 currentPlayer = Turn.LEFT_PLAYER
+
+                turnHistory.add(PlayerStep(Turn.RIGHT_PLAYER, it + Point(1, 1), CellState.MISS))
             }
 
             rightPlayer.gameModel?.addOnHit {
                 vibrator.explosion()
                 sfxPlayer.playExplosion()
+
+                turnHistory.add(PlayerStep(Turn.LEFT_PLAYER, it + Point(1, 1), CellState.HIT))
             }
 
             rightPlayer.gameModel?.addOnMiss {
                 vibrator.splash()
                 sfxPlayer.playSplash()
+
+                turnHistory.add(PlayerStep(Turn.LEFT_PLAYER, it + Point(1, 1), CellState.MISS))
             }
         }
     }
