@@ -10,6 +10,7 @@ import ru.etu.battleships.Application
 import ru.etu.battleships.BuildConfig
 import ru.etu.battleships.GameVibrator
 import ru.etu.battleships.R
+import ru.etu.battleships.SFXPlayer
 import ru.etu.battleships.databinding.ActivityGameBinding
 import ru.etu.battleships.db.UsersDBHelper
 import ru.etu.battleships.extUI.InfoGameDialog
@@ -29,6 +30,7 @@ class Game : AppCompatActivity() {
     private lateinit var helpDialog: InfoGameDialog
     private lateinit var winnerDialog: WinnerDialog
     private lateinit var dbHelper: UsersDBHelper
+    private lateinit var sfxPlayer: SFXPlayer
 
     private lateinit var vibrator: GameVibrator
 
@@ -42,6 +44,7 @@ class Game : AppCompatActivity() {
         binding = ActivityGameBinding.inflate(layoutInflater)
         dbHelper = UsersDBHelper(this)
         vibrator = GameVibrator(this)
+        sfxPlayer = SFXPlayer(this)
         questionDialog = QuestionDialog(this)
         helpDialog = InfoGameDialog(this)
         winnerDialog = WinnerDialog(this)
@@ -179,6 +182,7 @@ class Game : AppCompatActivity() {
 
             leftPlayer.gameModel?.addOnHit {
                 vibrator.explosion()
+                sfxPlayer.playExplosion()
                 Handler(Looper.getMainLooper()).postDelayed(
                     { ai?.hit() },
                     botHitReactionTimeMs
@@ -188,18 +192,20 @@ class Game : AppCompatActivity() {
 
             leftPlayer.gameModel?.addOnMiss {
                 vibrator.splash()
+                sfxPlayer.playSplash()
                 playerTurnArrow.animate().rotation(0f).start()
                 currentPlayer = Turn.LEFT_PLAYER
             }
 
             rightPlayer.gameModel?.addOnHit {
                 vibrator.explosion()
+                sfxPlayer.playExplosion()
             }
 
             rightPlayer.gameModel?.addOnMiss {
                 vibrator.splash()
+                sfxPlayer.playSplash()
             }
-
         }
     }
 
