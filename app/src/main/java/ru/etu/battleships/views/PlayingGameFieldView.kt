@@ -137,10 +137,10 @@ class PlayingGameFieldView(context: Context, attributeSet: AttributeSet?) :
     }
 
     private fun intToColor(i: Int) = when (i) {
-        1 -> Color.argb(128, 0, 0, 255)
-        2 -> Color.argb(128, 255, 255, 0)
-        3 -> Color.argb(128, 255, 0, 0)
-        4 -> Color.argb(128, 0, 255, 0)
+//        1 -> Color.argb(128, 0, 0, 255)
+//        2 -> Color.argb(128, 255, 255, 0)
+//        3 -> Color.argb(128, 255, 0, 0)
+//        4 -> Color.argb(128, 0, 255, 0)
         else -> Color.argb(0, 0, 0, 0)
     }
 

@@ -40,7 +40,7 @@ class GameVibrator(context: Context) {
         // ho-ho, magic numbers
         val splashAmplitudePattern = splashAmps.map { (it * splashMax).toInt() }.toIntArray()
         val splashTimesPattern =
-            LongArray(splashAmplitudePattern.size) { 1000L / max(splashAmplitudePattern.size, 20) }
+            LongArray(splashAmplitudePattern.size) { 500L / max(splashAmplitudePattern.size, 20) }
 
         splashEffect =
             VibrationEffect.createWaveform(splashTimesPattern, splashAmplitudePattern, -1)
@@ -48,7 +48,7 @@ class GameVibrator(context: Context) {
         // ho-ho, magic numbers
         val explosionAmplitudePattern = explosionAmps.map { (it * explosionMax).toInt() }.toIntArray()
         val explosionTimePattern =
-            LongArray(explosionAmplitudePattern.size) { 2000L / max(explosionAmplitudePattern.size, 20) }
+            LongArray(explosionAmplitudePattern.size) { 1000L / max(explosionAmplitudePattern.size, 20) }
 
         explosionEffect =
             VibrationEffect.createWaveform(explosionTimePattern, explosionAmplitudePattern, -1)
