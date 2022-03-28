@@ -5,6 +5,7 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.RectF
+import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import android.view.View
 import androidx.core.content.res.ResourcesCompat
@@ -19,6 +20,13 @@ open class GameFieldView(context: Context, attributeSet: AttributeSet?) :
     private val textPaint = Paint()
 
     private val strokeRatio = 1f / 10f
+
+    protected val shipResources: Map<Int, Drawable?> = mapOf(
+        Pair(1, ResourcesCompat.getDrawable(resources, R.drawable.ic_ship_1, null)),
+        Pair(2, ResourcesCompat.getDrawable(resources, R.drawable.ic_ship_2, null)),
+        Pair(3, ResourcesCompat.getDrawable(resources, R.drawable.ic_ship_3, null)),
+        Pair(4, ResourcesCompat.getDrawable(resources, R.drawable.ic_ship_4, null)),
+    )
 
     // TODO: only cellSize guy should be visible, play around with coords converter to rid off offsets in subclasses
     protected var offsetX = 0f
