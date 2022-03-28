@@ -100,13 +100,7 @@ class PlayingGameFieldView(context: Context, attributeSet: AttributeSet?) :
         val (x, y) = coordsViewToGame(event.x, event.y)
 
         return when (event.action) {
-            MotionEvent.ACTION_DOWN -> {
-                selectedPoint = Point(x - 1, y - 1)
-                invalidate()
-                true
-            }
-
-            MotionEvent.ACTION_MOVE -> {
+            MotionEvent.ACTION_MOVE, MotionEvent.ACTION_DOWN -> {
                 if (x in 1..10 && y in 1..10) {
                     selectedPoint = Point(x - 1, y - 1)
                     invalidate()
