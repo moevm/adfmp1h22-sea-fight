@@ -62,7 +62,6 @@ class Game : AppCompatActivity() {
         val rightPlayerScore = dbHelper.getWinnerLoserScore(app.player2.name, app.player1.name)
 
         binding.apply {
-            randomizeFirstPlayer(leftPlayer, rightPlayer, playerTurnArrow)
             btBack.setOnClickListener {
                 questionDialog.setMessage(resources.getString(R.string.back_dialog_message))
                 questionDialog.setOnAcceptListener {
@@ -102,6 +101,7 @@ class Game : AppCompatActivity() {
                 GameMode.PVE -> AI(leftPlayer.gameModel!!)
                 else -> throw IllegalStateException()
             }
+            randomizeFirstPlayer(leftPlayer, rightPlayer, playerTurnArrow, ai)
 
             leftPlayer.invalidate()
             rightPlayer.invalidate()
@@ -255,7 +255,8 @@ class Game : AppCompatActivity() {
     private fun randomizeFirstPlayer(
         leftPlayer: PlayingGameFieldView,
         rightPlayer: PlayingGameFieldView,
-        playerTurnArrow: ImageView
+        playerTurnArrow: ImageView,
+        ai: AI?,
     ) {
         Random(Date().time)
         currentPlayer = Turn.values().random()
@@ -267,6 +268,10 @@ class Game : AppCompatActivity() {
             Turn.RIGHT_PLAYER -> {
                 leftPlayer.areCrossLinesShowed = true
                 playerTurnArrow.rotation = 180F
+                Handler(Looper.getMainLooper()).postDelayed(
+                    { ai?.hit() },
+                    botTurnReactionTimeMs
+                )
             }
         }
     }
