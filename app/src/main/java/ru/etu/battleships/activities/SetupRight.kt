@@ -71,9 +71,10 @@ class SetupRight : AppCompatActivity() {
             gameFieldView.setupPullView(llTools)
 
             gameFieldView.addOnShipDragListener { ship, view ->
-                gameFieldView.removeShip(ship)
                 val shadowBuilder = ShipView.DragShadowBuilder(view as ShipView)
-                view.startDragAndDrop(null, shadowBuilder, view, 0)
+                if (view.startDragAndDrop(null, shadowBuilder, view, 0)) {
+                    gameFieldView.removeShip(ship)
+                }
             }
 
             shuffleButton.setOnClickListener {
