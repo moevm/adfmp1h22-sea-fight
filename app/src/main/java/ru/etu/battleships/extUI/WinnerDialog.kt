@@ -9,6 +9,7 @@ import ru.etu.battleships.model.UserScore
 class WinnerDialog(context: Context) {
     private var onBackListener: (() -> Unit)? = null
     private var onExitListener: (() -> Unit)? = null
+    private var onHistoryListener: (() -> Unit)? = null
 
     private var alertDialog: AlertDialog
     private var binding: DialogWinnerBinding = DialogWinnerBinding.inflate(LayoutInflater.from(context))
@@ -31,6 +32,10 @@ class WinnerDialog(context: Context) {
 
         binding.btExit.setOnClickListener {
             onExitListener?.invoke()
+        }
+
+        binding.btHistory.setOnClickListener {
+            onHistoryListener?.invoke()
         }
     }
 
@@ -55,6 +60,11 @@ class WinnerDialog(context: Context) {
 
     fun setOnExitListener(callback: () -> Unit): WinnerDialog {
         onExitListener = callback
+        return this
+    }
+
+    fun setOnHistoryListener(callback: () -> Unit): WinnerDialog {
+        onHistoryListener = callback
         return this
     }
 

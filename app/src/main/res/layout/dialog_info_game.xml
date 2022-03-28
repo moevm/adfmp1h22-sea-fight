@@ -66,6 +66,35 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@id/icon_guide"/>
 
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:padding="1dp"
+            app:layout_constraintHeight_max="50dp"
+            app:layout_constraintVertical_bias="0"
+            android:contentDescription="@string/on_hit_indicator"
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_exmp_explosion"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintTop_toTopOf="@id/what_is_hit_indicator"
+            app:layout_constraintBottom_toBottomOf="@id/what_is_hit_indicator"
+            app:layout_constraintStart_toEndOf="@id/icon_guide" />
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:padding="1dp"
+            app:layout_constraintHeight_max="50dp"
+            app:layout_constraintVertical_bias="1"
+            android:contentDescription="@string/hit_indicator"
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_exmp_hit"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintTop_toTopOf="@id/what_is_hit_indicator"
+
+            app:layout_constraintBottom_toBottomOf="@id/what_is_hit_indicator"
+            app:layout_constraintEnd_toEndOf="parent" />
+
         <TextView
             android:id="@+id/what_is_miss_indicator"
             android:text="@string/what_is_miss_indicator"
@@ -77,6 +106,34 @@
             app:layout_constraintTop_toBottomOf="@id/what_is_hit_indicator"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@id/icon_guide"/>
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:padding="1dp"
+            app:layout_constraintHeight_max="50dp"
+            app:layout_constraintVertical_bias="0"
+            android:contentDescription="@string/on_hit_indicator"
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_exmp_splash"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintTop_toTopOf="@id/what_is_miss_indicator"
+            app:layout_constraintBottom_toBottomOf="@id/what_is_miss_indicator"
+            app:layout_constraintStart_toEndOf="@id/icon_guide" />
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:padding="1dp"
+            app:layout_constraintHeight_max="50dp"
+            app:layout_constraintVertical_bias="1"
+            android:contentDescription="@string/hit_indicator"
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_exmp_miss"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintTop_toTopOf="@id/what_is_miss_indicator"
+            app:layout_constraintBottom_toBottomOf="@id/what_is_miss_indicator"
+            app:layout_constraintEnd_toEndOf="parent" />
 
         <TextView
             android:id="@+id/fire_rule"
@@ -111,6 +168,31 @@
             app:layout_constraintTop_toBottomOf="@id/destroy_rule"
             app:layout_constraintStart_toStartOf="parent" />
 
+        <TextView
+            android:id="@+id/how_to_see_history"
+            android:text="@string/how_to_see_history"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/akaya_kanadaka__regular"
+            android:textSize="26sp"
+            android:textColor="?colorPrimaryDark"
+            app:layout_constraintTop_toBottomOf="@id/winning_rule"
+            app:layout_constraintEnd_toEndOf="@id/icon_guide"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:padding="1dp"
+            android:contentDescription="@string/history_button"
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_book"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintTop_toTopOf="@id/how_to_see_history"
+            app:layout_constraintBottom_toBottomOf="@id/how_to_see_history"
+            app:layout_constraintStart_toEndOf="@id/icon_guide"
+            app:layout_constraintEnd_toEndOf="parent" />
+
 
         <Button
             android:id="@+id/ok"
@@ -123,7 +205,7 @@
             android:paddingTop="15dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/winning_rule"
+            app:layout_constraintTop_toBottomOf="@id/how_to_see_history"
             app:layout_constraintBottom_toBottomOf="parent"
             />
     </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="bottom"
+    android:padding="0dp"
+    android:weightSum="100">
+
+    <TextView
+        android:id="@+id/who"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="40"
+
+        android:background="@drawable/shape_table_cell"
+        android:gravity="center"
+        android:padding="2dp"
+
+        android:fontFamily="@font/akaya_kanadaka__regular"
+        android:textColor="?colorOnPrimary"
+        android:textSize="20sp"
+        android:includeFontPadding="false"/>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="30"
+
+        android:background="@drawable/shape_table_cell"
+        android:gravity="center"
+        android:padding="2dp">
+
+        <TextView
+            android:id="@+id/where_letter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:fontFamily="@font/akaya_kanadaka__regular"
+            android:textColor="?colorOnPrimary"
+            android:textSize="20sp"
+            android:includeFontPadding="false"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/point_delimiter"
+
+            android:fontFamily="@font/akaya_kanadaka__regular"
+            android:textColor="?colorOnPrimary"
+            android:textSize="20sp"
+            android:includeFontPadding="false"/>
+
+        <TextView
+            android:id="@+id/where_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:fontFamily="@font/aladin__regular"
+            android:textColor="?colorOnPrimary"
+            android:textSize="20sp"
+            android:includeFontPadding="false"/>
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/status"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="30"
+
+        android:background="@drawable/shape_table_cell"
+        android:gravity="center"
+        android:padding="2dp"
+
+        android:fontFamily="@font/akaya_kanadaka__regular"
+        android:textColor="?colorOnPrimary"
+        android:textSize="20sp"
+        android:includeFontPadding="false"/>
+
+</LinearLayout>
