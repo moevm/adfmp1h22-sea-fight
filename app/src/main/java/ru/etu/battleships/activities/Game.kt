@@ -8,16 +8,17 @@ import android.util.Log
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import ru.etu.battleships.Application
-import ru.etu.battleships.BuildConfig
 import ru.etu.battleships.GameVibrator
 import ru.etu.battleships.R
 import ru.etu.battleships.SFXPlayer
 import ru.etu.battleships.databinding.ActivityGameBinding
 import ru.etu.battleships.db.UsersDBHelper
+import ru.etu.battleships.extUI.GameHistoryDialog
 import ru.etu.battleships.extUI.InfoGameDialog
 import ru.etu.battleships.extUI.QuestionDialog
 import ru.etu.battleships.extUI.WinnerDialog
 import ru.etu.battleships.model.AI
+import ru.etu.battleships.model.CellState
 import ru.etu.battleships.model.GameMode
 import ru.etu.battleships.model.PlayerStep
 import ru.etu.battleships.model.Point
@@ -33,6 +34,8 @@ class Game : AppCompatActivity() {
     private lateinit var questionDialog: QuestionDialog
     private lateinit var helpDialog: InfoGameDialog
     private lateinit var winnerDialog: WinnerDialog
+    private lateinit var gameHistoryDialog: GameHistoryDialog
+
     private lateinit var dbHelper: UsersDBHelper
     private lateinit var sfxPlayer: SFXPlayer
 
@@ -49,11 +52,14 @@ class Game : AppCompatActivity() {
         dbHelper = UsersDBHelper(this)
         vibrator = GameVibrator(this)
         sfxPlayer = SFXPlayer(this)
+
         questionDialog = QuestionDialog(this)
+        gameHistoryDialog = GameHistoryDialog(turnHistory, this)
         helpDialog = InfoGameDialog(this)
         winnerDialog = WinnerDialog(this)
             .setOnBackListener { binding.btBack.performClick() }
             .setOnExitListener { binding.btExit.performClick() }
+            .setOnHistoryListener { binding.btHistory.performClick() }
         setContentView(binding.root)
 
         val app = application as Application
@@ -87,6 +93,10 @@ class Game : AppCompatActivity() {
                 helpDialog.show()
             }
 
+            btHistory.setOnClickListener {
+                gameHistoryDialog.show()
+            }
+
             usernamePlayer1.text = app.player1.name
             usernamePlayer2.text = app.player2.name
 
@@ -109,18 +119,13 @@ class Game : AppCompatActivity() {
             leftPlayer.setOnTapListener { point: Point ->
                 if (app.gameMode == GameMode.PVP) {
                     if (currentPlayer == Turn.RIGHT_PLAYER) {
-                        val previousCellState =
-                            leftPlayer.gameModel!!.getCell(point.x - 1, point.y - 1)
-                        val (isKeep, nextCellState) = leftPlayer.gameModel!!.hit(
-                            point.x - 1,
-                            point.y - 1
-                        )
-                        turnHistory.add(
-                            PlayerStep(
-                                currentPlayer,
-                                point,
-                                previousCellState,
-                                nextCellState
+                        val (isKeep, _) = leftPlayer.gameModel!!.hit(point.x - 1, point.y - 1)
+                        if (leftPlayer.gameModel!!.isOver()) {
+                            app.turnHistory = turnHistory
+
+                            dbHelper.addScoreForPair(
+                                winner = usernamePlayer2.text.toString(),
+                                loser = usernamePlayer1.text.toString(),
                             )
                         )
                         currentPlayer = if (isKeep) {
@@ -134,20 +139,14 @@ class Game : AppCompatActivity() {
             }
 
             rightPlayer.setOnTapListener { point: Point ->
-                Log.d("TAP", "right player | (${point.x};${point.y})")
                 if (currentPlayer == Turn.LEFT_PLAYER) {
-                    val previousCellState =
-                        rightPlayer.gameModel!!.getCell(point.x - 1, point.y - 1)
-                    val (isKeep, nextCellState) = rightPlayer.gameModel!!.hit(
-                        point.x - 1,
-                        point.y - 1
-                    )
-                    turnHistory.add(
-                        PlayerStep(
-                            currentPlayer,
-                            point,
-                            previousCellState,
-                            nextCellState
+                    val (isKeep, _) = rightPlayer.gameModel!!.hit(point.x - 1, point.y - 1)
+                    if (rightPlayer.gameModel!!.isOver()) {
+                        app.turnHistory = turnHistory
+
+                        dbHelper.addScoreForPair(
+                            winner = usernamePlayer1.text.toString(),
+                            loser = usernamePlayer2.text.toString(),
                         )
                     )
                     currentPlayer = if (isKeep) {
@@ -227,6 +226,8 @@ class Game : AppCompatActivity() {
                     botHitReactionTimeMs
                 )
                 currentPlayer = Turn.RIGHT_PLAYER
+
+                gameHistoryDialog.addStep(PlayerStep(app.player2.name, it + Point(1, 1), CellState.HIT))
             }
 
             leftPlayer.gameModel?.addOnMiss {
@@ -236,11 +237,15 @@ class Game : AppCompatActivity() {
                 currentPlayer = Turn.LEFT_PLAYER
                 leftPlayer.areCrossLinesShowed = false
                 rightPlayer.areCrossLinesShowed = true
+
+                gameHistoryDialog.addStep(PlayerStep(app.player2.name, it + Point(1, 1), CellState.MISS))
             }
 
             rightPlayer.gameModel?.addOnHit {
                 vibrator.explosion()
                 sfxPlayer.playExplosion()
+
+                gameHistoryDialog.addStep(PlayerStep(app.player1.name, it + Point(1, 1), CellState.HIT))
             }
 
             rightPlayer.gameModel?.addOnMiss {
@@ -248,6 +253,7 @@ class Game : AppCompatActivity() {
                 sfxPlayer.playSplash()
                 leftPlayer.areCrossLinesShowed = true
                 rightPlayer.areCrossLinesShowed = false
+                gameHistoryDialog.addStep(PlayerStep(app.player1.name, it + Point(1, 1), CellState.MISS))
             }
         }
     }

@@ -1,8 +1,7 @@
 package ru.etu.battleships.model
 
 data class PlayerStep(
-    val player: Turn,
+    val player: String,
     val point: Point,
-    val previousCellState: CellState,
-    val nextCellState: CellState,
+    val cellState: CellState
 )

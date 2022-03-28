@@ -33,6 +33,7 @@
     <string name="victories_delimiter">:</string>
     <string name="turn_indicator">Turn</string>
     <string name="bot_name">CaptainAI</string>
+    <string name="history_button">History</string>
 
     <!--    Dialogs-->
     <string name="exit_dialog_message">Are you sure want to exit game?</string>
@@ -55,9 +56,24 @@
     <string name="fire_rule">When hitting an enemy ship, you can make the next shot. When you miss an enemy ship, the turn is passed to another player</string>
     <string name="destroy_rule">Enemy ship destroying automatically hits surrounding cells</string>
     <string name="winning_rule">The first player to lose all ships is the loser.</string>
+    <string name="how_to_see_history">You always can look up history of turns by pressing this button:</string>
+    <string name="hit_indicator">red cross mark after hit</string>
+    <string name="miss_indicator">blur blue point after miss</string>
+    <string name="on_hit_indicator">explosion animation on tap</string>
+    <string name="on_miss_indicator">water splash animation on tap</string>
 
 <!--    Winner window-->
     <string name="congratulations">Congratulations!</string>
     <string name="wins">Wins!</string>
+
+<!--    Game History-->
+    <string name="close_button">Close</string>
+    <string name="attacker">Attacker</string>
+    <string name="point_under_attack">Where</string>
+    <string name="attack_result">Status</string>
+    <string name="point_delimiter">:</string>
+    <string name="hit">Hit!</string>
+    <string name="miss">Miss!</string>
+
 
 </resources>

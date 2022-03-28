@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item>
-        <inset
-            android:insetTop="-2dp"
-            android:insetLeft="-2dp"
-            >
+        <inset>
             <shape>
                 <stroke
                     android:color="?colorPrimaryDark"
                     android:width="2dp"/>
+
+                <solid android:color="?colorPrimary"/>
             </shape>
         </inset>
     </item>

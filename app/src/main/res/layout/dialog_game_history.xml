@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:padding="10dp"
+    android:background="@drawable/dialog_shape">
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/top_guide"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_begin="20dp"/>
+
+    <ImageButton
+        android:id="@+id/bt_close"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:padding="0dp"
+
+        android:backgroundTint="#00000000"
+        android:contentDescription="@string/close_button"
+
+        android:scaleType="centerInside"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/top_guide"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintHorizontal_bias="1"
+        app:layout_constraintDimensionRatio="1:1"
+        app:srcCompat="@drawable/ic_close" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        app:layout_constrainedHeight="true"
+        android:orientation="vertical"
+        android:background="@drawable/shape_table"
+        app:layout_constraintTop_toBottomOf="@id/top_guide"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout
+            android:id="@+id/header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="100">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+
+                android:fontFamily="@font/akaya_kanadaka__regular"
+                android:textColor="?colorOnPrimary"
+                android:textSize="24sp"
+                android:includeFontPadding="false"
+
+                android:paddingVertical="2dp"
+                android:background="@drawable/shape_table_cell"
+
+                android:gravity="center"
+                android:layout_weight="40"
+                android:text="@string/attacker" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+
+                android:fontFamily="@font/akaya_kanadaka__regular"
+                android:textColor="?colorOnPrimary"
+                android:textSize="24sp"
+                android:includeFontPadding="false"
+
+                android:paddingVertical="2dp"
+                android:background="@drawable/shape_table_cell"
+
+                android:gravity="center"
+                android:layout_weight="30"
+                android:text="@string/point_under_attack" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+
+                android:fontFamily="@font/akaya_kanadaka__regular"
+                android:textColor="?colorOnPrimary"
+                android:textSize="24sp"
+                android:includeFontPadding="false"
+
+                android:paddingVertical="2dp"
+                android:background="@drawable/shape_table_cell"
+
+                android:gravity="center"
+                android:layout_weight="30"
+                android:text="@string/attack_result" />
+
+        </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_game_history"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scrollbarAlwaysDrawVerticalTrack="true"
+            tools:itemCount="0"
+            />
+
+    </LinearLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
