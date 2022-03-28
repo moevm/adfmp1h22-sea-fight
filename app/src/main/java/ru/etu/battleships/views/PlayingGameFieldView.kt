@@ -31,6 +31,8 @@ class PlayingGameFieldView(context: Context, attributeSet: AttributeSet?) :
 
     var selectedPoint: Point? = null
 
+    var areCrossLinesShowed = false
+
     init {
         fillPaint.style = Paint.Style.FILL
     }
@@ -161,7 +163,7 @@ class PlayingGameFieldView(context: Context, attributeSet: AttributeSet?) :
             anim.draw(canvas)
         }
 
-        if (selectedPoint != null) {
+        if (selectedPoint != null && areCrossLinesShowed) {
             val color = when (gameModel!!.getCell(selectedPoint!!)) {
                 CellState.FREE, CellState.OCCUPIED -> Color.argb(128, 0, 255, 0)
                 CellState.MISS, CellState.HIT, CellState.KILLED -> Color.argb(128, 255, 0, 0)

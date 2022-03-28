@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import ru.etu.battleships.Application
 import ru.etu.battleships.BuildConfig
@@ -22,6 +23,9 @@ import ru.etu.battleships.model.PlayerStep
 import ru.etu.battleships.model.Point
 import ru.etu.battleships.model.Turn
 import ru.etu.battleships.model.UserScore
+import ru.etu.battleships.views.PlayingGameFieldView
+import java.util.*
+import kotlin.random.Random
 import kotlin.system.exitProcess
 
 class Game : AppCompatActivity() {
@@ -58,6 +62,7 @@ class Game : AppCompatActivity() {
         val rightPlayerScore = dbHelper.getWinnerLoserScore(app.player2.name, app.player1.name)
 
         binding.apply {
+            randomizeFirstPlayer(leftPlayer, rightPlayer, playerTurnArrow)
             btBack.setOnClickListener {
                 questionDialog.setMessage(resources.getString(R.string.back_dialog_message))
                 questionDialog.setOnAcceptListener {
@@ -104,14 +109,28 @@ class Game : AppCompatActivity() {
             leftPlayer.setOnTapListener { point: Point ->
                 if (app.gameMode == GameMode.PVP) {
                     if (currentPlayer == Turn.RIGHT_PLAYER) {
-                        val previousCellState = leftPlayer.gameModel!!.getCell(point.x - 1, point.y - 1)
-                        val (isKeep, nextCellState) = leftPlayer.gameModel!!.hit(point.x - 1, point.y - 1)
-                        turnHistory.add(PlayerStep(currentPlayer, point, previousCellState, nextCellState))
+                        val previousCellState =
+                            leftPlayer.gameModel!!.getCell(point.x - 1, point.y - 1)
+                        val (isKeep, nextCellState) = leftPlayer.gameModel!!.hit(
+                            point.x - 1,
+                            point.y - 1
+                        )
+                        turnHistory.add(
+                            PlayerStep(
+                                currentPlayer,
+                                point,
+                                previousCellState,
+                                nextCellState
+                            )
+                        )
                         if (leftPlayer.gameModel!!.isOver()) {
                             app.turnHistory = turnHistory
                             if (BuildConfig.DEBUG) {
                                 turnHistory.forEach { turn ->
-                                    Log.d("turnHistory", "${turn.player} | ${turn.point} ${turn.previousCellState} -> ${turn.nextCellState}")
+                                    Log.d(
+                                        "turnHistory",
+                                        "${turn.player} | ${turn.point} ${turn.previousCellState} -> ${turn.nextCellState}"
+                                    )
                                 }
                             }
                             dbHelper.addScoreForPair(
@@ -142,14 +161,28 @@ class Game : AppCompatActivity() {
             rightPlayer.setOnTapListener { point: Point ->
                 Log.d("TAP", "right player | (${point.x};${point.y})")
                 if (currentPlayer == Turn.LEFT_PLAYER) {
-                    val previousCellState = rightPlayer.gameModel!!.getCell(point.x - 1, point.y - 1)
-                    val (isKeep, nextCellState) = rightPlayer.gameModel!!.hit(point.x - 1, point.y - 1)
-                    turnHistory.add(PlayerStep(currentPlayer, point, previousCellState, nextCellState))
+                    val previousCellState =
+                        rightPlayer.gameModel!!.getCell(point.x - 1, point.y - 1)
+                    val (isKeep, nextCellState) = rightPlayer.gameModel!!.hit(
+                        point.x - 1,
+                        point.y - 1
+                    )
+                    turnHistory.add(
+                        PlayerStep(
+                            currentPlayer,
+                            point,
+                            previousCellState,
+                            nextCellState
+                        )
+                    )
                     if (rightPlayer.gameModel!!.isOver()) {
                         app.turnHistory = turnHistory
                         if (BuildConfig.DEBUG) {
                             turnHistory.forEach { turn ->
-                                Log.d("turnHistory", "${turn.player} | ${turn.point} ${turn.previousCellState} -> ${turn.nextCellState}")
+                                Log.d(
+                                    "turnHistory",
+                                    "${turn.player} | ${turn.point} ${turn.previousCellState} -> ${turn.nextCellState}"
+                                )
                             }
                         }
                         dbHelper.addScoreForPair(
@@ -195,6 +228,8 @@ class Game : AppCompatActivity() {
                 sfxPlayer.playSplash()
                 playerTurnArrow.animate().rotation(0f).start()
                 currentPlayer = Turn.LEFT_PLAYER
+                leftPlayer.areCrossLinesShowed = false
+                rightPlayer.areCrossLinesShowed = true
             }
 
             rightPlayer.gameModel?.addOnHit {
@@ -205,6 +240,27 @@ class Game : AppCompatActivity() {
             rightPlayer.gameModel?.addOnMiss {
                 vibrator.splash()
                 sfxPlayer.playSplash()
+                leftPlayer.areCrossLinesShowed = true
+                rightPlayer.areCrossLinesShowed = false
+            }
+        }
+    }
+
+    private fun randomizeFirstPlayer(
+        leftPlayer: PlayingGameFieldView,
+        rightPlayer: PlayingGameFieldView,
+        playerTurnArrow: ImageView
+    ) {
+        Random(Date().time)
+        currentPlayer = Turn.values().random()
+        when (currentPlayer) {
+            Turn.LEFT_PLAYER -> {
+                rightPlayer.areCrossLinesShowed = true
+                playerTurnArrow.rotation = 0F
+            }
+            Turn.RIGHT_PLAYER -> {
+                leftPlayer.areCrossLinesShowed = true
+                playerTurnArrow.rotation = 180F
             }
         }
     }
