@@ -4,7 +4,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import ru.etu.battleships.Application
@@ -127,7 +126,7 @@ class Game : AppCompatActivity() {
                                 winner = usernamePlayer2.text.toString(),
                                 loser = usernamePlayer1.text.toString(),
                             )
-                        )
+                        }
                         currentPlayer = if (isKeep) {
                             Turn.RIGHT_PLAYER
                         } else {
@@ -148,7 +147,7 @@ class Game : AppCompatActivity() {
                             winner = usernamePlayer1.text.toString(),
                             loser = usernamePlayer2.text.toString(),
                         )
-                    )
+                    }
                     currentPlayer = if (isKeep) {
                         Turn.LEFT_PLAYER
                     } else {
@@ -165,14 +164,6 @@ class Game : AppCompatActivity() {
             leftPlayer.gameModel?.addOnKill {
                 if (leftPlayer.gameModel!!.isOver()) {
                     app.turnHistory = turnHistory
-                    if (BuildConfig.DEBUG) {
-                        turnHistory.forEach { turn ->
-                            Log.d(
-                                "turnHistory",
-                                "${turn.player} | ${turn.point} ${turn.previousCellState} -> ${turn.nextCellState}"
-                            )
-                        }
-                    }
                     dbHelper.addScoreForPair(
                         winner = usernamePlayer2.text.toString(),
                         loser = usernamePlayer1.text.toString(),
@@ -193,14 +184,6 @@ class Game : AppCompatActivity() {
             rightPlayer.gameModel?.addOnKill {
                 if (rightPlayer.gameModel!!.isOver()) {
                     app.turnHistory = turnHistory
-                    if (BuildConfig.DEBUG) {
-                        turnHistory.forEach { turn ->
-                            Log.d(
-                                "turnHistory",
-                                "${turn.player} | ${turn.point} ${turn.previousCellState} -> ${turn.nextCellState}"
-                            )
-                        }
-                    }
                     dbHelper.addScoreForPair(
                         winner = usernamePlayer1.text.toString(),
                         loser = usernamePlayer2.text.toString(),
@@ -253,7 +236,9 @@ class Game : AppCompatActivity() {
                 sfxPlayer.playSplash()
                 leftPlayer.areCrossLinesShowed = true
                 rightPlayer.areCrossLinesShowed = false
+
                 gameHistoryDialog.addStep(PlayerStep(app.player1.name, it + Point(1, 1), CellState.MISS))
+
             }
         }
     }
