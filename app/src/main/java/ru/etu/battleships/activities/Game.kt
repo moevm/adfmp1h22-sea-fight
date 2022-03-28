@@ -123,31 +123,6 @@ class Game : AppCompatActivity() {
                                 nextCellState
                             )
                         )
-                        if (leftPlayer.gameModel!!.isOver()) {
-                            app.turnHistory = turnHistory
-                            if (BuildConfig.DEBUG) {
-                                turnHistory.forEach { turn ->
-                                    Log.d(
-                                        "turnHistory",
-                                        "${turn.player} | ${turn.point} ${turn.previousCellState} -> ${turn.nextCellState}"
-                                    )
-                                }
-                            }
-                            dbHelper.addScoreForPair(
-                                winner = usernamePlayer2.text.toString(),
-                                loser = usernamePlayer1.text.toString(),
-                            )
-                            winnerDialog.setScore(
-                                UserScore(
-                                    usernamePlayer1.text.toString(),
-                                    victoriesPlayer1.text.toString().toInt()
-                                ),
-                                UserScore(
-                                    usernamePlayer2.text.toString(),
-                                    victoriesPlayer2.text.toString().toInt() + 1
-                                )
-                            ).setWinner(usernamePlayer2.text.toString()).show()
-                        }
                         currentPlayer = if (isKeep) {
                             Turn.RIGHT_PLAYER
                         } else {
@@ -175,31 +150,6 @@ class Game : AppCompatActivity() {
                             nextCellState
                         )
                     )
-                    if (rightPlayer.gameModel!!.isOver()) {
-                        app.turnHistory = turnHistory
-                        if (BuildConfig.DEBUG) {
-                            turnHistory.forEach { turn ->
-                                Log.d(
-                                    "turnHistory",
-                                    "${turn.player} | ${turn.point} ${turn.previousCellState} -> ${turn.nextCellState}"
-                                )
-                            }
-                        }
-                        dbHelper.addScoreForPair(
-                            winner = usernamePlayer1.text.toString(),
-                            loser = usernamePlayer2.text.toString(),
-                        )
-                        winnerDialog.setScore(
-                            UserScore(
-                                usernamePlayer1.text.toString(),
-                                victoriesPlayer1.text.toString().toInt() + 1
-                            ),
-                            UserScore(
-                                usernamePlayer2.text.toString(),
-                                victoriesPlayer2.text.toString().toInt()
-                            )
-                        ).setWinner(usernamePlayer1.text.toString()).show()
-                    }
                     currentPlayer = if (isKeep) {
                         Turn.LEFT_PLAYER
                     } else {
@@ -210,6 +160,62 @@ class Game : AppCompatActivity() {
                         )
                         Turn.RIGHT_PLAYER
                     }
+                }
+            }
+
+            leftPlayer.gameModel?.addOnKill {
+                if (leftPlayer.gameModel!!.isOver()) {
+                    app.turnHistory = turnHistory
+                    if (BuildConfig.DEBUG) {
+                        turnHistory.forEach { turn ->
+                            Log.d(
+                                "turnHistory",
+                                "${turn.player} | ${turn.point} ${turn.previousCellState} -> ${turn.nextCellState}"
+                            )
+                        }
+                    }
+                    dbHelper.addScoreForPair(
+                        winner = usernamePlayer2.text.toString(),
+                        loser = usernamePlayer1.text.toString(),
+                    )
+                    winnerDialog.setScore(
+                        UserScore(
+                            usernamePlayer1.text.toString(),
+                            victoriesPlayer1.text.toString().toInt()
+                        ),
+                        UserScore(
+                            usernamePlayer2.text.toString(),
+                            victoriesPlayer2.text.toString().toInt() + 1
+                        )
+                    ).setWinner(usernamePlayer2.text.toString()).show()
+                }
+            }
+
+            rightPlayer.gameModel?.addOnKill {
+                if (rightPlayer.gameModel!!.isOver()) {
+                    app.turnHistory = turnHistory
+                    if (BuildConfig.DEBUG) {
+                        turnHistory.forEach { turn ->
+                            Log.d(
+                                "turnHistory",
+                                "${turn.player} | ${turn.point} ${turn.previousCellState} -> ${turn.nextCellState}"
+                            )
+                        }
+                    }
+                    dbHelper.addScoreForPair(
+                        winner = usernamePlayer1.text.toString(),
+                        loser = usernamePlayer2.text.toString(),
+                    )
+                    winnerDialog.setScore(
+                        UserScore(
+                            usernamePlayer1.text.toString(),
+                            victoriesPlayer1.text.toString().toInt() + 1
+                        ),
+                        UserScore(
+                            usernamePlayer2.text.toString(),
+                            victoriesPlayer2.text.toString().toInt()
+                        )
+                    ).setWinner(usernamePlayer1.text.toString()).show()
                 }
             }
 
