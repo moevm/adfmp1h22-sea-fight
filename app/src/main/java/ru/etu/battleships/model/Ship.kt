@@ -1,7 +1,7 @@
 package ru.etu.battleships.model
 
 class Ship(
-    var length: Int,
+    val length: Int,
     var position: Point,
     var orientation: Orientation,
     val id: Int,
@@ -14,7 +14,6 @@ class Ship(
     ) {}
 
     fun set(other: Ship) {
-        length = other.length
         position = other.position
         orientation = other.orientation
     }

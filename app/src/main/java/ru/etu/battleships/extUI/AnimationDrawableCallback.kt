@@ -24,10 +24,10 @@ open class AnimationDrawableCallback(
 
     override fun invalidateDrawable(who: Drawable) {
         mView?.postInvalidateOnAnimation(
-//            who.bounds.left,
-//            who.bounds.top,
-//            who.bounds.right,
-//            who.bounds.bottom,
+            who.bounds.left,
+            who.bounds.top,
+            who.bounds.right,
+            who.bounds.bottom,
         )
         mWrappedCallback?.invalidateDrawable(who)
         if (!mIsCallbackTriggered && mLastFrame != null && mLastFrame == who.current) {
