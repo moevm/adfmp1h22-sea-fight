@@ -3,6 +3,7 @@ package ru.etu.battleships.extUI
 import android.graphics.drawable.AnimationDrawable
 import android.graphics.drawable.Drawable
 import android.os.SystemClock
+import android.util.Log
 import android.view.View
 
 open class AnimationDrawableCallback(
@@ -22,11 +23,11 @@ open class AnimationDrawableCallback(
     }
 
     override fun invalidateDrawable(who: Drawable) {
-        mView?.postInvalidate(
-            who.bounds.left,
-            who.bounds.top,
-            who.bounds.right,
-            who.bounds.bottom,
+        mView?.postInvalidateOnAnimation(
+//            who.bounds.left,
+//            who.bounds.top,
+//            who.bounds.right,
+//            who.bounds.bottom,
         )
         mWrappedCallback?.invalidateDrawable(who)
         if (!mIsCallbackTriggered && mLastFrame != null && mLastFrame == who.current) {
@@ -36,7 +37,7 @@ open class AnimationDrawableCallback(
     }
 
     override fun scheduleDrawable(who: Drawable, what: Runnable, `when`: Long) {
-        mView?.postDelayed(what, `when` - SystemClock.uptimeMillis())
+        mView?.postOnAnimationDelayed(what, `when` - SystemClock.uptimeMillis())
         mWrappedCallback?.scheduleDrawable(who, what, `when`)
     }
 
