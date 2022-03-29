@@ -178,6 +178,9 @@ class PlayingGameFieldView(context: Context, attributeSet: AttributeSet?) :
 
         cellDrawables.forEach { anim ->
             anim.draw(canvas)
+            if (anim is AnimationDrawable) {
+                anim.start()
+            }
         }
 
         if (selectedPoint != null && areCrossLinesShowed) {
