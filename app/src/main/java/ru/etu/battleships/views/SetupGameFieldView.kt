@@ -13,7 +13,9 @@ import android.view.DragEvent
 import android.view.MotionEvent
 import android.view.View
 import android.widget.LinearLayout
+import android.widget.Toast
 import androidx.core.view.forEach
+import ru.etu.battleships.R
 import ru.etu.battleships.model.Orientation
 import ru.etu.battleships.model.Point
 import ru.etu.battleships.model.Ship
@@ -210,6 +212,33 @@ class SetupGameFieldView(context: Context, attributeSet: AttributeSet?) :
         return ships.remove(ship)
     }
 
+    private fun rotateShip(ship: Ship): Boolean {
+        val tmp = Ship(ship)
+        ships.remove(ship)
+
+        tmp.rotate()
+
+        if (validateShipPosition(tmp, ships)) {
+            ship.set(tmp)
+            ships.add(ship)
+            return true
+        }
+
+        when (tmp.orientation) {
+            Orientation.HORIZONTAL -> tmp.position -= Point(tmp.length - 1, 0)
+            Orientation.VERTICAL -> tmp.position -= Point(0, tmp.length - 1)
+        }
+
+        if (validateShipPosition(tmp, ships)) {
+            ship.set(tmp)
+            ships.add(ship)
+            return true
+        }
+
+        ships.add(ship)
+        return false
+    }
+
     fun allShipsArePlaced() = ships.sumOf { it.length } == (4 * 1 + 3 * 2 + 2 * 3 + 1 * 4)
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
@@ -235,13 +264,15 @@ class SetupGameFieldView(context: Context, attributeSet: AttributeSet?) :
             MotionEvent.ACTION_UP -> {
                 this.performClick()
                 if (ship != null) {
-                    ship.rotate()
-                    if (validateShipPosition(ship, ships)) {
-                        shipToViewMap[ship]?.rotate()
-                    } else {
-                        // TODO: Notify about bad rotation
-                        ship.rotate()
+
+                    if (!rotateShip(ship)) {
+                        Toast.makeText(context,
+                            resources.getString(R.string.bad_rotation),
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
+
+                    shipToViewMap[ship]?.orientation = ship.orientation
 
                     invalidate()
                 }

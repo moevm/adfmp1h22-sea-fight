@@ -28,6 +28,7 @@
     <string name="shuffle_button">Shuffle</string>
     <string name="previous_player_name_conflict">Sorry, name \"%1$s\" taken by previous player :(</string>
     <string name="bot_name_conflict">Sorry, name \"%1$s\" taken by our bot :(</string>
+    <string name="bad_rotation">Can\'t rotate ship from this position</string>
 
     <!--    Game state-->
     <string name="victories_delimiter">:</string>
