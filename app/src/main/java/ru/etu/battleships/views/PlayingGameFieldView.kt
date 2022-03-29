@@ -5,6 +5,7 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Rect
+import android.graphics.RectF
 import android.graphics.drawable.AnimationDrawable
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
@@ -15,6 +16,7 @@ import ru.etu.battleships.R
 import ru.etu.battleships.extUI.AnimationDrawableCallback
 import ru.etu.battleships.model.CellState
 import ru.etu.battleships.model.GameModel
+import ru.etu.battleships.model.Orientation
 import ru.etu.battleships.model.Point
 import ru.etu.battleships.model.Ship
 
@@ -26,10 +28,13 @@ class PlayingGameFieldView(context: Context, attributeSet: AttributeSet?) :
     private val onTapListenerCallbacks: MutableList<(Point) -> Unit> = mutableListOf()
 
     private val cellDrawables = mutableListOf<Drawable>()
+    private val killedShips = mutableListOf<Ship>()
 
     var gameModel: GameModel? = null
 
     var selectedPoint: Point? = null
+
+    var areCrossLinesShowed = false
 
     init {
         fillPaint.style = Paint.Style.FILL
@@ -98,13 +103,7 @@ class PlayingGameFieldView(context: Context, attributeSet: AttributeSet?) :
         val (x, y) = coordsViewToGame(event.x, event.y)
 
         return when (event.action) {
-            MotionEvent.ACTION_DOWN -> {
-                selectedPoint = Point(x - 1, y - 1)
-                invalidate()
-                true
-            }
-
-            MotionEvent.ACTION_MOVE -> {
+            MotionEvent.ACTION_MOVE, MotionEvent.ACTION_DOWN -> {
                 if (x in 1..10 && y in 1..10) {
                     selectedPoint = Point(x - 1, y - 1)
                     invalidate()
@@ -157,11 +156,31 @@ class PlayingGameFieldView(context: Context, attributeSet: AttributeSet?) :
             }
         }
 
+        killedShips.forEach { ship ->
+            val x = ship.position.x
+            val y = ship.position.y
+
+            val (left, top) = coordsGameToView(x, y)
+            val (right, bottom) = coordsGameToView(x + ship.length, y + 1)
+            val bounds = Rect()
+            RectF(left, top, right, bottom).round(bounds)
+
+            canvas.save()
+            if (ship.orientation == Orientation.VERTICAL) {
+                canvas.rotate(90f, left + cellSize / 2, top + cellSize / 2)
+            }
+
+            val drawable = shipResources[ship.length]!!
+            drawable.bounds = bounds
+            drawable.draw(canvas)
+            canvas.restore()
+        }
+
         cellDrawables.forEach { anim ->
             anim.draw(canvas)
         }
 
-        if (selectedPoint != null) {
+        if (selectedPoint != null && areCrossLinesShowed) {
             val color = when (gameModel!!.getCell(selectedPoint!!)) {
                 CellState.FREE, CellState.OCCUPIED -> Color.argb(128, 0, 255, 0)
                 CellState.MISS, CellState.HIT, CellState.KILLED -> Color.argb(128, 255, 0, 0)
@@ -193,6 +212,9 @@ class PlayingGameFieldView(context: Context, attributeSet: AttributeSet?) :
             } else if (prev == CellState.OCCUPIED && next == CellState.HIT) {
                 hitCell(point.x + 1, point.y + 1)
             }
+        }
+        gameModel?.addOnKill { ship ->
+            killedShips.add(ship)
         }
     }
 }

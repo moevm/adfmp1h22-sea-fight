@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import ru.etu.battleships.Application
 import ru.etu.battleships.GameVibrator
@@ -22,6 +23,9 @@ import ru.etu.battleships.model.PlayerStep
 import ru.etu.battleships.model.Point
 import ru.etu.battleships.model.Turn
 import ru.etu.battleships.model.UserScore
+import ru.etu.battleships.views.PlayingGameFieldView
+import java.util.*
+import kotlin.random.Random
 import kotlin.system.exitProcess
 
 class Game : AppCompatActivity() {
@@ -106,6 +110,7 @@ class Game : AppCompatActivity() {
                 GameMode.PVE -> AI(leftPlayer.gameModel!!)
                 else -> throw IllegalStateException()
             }
+            randomizeFirstPlayer(leftPlayer, rightPlayer, playerTurnArrow, ai)
 
             leftPlayer.invalidate()
             rightPlayer.invalidate()
@@ -121,16 +126,6 @@ class Game : AppCompatActivity() {
                                 winner = usernamePlayer2.text.toString(),
                                 loser = usernamePlayer1.text.toString(),
                             )
-                            winnerDialog.setScore(
-                                UserScore(
-                                    usernamePlayer1.text.toString(),
-                                    victoriesPlayer1.text.toString().toInt()
-                                ),
-                                UserScore(
-                                    usernamePlayer2.text.toString(),
-                                    victoriesPlayer2.text.toString().toInt() + 1
-                                )
-                            ).setWinner(usernamePlayer2.text.toString()).show()
                         }
                         currentPlayer = if (isKeep) {
                             Turn.RIGHT_PLAYER
@@ -152,16 +147,6 @@ class Game : AppCompatActivity() {
                             winner = usernamePlayer1.text.toString(),
                             loser = usernamePlayer2.text.toString(),
                         )
-                        winnerDialog.setScore(
-                            UserScore(
-                                usernamePlayer1.text.toString(),
-                                victoriesPlayer1.text.toString().toInt() + 1
-                            ),
-                            UserScore(
-                                usernamePlayer2.text.toString(),
-                                victoriesPlayer2.text.toString().toInt()
-                            )
-                        ).setWinner(usernamePlayer1.text.toString()).show()
                     }
                     currentPlayer = if (isKeep) {
                         Turn.LEFT_PLAYER
@@ -173,6 +158,46 @@ class Game : AppCompatActivity() {
                         )
                         Turn.RIGHT_PLAYER
                     }
+                }
+            }
+
+            leftPlayer.gameModel?.addOnKill {
+                if (leftPlayer.gameModel!!.isOver()) {
+                    app.turnHistory = turnHistory
+                    dbHelper.addScoreForPair(
+                        winner = usernamePlayer2.text.toString(),
+                        loser = usernamePlayer1.text.toString(),
+                    )
+                    winnerDialog.setScore(
+                        UserScore(
+                            usernamePlayer1.text.toString(),
+                            victoriesPlayer1.text.toString().toInt()
+                        ),
+                        UserScore(
+                            usernamePlayer2.text.toString(),
+                            victoriesPlayer2.text.toString().toInt() + 1
+                        )
+                    ).setWinner(usernamePlayer2.text.toString()).show()
+                }
+            }
+
+            rightPlayer.gameModel?.addOnKill {
+                if (rightPlayer.gameModel!!.isOver()) {
+                    app.turnHistory = turnHistory
+                    dbHelper.addScoreForPair(
+                        winner = usernamePlayer1.text.toString(),
+                        loser = usernamePlayer2.text.toString(),
+                    )
+                    winnerDialog.setScore(
+                        UserScore(
+                            usernamePlayer1.text.toString(),
+                            victoriesPlayer1.text.toString().toInt() + 1
+                        ),
+                        UserScore(
+                            usernamePlayer2.text.toString(),
+                            victoriesPlayer2.text.toString().toInt()
+                        )
+                    ).setWinner(usernamePlayer1.text.toString()).show()
                 }
             }
 
@@ -193,6 +218,8 @@ class Game : AppCompatActivity() {
                 sfxPlayer.playSplash()
                 playerTurnArrow.animate().rotation(0f).start()
                 currentPlayer = Turn.LEFT_PLAYER
+                leftPlayer.areCrossLinesShowed = false
+                rightPlayer.areCrossLinesShowed = true
 
                 gameHistoryDialog.addStep(PlayerStep(app.player2.name, it + Point(1, 1), CellState.MISS))
             }
@@ -207,8 +234,35 @@ class Game : AppCompatActivity() {
             rightPlayer.gameModel?.addOnMiss {
                 vibrator.splash()
                 sfxPlayer.playSplash()
+                leftPlayer.areCrossLinesShowed = true
+                rightPlayer.areCrossLinesShowed = false
 
                 gameHistoryDialog.addStep(PlayerStep(app.player1.name, it + Point(1, 1), CellState.MISS))
+
+            }
+        }
+    }
+
+    private fun randomizeFirstPlayer(
+        leftPlayer: PlayingGameFieldView,
+        rightPlayer: PlayingGameFieldView,
+        playerTurnArrow: ImageView,
+        ai: AI?,
+    ) {
+        Random(Date().time)
+        currentPlayer = Turn.values().random()
+        when (currentPlayer) {
+            Turn.LEFT_PLAYER -> {
+                rightPlayer.areCrossLinesShowed = true
+                playerTurnArrow.rotation = 0F
+            }
+            Turn.RIGHT_PLAYER -> {
+                leftPlayer.areCrossLinesShowed = true
+                playerTurnArrow.rotation = 180F
+                Handler(Looper.getMainLooper()).postDelayed(
+                    { ai?.hit() },
+                    botTurnReactionTimeMs
+                )
             }
         }
     }

@@ -7,16 +7,13 @@ import android.graphics.DashPathEffect
 import android.graphics.Paint
 import android.graphics.Rect
 import android.graphics.RectF
-import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import android.util.Log
 import android.view.DragEvent
 import android.view.MotionEvent
 import android.view.View
 import android.widget.LinearLayout
-import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.forEach
-import ru.etu.battleships.R
 import ru.etu.battleships.model.Orientation
 import ru.etu.battleships.model.Point
 import ru.etu.battleships.model.Ship
@@ -32,12 +29,6 @@ class SetupGameFieldView(context: Context, attributeSet: AttributeSet?) :
 
     private val shipToViewMap: MutableMap<Ship, ShipView> = mutableMapOf()
     private val onShipDragCallbacks: MutableList<(Ship, ShipView) -> Unit> = mutableListOf()
-    private val shipResources: Map<Int, Drawable?> = mapOf(
-        Pair(1, ResourcesCompat.getDrawable(resources, R.drawable.ic_ship_1, null)),
-        Pair(2, ResourcesCompat.getDrawable(resources, R.drawable.ic_ship_2, null)),
-        Pair(3, ResourcesCompat.getDrawable(resources, R.drawable.ic_ship_3, null)),
-        Pair(4, ResourcesCompat.getDrawable(resources, R.drawable.ic_ship_4, null)),
-    )
 
     private var previousTouchAction = MotionEvent.ACTION_UP
     private var lastDraggedShip: Ship? = null

@@ -162,14 +162,14 @@ class GameModel(listOfShips: Set<Ship>) {
             if (killed) {
                 val point = findLeftShipCorner(x, y, vertical)
                 hitAroundCells(point, length, vertical)
-//                val orientation = if (vertical) {
-//                    Orientation.VERTICAL
-//                } else {
-//                    Orientation.HORIZONTAL
-//                }
-//                onShipKillCallbacks.forEach { callback ->
-//                    callback(Ship(length, Point(point.x + 1, point.y + 1), orientation, -1))
-//                }
+                val orientation = if (vertical) {
+                    Orientation.VERTICAL
+                } else {
+                    Orientation.HORIZONTAL
+                }
+                onShipKillCallbacks.forEach { callback ->
+                    callback(Ship(length, Point(point.x + 1, point.y + 1), orientation, -1))
+                }
 //                println(matrix)
             }
             return Pair(true, getCell(x, y))
@@ -232,8 +232,8 @@ class GameModel(listOfShips: Set<Ship>) {
         throw IllegalStateException()
     }
 
-    fun setOnShipKilled(function: (Ship) -> Unit) {
-        onShipKillCallbacks.add((function))
+    fun addOnKill(function: (Ship) -> Unit) {
+        onShipKillCallbacks.add(function)
     }
 
     fun addOnHit(function: (Point) -> Unit) {
