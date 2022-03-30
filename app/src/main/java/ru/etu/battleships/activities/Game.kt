@@ -45,6 +45,8 @@ class Game : AppCompatActivity() {
     private var botTurnReactionTimeMs = 700L
     private var botHitReactionTimeMs = 1000L
 
+    private var turnCounter = 0
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityGameBinding.inflate(layoutInflater)
@@ -63,8 +65,8 @@ class Game : AppCompatActivity() {
 
         val app = application as Application
 
-        val leftPlayerScore = dbHelper.getWinnerLoserScore(app.player1.name, app.player2.name)
-        val rightPlayerScore = dbHelper.getWinnerLoserScore(app.player2.name, app.player1.name)
+        var leftPlayerScore = dbHelper.getWinnerLoserScore(app.player1.name, app.player2.name)
+        var rightPlayerScore = dbHelper.getWinnerLoserScore(app.player2.name, app.player1.name)
 
         binding.apply {
             btBack.setOnClickListener {
@@ -96,6 +98,7 @@ class Game : AppCompatActivity() {
                 gameHistoryDialog.show()
             }
 
+            tvCounter.text = turnCounter.toString()
             usernamePlayer1.text = app.player1.name
             usernamePlayer2.text = app.player2.name
 
@@ -168,14 +171,18 @@ class Game : AppCompatActivity() {
                         winner = usernamePlayer2.text.toString(),
                         loser = usernamePlayer1.text.toString(),
                     )
+
+                    rightPlayerScore += 1
+                    victoriesPlayer2.text = rightPlayerScore.toString()
+
                     winnerDialog.setScore(
                         UserScore(
                             usernamePlayer1.text.toString(),
-                            victoriesPlayer1.text.toString().toInt()
+                            leftPlayerScore
                         ),
                         UserScore(
                             usernamePlayer2.text.toString(),
-                            victoriesPlayer2.text.toString().toInt() + 1
+                            rightPlayerScore
                         )
                     ).setWinner(usernamePlayer2.text.toString()).show()
                 }
@@ -188,14 +195,18 @@ class Game : AppCompatActivity() {
                         winner = usernamePlayer1.text.toString(),
                         loser = usernamePlayer2.text.toString(),
                     )
+
+                    leftPlayerScore += 1
+                    victoriesPlayer1.text = leftPlayerScore.toString()
+
                     winnerDialog.setScore(
                         UserScore(
                             usernamePlayer1.text.toString(),
-                            victoriesPlayer1.text.toString().toInt() + 1
+                            leftPlayerScore
                         ),
                         UserScore(
                             usernamePlayer2.text.toString(),
-                            victoriesPlayer2.text.toString().toInt()
+                            rightPlayerScore
                         )
                     ).setWinner(usernamePlayer1.text.toString()).show()
                 }
@@ -211,6 +222,7 @@ class Game : AppCompatActivity() {
                 currentPlayer = Turn.RIGHT_PLAYER
 
                 gameHistoryDialog.addStep(PlayerStep(app.player2.name, it + Point(1, 1), CellState.HIT))
+                incrementCounter()
             }
 
             leftPlayer.gameModel?.addOnMiss {
@@ -222,6 +234,7 @@ class Game : AppCompatActivity() {
                 rightPlayer.areCrossLinesShowed = true
 
                 gameHistoryDialog.addStep(PlayerStep(app.player2.name, it + Point(1, 1), CellState.MISS))
+                incrementCounter()
             }
 
             rightPlayer.gameModel?.addOnHit {
@@ -229,6 +242,7 @@ class Game : AppCompatActivity() {
                 sfxPlayer.playExplosion()
 
                 gameHistoryDialog.addStep(PlayerStep(app.player1.name, it + Point(1, 1), CellState.HIT))
+                incrementCounter()
             }
 
             rightPlayer.gameModel?.addOnMiss {
@@ -238,9 +252,14 @@ class Game : AppCompatActivity() {
                 rightPlayer.areCrossLinesShowed = false
 
                 gameHistoryDialog.addStep(PlayerStep(app.player1.name, it + Point(1, 1), CellState.MISS))
-
+                incrementCounter()
             }
         }
+    }
+
+    private fun incrementCounter() = with(binding) {
+        turnCounter += 1
+        tvCounter.text = turnCounter.toString()
     }
 
     private fun randomizeFirstPlayer(

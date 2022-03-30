@@ -26,10 +26,13 @@
         <entry key="app/src/main/res/drawable/rounded_corners.xml" value="0.306" />
         <entry key="app/src/main/res/drawable/shape_circle_button.xml" value="0.193" />
         <entry key="app/src/main/res/drawable/shape_circular_button.xml" value="0.193" />
+        <entry key="app/src/main/res/drawable/shape_counter.xml" value="0.1955" />
+        <entry key="app/src/main/res/drawable/shape_counter_inc.xml" value="0.1955" />
         <entry key="app/src/main/res/drawable/shape_game_history_item.xml" value="0.1955" />
         <entry key="app/src/main/res/drawable/shape_game_history_table.xml" value="0.2" />
         <entry key="app/src/main/res/drawable/shape_table.xml" value="0.1955" />
         <entry key="app/src/main/res/drawable/shape_table_cell.xml" value="0.2825" />
+        <entry key="app/src/main/res/drawable/shape_triangle.xml" value="0.1955" />
         <entry key="app/src/main/res/drawable/splash.xml" value="0.2825" />
         <entry key="app/src/main/res/drawable/splash_animation.xml" value="0.2825" />
         <entry key="app/src/main/res/drawable/table.xml" value="0.222" />
@@ -38,10 +41,11 @@
         <entry key="app/src/main/res/drawable/text_button_disabled.xml" value="0.3315" />
         <entry key="app/src/main/res/drawable/text_button_enabled.xml" value="0.3315" />
         <entry key="app/src/main/res/drawable/text_button_pressed.xml" value="0.3315" />
+        <entry key="app/src/main/res/drawable/transition_counter.xml" value="0.1955" />
         <entry key="app/src/main/res/drawable/vertical_divider.xml" value="0.222" />
         <entry key="app/src/main/res/layout-land/activity_setup_right.xml" value="0.18209876543209877" />
         <entry key="app/src/main/res/layout/activity_entry.xml" value="0.4588584136397331" />
-        <entry key="app/src/main/res/layout/activity_game.xml" value="0.5" />
+        <entry key="app/src/main/res/layout/activity_game.xml" value="0.375" />
         <entry key="app/src/main/res/layout/activity_menu.xml" value="0.5" />
         <entry key="app/src/main/res/layout/activity_score_board.xml" value="0.22" />
         <entry key="app/src/main/res/layout/activity_setup_left.xml" value="0.2859399684044234" />
