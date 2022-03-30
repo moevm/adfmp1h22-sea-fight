@@ -65,8 +65,8 @@ class Game : AppCompatActivity() {
 
         val app = application as Application
 
-        val leftPlayerScore = dbHelper.getWinnerLoserScore(app.player1.name, app.player2.name)
-        val rightPlayerScore = dbHelper.getWinnerLoserScore(app.player2.name, app.player1.name)
+        var leftPlayerScore = dbHelper.getWinnerLoserScore(app.player1.name, app.player2.name)
+        var rightPlayerScore = dbHelper.getWinnerLoserScore(app.player2.name, app.player1.name)
 
         binding.apply {
             btBack.setOnClickListener {
@@ -171,14 +171,18 @@ class Game : AppCompatActivity() {
                         winner = usernamePlayer2.text.toString(),
                         loser = usernamePlayer1.text.toString(),
                     )
+
+                    rightPlayerScore += 1
+                    victoriesPlayer2.text = rightPlayerScore.toString()
+
                     winnerDialog.setScore(
                         UserScore(
                             usernamePlayer1.text.toString(),
-                            victoriesPlayer1.text.toString().toInt()
+                            leftPlayerScore
                         ),
                         UserScore(
                             usernamePlayer2.text.toString(),
-                            victoriesPlayer2.text.toString().toInt() + 1
+                            rightPlayerScore
                         )
                     ).setWinner(usernamePlayer2.text.toString()).show()
                 }
@@ -191,14 +195,18 @@ class Game : AppCompatActivity() {
                         winner = usernamePlayer1.text.toString(),
                         loser = usernamePlayer2.text.toString(),
                     )
+
+                    leftPlayerScore += 1
+                    victoriesPlayer1.text = leftPlayerScore.toString()
+
                     winnerDialog.setScore(
                         UserScore(
                             usernamePlayer1.text.toString(),
-                            victoriesPlayer1.text.toString().toInt() + 1
+                            leftPlayerScore
                         ),
                         UserScore(
                             usernamePlayer2.text.toString(),
-                            victoriesPlayer2.text.toString().toInt()
+                            rightPlayerScore
                         )
                     ).setWinner(usernamePlayer1.text.toString()).show()
                 }
