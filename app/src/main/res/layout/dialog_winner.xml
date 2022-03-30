@@ -11,7 +11,6 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:orientation="vertical"
-        app:layout_constraintHeight_min="30dp"
         app:layout_constraintGuide_percent=".1" />
 
     <androidx.constraintlayout.widget.Guideline
@@ -19,14 +18,12 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:orientation="vertical"
-        app:layout_constraintHeight_min="30dp"
         app:layout_constraintGuide_percent=".9" />
 
     <ImageButton
         android:id="@+id/bt_back"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintHeight_min="30dp"
         android:padding="0dp"
 
         android:backgroundTint="#00000000"
@@ -43,7 +40,6 @@
         android:id="@+id/bt_history"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintHeight_min="30dp"
         android:padding="0dp"
 
         android:backgroundTint="#00000000"
@@ -61,14 +57,13 @@
         android:id="@+id/bt_exit"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintHeight_min="30dp"
         android:padding="0dp"
 
         android:backgroundTint="#00000000"
         android:contentDescription="@string/exit_button"
 
         android:scaleType="centerInside"
-        app:layout_constraintDimensionRatio="W, 1:1"
+        app:layout_constraintDimensionRatio="H, 1:1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toEndOf="@id/right_guideline"
