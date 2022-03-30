@@ -64,6 +64,22 @@
                 android:background="@drawable/shape_table_cell"
 
                 android:gravity="center"
+                android:layout_weight="10"
+                android:text="@string/index" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+
+                android:fontFamily="@font/akaya_kanadaka__regular"
+                android:textColor="?colorOnPrimary"
+                android:textSize="24sp"
+                android:includeFontPadding="false"
+
+                android:paddingVertical="2dp"
+                android:background="@drawable/shape_table_cell"
+
+                android:gravity="center"
                 android:layout_weight="40"
                 android:text="@string/attacker" />
 
@@ -80,7 +96,7 @@
                 android:background="@drawable/shape_table_cell"
 
                 android:gravity="center"
-                android:layout_weight="30"
+                android:layout_weight="25"
                 android:text="@string/point_under_attack" />
 
             <TextView
@@ -96,7 +112,7 @@
                 android:background="@drawable/shape_table_cell"
 
                 android:gravity="center"
-                android:layout_weight="30"
+                android:layout_weight="25"
                 android:text="@string/attack_result" />
 
         </LinearLayout>

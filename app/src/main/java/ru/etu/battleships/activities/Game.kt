@@ -45,6 +45,8 @@ class Game : AppCompatActivity() {
     private var botTurnReactionTimeMs = 700L
     private var botHitReactionTimeMs = 1000L
 
+    private var turnCounter = 0
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityGameBinding.inflate(layoutInflater)
@@ -96,6 +98,7 @@ class Game : AppCompatActivity() {
                 gameHistoryDialog.show()
             }
 
+            tvCounter.text = turnCounter.toString()
             usernamePlayer1.text = app.player1.name
             usernamePlayer2.text = app.player2.name
 
@@ -211,6 +214,7 @@ class Game : AppCompatActivity() {
                 currentPlayer = Turn.RIGHT_PLAYER
 
                 gameHistoryDialog.addStep(PlayerStep(app.player2.name, it + Point(1, 1), CellState.HIT))
+                incrementCounter()
             }
 
             leftPlayer.gameModel?.addOnMiss {
@@ -222,6 +226,7 @@ class Game : AppCompatActivity() {
                 rightPlayer.areCrossLinesShowed = true
 
                 gameHistoryDialog.addStep(PlayerStep(app.player2.name, it + Point(1, 1), CellState.MISS))
+                incrementCounter()
             }
 
             rightPlayer.gameModel?.addOnHit {
@@ -229,6 +234,7 @@ class Game : AppCompatActivity() {
                 sfxPlayer.playExplosion()
 
                 gameHistoryDialog.addStep(PlayerStep(app.player1.name, it + Point(1, 1), CellState.HIT))
+                incrementCounter()
             }
 
             rightPlayer.gameModel?.addOnMiss {
@@ -238,9 +244,14 @@ class Game : AppCompatActivity() {
                 rightPlayer.areCrossLinesShowed = false
 
                 gameHistoryDialog.addStep(PlayerStep(app.player1.name, it + Point(1, 1), CellState.MISS))
-
+                incrementCounter()
             }
         }
+    }
+
+    private fun incrementCounter() = with(binding) {
+        turnCounter += 1
+        tvCounter.text = turnCounter.toString()
     }
 
     private fun randomizeFirstPlayer(

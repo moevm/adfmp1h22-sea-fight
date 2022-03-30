@@ -36,7 +36,7 @@
             android:layout_height="0dp"
             android:contentDescription="@string/turn_indicator"
             android:scaleType="centerInside"
-            android:src="@drawable/ic_triangle"
+            android:src="@drawable/shape_triangle"
 
             app:layout_constraintBottom_toBottomOf="@+id/turn_rule"
             app:layout_constraintEnd_toEndOf="parent"
@@ -186,7 +186,7 @@
             android:padding="1dp"
             android:contentDescription="@string/history_button"
             android:scaleType="centerInside"
-            android:src="@drawable/ic_book"
+            android:src="@drawable/ic_history"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintTop_toTopOf="@id/how_to_see_history"
             app:layout_constraintBottom_toBottomOf="@id/how_to_see_history"

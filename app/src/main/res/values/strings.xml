@@ -70,6 +70,7 @@
 <!--    Game History-->
     <string name="close_button">Close</string>
     <string name="attacker">Attacker</string>
+    <string name="index">#</string>
     <string name="point_under_attack">Where</string>
     <string name="attack_result">Status</string>
     <string name="point_delimiter">:</string>

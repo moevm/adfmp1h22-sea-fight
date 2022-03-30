@@ -18,7 +18,8 @@ class GameHistoryDialog(playersSteps: MutableList<PlayerStep>, context: Context)
     class GameHistoryAdapter(private var playersSteps: MutableList<PlayerStep>): RecyclerView.Adapter<GameHistoryAdapter.Holder>() {
         class Holder(item: View): RecyclerView.ViewHolder(item) {
             private var binding = GameHistoryItemBinding.bind(item)
-            fun bind(playerStep: PlayerStep) = with(binding) {
+            fun bind(number: Int, playerStep: PlayerStep) = with(binding) {
+                index.text = number.toString()
                 who.text = playerStep.player
                 whereLetter.text = "ABCDEFGHIK"[playerStep.point.y - 1].toString()
                 whereNumber.text = playerStep.point.x.toString()
@@ -45,7 +46,7 @@ class GameHistoryDialog(playersSteps: MutableList<PlayerStep>, context: Context)
         )
 
         override fun onBindViewHolder(holder: Holder, position: Int) {
-            holder.bind(playersSteps[position])
+            holder.bind(position + 1, playersSteps[position])
         }
 
         override fun getItemCount() = playersSteps.size
