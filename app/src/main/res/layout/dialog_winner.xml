@@ -33,7 +33,7 @@
         android:contentDescription="@string/back_button"
 
         android:scaleType="centerInside"
-        app:layout_constraintDimensionRatio="H, 1:1"
+        app:layout_constraintDimensionRatio="W, 1:1"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toStartOf="@id/left_guideline"
@@ -43,17 +43,18 @@
         android:id="@+id/bt_history"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:backgroundTint="#00000000"
+        app:layout_constraintHeight_min="30dp"
+        android:padding="0dp"
 
+        android:backgroundTint="#00000000"
         android:contentDescription="@string/help_button"
-        android:padding="5dp"
-        android:scaleType="centerCrop"
+        android:scaleType="centerInside"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="@id/bt_back"
         app:layout_constraintStart_toEndOf="@id/bt_back"
         app:layout_constraintEnd_toStartOf="@id/bt_exit"
 
-        app:layout_constraintDimensionRatio="w, 1:1"
+        app:layout_constraintDimensionRatio="W, 1:1"
         app:srcCompat="@drawable/ic_history" />
 
     <ImageButton
@@ -67,7 +68,7 @@
         android:contentDescription="@string/exit_button"
 
         android:scaleType="centerInside"
-        app:layout_constraintDimensionRatio="H, 1:1"
+        app:layout_constraintDimensionRatio="W, 1:1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toEndOf="@id/right_guideline"
